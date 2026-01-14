@@ -252,7 +252,8 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   placeholder="Buscar..."
-                  className="w-full h-9 sm:h-10 lg:h-12 pl-2.5 sm:pl-3 lg:pl-4 pr-14 sm:pr-16 lg:pr-12 bg-gray-100 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-lg sm:rounded-xl text-xs sm:text-sm transition-all outline-none"
+                  className="w-full h-9 sm:h-10 lg:h-12 pl-2.5 sm:pl-3 lg:pl-4 pr-14 sm:pr-16 lg:pr-12 bg-gray-100 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-lg sm:rounded-xl text-base outline-none"
+                  style={{ fontSize: '16px' }}
                 />
                 {searchQuery && (
                   <button 
@@ -269,7 +270,7 @@ export default function Header() {
 
               {/* Resultados de búsqueda - Solo productos con scroll adaptativo */}
               {showResults && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50" style={{ width: 'min(500px, calc(100vw - 2rem))' }}>
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 lg:left-auto lg:right-auto lg:w-[500px]">
                   {/* Corrección ortográfica */}
                   {searchResults.correction && (
                     <div className="px-4 py-2 bg-orange-50 border-b border-orange-100">

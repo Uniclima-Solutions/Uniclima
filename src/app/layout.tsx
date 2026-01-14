@@ -11,6 +11,13 @@ export const metadata: Metadata = {
   keywords: 'repuestos calderas, repuestos aire acondicionado, HVAC, Vaillant, Junkers, Baxi, Ferroli',
 }
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+}
+
 export default function RootLayout({
   children,
 }: {
