@@ -1,0 +1,558 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* 
+ * DESIGN SYSTEM: Uniclima Solutions
+ * Ecommerce Profesional Tipo Retail Tech
+ * Estructura visual inspirada en PCComponentes
+ * 
+ * Colores:
+ * - Primary: Naranja (#FF6B00) para CTAs y elementos destacados
+ * - Accent: Rojo (#E53935) para descuentos y ofertas
+ * - Text: Negro (#1A1A1A) para máxima legibilidad
+ * - Background: Blanco (#FFFFFF) limpio y profesional
+ */
+
+@theme inline {
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  /* Colores Ecommerce - Retail Tech */
+  --color-price: oklch(0.20 0 0);
+  --color-price-old: oklch(0.60 0 0);
+  --color-discount: oklch(0.55 0.22 25);
+  --color-success: oklch(0.55 0.15 145);
+  --color-warning: oklch(0.70 0.18 70);
+  --color-trending: oklch(0.50 0.20 300);
+  --color-free-shipping: oklch(0.55 0.15 145);
+}
+
+:root {
+  /* Naranja como color primario (estilo PCComponentes) */
+  --primary: oklch(0.65 0.20 45);
+  --primary-foreground: oklch(1 0 0);
+  --radius: 8px;
+  
+  /* Fondos */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0 0);
+  
+  /* Secundarios */
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.25 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  
+  /* Accent (rojo para ofertas) */
+  --accent: oklch(0.55 0.22 25);
+  --accent-foreground: oklch(1 0 0);
+  
+  /* Destructive */
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  
+  /* Bordes */
+  --border: oklch(0.90 0 0);
+  --input: oklch(0.90 0 0);
+  --ring: oklch(0.65 0.20 45);
+  
+  /* Charts */
+  --chart-1: oklch(0.65 0.20 45);
+  --chart-2: oklch(0.55 0.22 25);
+  --chart-3: oklch(0.55 0.15 145);
+  --chart-4: oklch(0.60 0.15 250);
+  --chart-5: oklch(0.50 0.20 300);
+  
+  /* Sidebar */
+  --sidebar: oklch(0.98 0 0);
+  --sidebar-foreground: oklch(0.15 0 0);
+  --sidebar-primary: oklch(0.65 0.20 45);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.96 0 0);
+  --sidebar-accent-foreground: oklch(0.15 0 0);
+  --sidebar-border: oklch(0.90 0 0);
+  --sidebar-ring: oklch(0.65 0.20 45);
+}
+
+.dark {
+  --primary: oklch(0.70 0.20 45);
+  --primary-foreground: oklch(1 0 0);
+  --background: oklch(0.12 0 0);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.15 0 0);
+  --card-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.15 0 0);
+  --popover-foreground: oklch(0.95 0 0);
+  --secondary: oklch(0.20 0 0);
+  --secondary-foreground: oklch(0.90 0 0);
+  --muted: oklch(0.22 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --accent: oklch(0.60 0.22 25);
+  --accent-foreground: oklch(1 0 0);
+  --destructive: oklch(0.60 0.22 25);
+  --destructive-foreground: oklch(1 0 0);
+  --border: oklch(0.25 0 0);
+  --input: oklch(0.25 0 0);
+  --ring: oklch(0.70 0.20 45);
+  --chart-1: oklch(0.70 0.20 45);
+  --chart-2: oklch(0.60 0.22 25);
+  --chart-3: oklch(0.60 0.15 145);
+  --chart-4: oklch(0.65 0.15 250);
+  --chart-5: oklch(0.55 0.20 300);
+  --sidebar: oklch(0.15 0 0);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-accent: oklch(0.22 0 0);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.25 0 0);
+  --sidebar-ring: oklch(0.70 0.20 45);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@layer components {
+  /* Container responsive */
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1440px;
+    }
+  }
+  
+  /* Badge de descuento estilo retail */
+  .badge-discount {
+    @apply inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white rounded;
+    background-color: #E53935;
+  }
+  
+  /* Badge trending */
+  .badge-trending {
+    @apply inline-flex items-center justify-center px-2 py-0.5 text-xs font-semibold rounded;
+    background-color: #9C27B0;
+    color: white;
+  }
+  
+  /* Badge envío gratis */
+  .badge-free-shipping {
+    @apply inline-flex items-center gap-1 text-xs font-medium;
+    color: #4CAF50;
+  }
+  
+  /* Precio actual */
+  .price-current {
+    @apply text-xl font-bold;
+    color: #1A1A1A;
+  }
+  
+  /* Precio anterior tachado */
+  .price-old {
+    @apply text-sm line-through;
+    color: #999999;
+  }
+  
+  /* Botón CTA primario (naranja) */
+  .btn-cta {
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white rounded-lg transition-all duration-200;
+    background-color: #FF6B00;
+  }
+  .btn-cta:hover {
+    background-color: #E55A00;
+  }
+  
+  /* Botón secundario */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-lg transition-all duration-200;
+    background-color: #F5F5F5;
+    color: #1A1A1A;
+  }
+  .btn-secondary:hover {
+    background-color: #E0E0E0;
+  }
+  
+  /* Card de producto */
+  .product-card {
+    @apply bg-white rounded-lg border border-gray-100 overflow-hidden transition-all duration-200;
+  }
+  .product-card:hover {
+    @apply shadow-lg border-gray-200;
+    transform: translateY(-2px);
+  }
+  
+  /* Sección título */
+  .section-title {
+    @apply text-xl font-bold text-gray-900;
+  }
+  
+  /* Link "Ver más" */
+  .link-more {
+    @apply text-sm font-medium text-primary hover:underline;
+  }
+  
+  /* Rating estrellas */
+  .rating {
+    @apply inline-flex items-center gap-1 text-xs;
+  }
+  .rating-star {
+    color: #FFB800;
+  }
+  .rating-count {
+    @apply text-gray-500;
+  }
+  
+  /* Barra de beneficios */
+  .benefits-bar {
+    @apply flex items-center justify-center gap-6 py-2 text-sm bg-gray-50 border-b border-gray-100;
+  }
+  .benefit-item {
+    @apply flex items-center gap-2 text-gray-600;
+  }
+  
+  /* Mega menú */
+  .mega-menu {
+    @apply absolute top-full left-0 w-full bg-white shadow-xl border-t border-gray-100 z-50;
+  }
+  
+  /* Header sticky */
+  .header-sticky {
+    @apply sticky top-0 z-40 bg-white shadow-sm;
+  }
+  
+  /* Carrusel controles */
+  .carousel-btn {
+    @apply absolute top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-md flex items-center justify-center text-gray-600 hover:text-gray-900 hover:shadow-lg transition-all z-10;
+  }
+  .carousel-btn-prev {
+    @apply left-2;
+  }
+  .carousel-btn-next {
+    @apply right-2;
+  }
+  
+  /* Tabs de categorías */
+  .category-tabs {
+    @apply flex items-center gap-2 overflow-x-auto pb-2;
+  }
+  .category-tab {
+    @apply px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-full whitespace-nowrap transition-colors;
+  }
+  .category-tab:hover,
+  .category-tab.active {
+    @apply bg-primary text-white;
+  }
+  
+  /* Flip card 3D styles */
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .transform-style-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Scrollbar delgado personalizado */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+  }
+  
+  /* Scrollbar visible naranja */
+  .scrollbar-visible {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(249, 115, 22, 0.6) rgba(0, 0, 0, 0.05);
+  }
+  .scrollbar-visible::-webkit-scrollbar {
+    width: 5px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb {
+    background-color: rgba(249, 115, 22, 0.6);
+    border-radius: 3px;
+  }
+  .scrollbar-visible::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(249, 115, 22, 0.8);
+  }
+  
+  /* Efecto flip 3D para tarjetas - Mejorado */
+  .perspective-1000 {
+    perspective: 1200px;
+    -webkit-perspective: 1200px;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+  }
+  
+  .transform-style-3d {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    position: relative;
+  }
+  
+  .backface-hidden {
+    backface-visibility: hidden !important;
+    -webkit-backface-visibility: hidden !important;
+    -moz-backface-visibility: hidden !important;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+  
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+  }
+  
+  /* Mejoras para táctil/móvil */
+  @media (hover: none) and (pointer: coarse) {
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+  }
+  
+  /* Animación de tarjetas al hacer hover */
+  .card-hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-hover-lift:hover {
+    transform: translateY(-4px) scale(1.01);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+  }
+}
+
+
+/* ============================================
+   ANIMACIONES - Banner Reparación de Placas
+   ============================================ */
+
+/* Animación fade-in con movimiento hacia arriba */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+/* Delays para animación escalonada */
+.animation-delay-100 {
+  animation-delay: 0.1s;
+}
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
+.animation-delay-500 {
+  animation-delay: 0.5s;
+}
+.animation-delay-600 {
+  animation-delay: 0.6s;
+}
+
+/* Animación de brillo/glow para texto destacado */
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(253, 224, 71, 0.4), 0 0 40px rgba(253, 224, 71, 0.2);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(253, 224, 71, 0.6), 0 0 60px rgba(253, 224, 71, 0.3);
+  }
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+/* Animaciones de partículas flotantes */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-20px) translateX(10px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(-5px);
+  }
+  75% {
+    transform: translateY(-25px) translateX(5px);
+  }
+}
+
+@keyframes float-medium {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-15px) translateX(-10px);
+  }
+  66% {
+    transform: translateY(-25px) translateX(8px);
+  }
+}
+
+@keyframes float-fast {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-30px) translateX(-15px);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: float-medium 6s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+
+/* Animación de brillo que pasa por encima */
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(12deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(12deg);
+  }
+}
+
+.animate-shine {
+  animation: shine 8s ease-in-out infinite;
+}
+
+/* Animación bounce sutil para CTA */
+@keyframes bounce-subtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-bounce-subtle {
+  animation: bounce-subtle 2s ease-in-out infinite;
+}
+
+.animate-bounce-subtle:hover {
+  animation: none;
+}
