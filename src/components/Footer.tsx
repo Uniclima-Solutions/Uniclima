@@ -59,7 +59,7 @@ export default function Footer() {
       
       {/* Barra de beneficios superior */}
       <div className="w-full bg-orange-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="flex items-center gap-3 text-white">
               <Truck className="w-6 h-6 flex-shrink-0" />
@@ -95,7 +95,7 @@ export default function Footer() {
 
       {/* Newsletter */}
       <div className="w-full bg-slate-800 border-b border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="text-center md:text-left">
               <h3 className="text-white font-bold text-lg">Suscríbete a nuestra newsletter</h3>
@@ -118,7 +118,7 @@ export default function Footer() {
 
       {/* Sección principal con acordeones */}
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-8">
             
             {/* Columna 1: Logo y descripción (siempre visible) */}
@@ -352,7 +352,7 @@ export default function Footer() {
 
       {/* Métodos de pago y certificaciones */}
       <div className="w-full bg-slate-800/50 border-t border-slate-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-slate-400 text-sm">
               <CreditCard className="w-5 h-5" />
@@ -380,7 +380,7 @@ export default function Footer() {
 
       {/* Copyright y legales */}
       <div className="w-full bg-slate-900 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-slate-500 text-xs">
               © 2026 Uniclima Solutions S.L. Todos los derechos reservados. CIF: B12345678
