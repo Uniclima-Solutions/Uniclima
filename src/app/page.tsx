@@ -1083,7 +1083,7 @@ export default function Home() {
       {/* Banner Reparación de Placas - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Link href="/reparacion-placas" className="block w-full">
+          <Link href="/diagnostico-placas" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
               <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet_final.png" />
