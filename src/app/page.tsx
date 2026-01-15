@@ -407,7 +407,7 @@ function CategoryCarousel({
   };
 
   return (
-    <section className="py-6 sm:py-8 lg:py-10 bg-white">
+    <section className="py-[50px] bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
@@ -823,7 +823,7 @@ function MaintenanceSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="py-6 sm:py-8 lg:py-10 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-[50px] bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
@@ -905,16 +905,14 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (MÁS GRANDE) */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="max-w-6xl mx-auto">
-          <Link href="/ofertas" className="block w-full">
-            <img 
-              src="/banner_ofertas.png" 
-              alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-              className="w-full h-auto object-cover rounded-xl sm:rounded-2xl hover:opacity-95 transition-opacity duration-300 shadow-lg"
-            />
-          </Link>
-        </div>
+      <section className="w-full mb-[50px]">
+        <Link href="/ofertas" className="block w-full">
+          <img 
+            src="/banner_ofertas.png" 
+            alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
+            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+          />
+        </Link>
       </section>
 
       {/* Sección: Repuestos de Calderas */}
@@ -937,20 +935,18 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="max-w-6xl mx-auto">
-          <Link href="/pieza-gratis" className="block w-full">
-            <img 
-              src="/banner_pieza_gratis.png" 
-              alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-              className="w-full h-auto object-cover rounded-xl sm:rounded-2xl hover:opacity-95 transition-opacity duration-300 shadow-lg"
-            />
-          </Link>
-        </div>
+      <section className="w-full my-[50px]">
+        <Link href="/pieza-gratis" className="block w-full">
+          <img 
+            src="/banner_pieza_gratis.png" 
+            alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
+            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+          />
+        </Link>
       </section>
 
       {/* Categorías destacadas - Estilo PCComponentes */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-gray-50">
+      <section className="py-[50px] bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
@@ -979,7 +975,7 @@ export default function Home() {
       </section>
 
       {/* Banner CTA Profesionales - Diseño Premium */}
-      <section className="py-6 sm:py-8 lg:py-10 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
+      <section className="py-[50px] bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
         <div className="w-[90%] max-w-6xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -1073,16 +1069,14 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas */}
-      <section className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-        <div className="max-w-6xl mx-auto">
-          <Link href="/reparacion-placas" className="block w-full">
-            <img 
-              src="/banner_placa.png" 
-              alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-              className="w-full h-auto object-cover rounded-xl sm:rounded-2xl hover:opacity-95 transition-opacity duration-300 shadow-lg"
-            />
-          </Link>
-        </div>
+      <section className="w-full my-[50px]">
+        <Link href="/reparacion-placas" className="block w-full">
+          <img 
+            src="/banner_placa.png" 
+            alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
+            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+          />
+        </Link>
       </section>
 
       {/* Marcas */}
