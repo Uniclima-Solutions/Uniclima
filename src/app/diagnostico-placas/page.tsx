@@ -2,7 +2,7 @@
 
 /**
  * DIAGNÓSTICO DE PLACAS ELECTRÓNICAS
- * Diseño minimalista y profesional - Estilo diseñador gráfico
+ * Diseño minimalista profesional con FAQ premium
  */
 
 import { useState, useRef } from 'react';
@@ -10,7 +10,6 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { 
-  equipmentDatabase, 
   getBrandsByType, 
   getModelsByBrand,
   commonErrorCodes,
@@ -27,7 +26,6 @@ import {
   ChevronDown,
   Check,
   Upload,
-  Camera,
   Video,
   X,
   Search,
@@ -38,18 +36,10 @@ import {
   Package,
   FileText,
   Wrench,
-  Shield,
-  Clock,
   Euro,
-  AlertTriangle,
-  Power,
-  Volume2,
-  Thermometer,
-  Droplet,
-  Monitor,
-  Wifi,
-  HelpCircle,
-  ArrowRight
+  ArrowRight,
+  Plus,
+  Minus
 } from 'lucide-react';
 
 // Tipos
@@ -109,16 +99,41 @@ const provincias = [
   'Vizcaya', 'Zamora', 'Zaragoza', 'Ceuta', 'Melilla'
 ];
 
+// Síntomas corregidos
 const symptoms = [
   { id: 'no-enciende', label: 'No enciende' },
   { id: 'codigo-error', label: 'Muestra código de error' },
+  { id: 'comunicacion-placas', label: 'Error de comunicación entre placas' },
   { id: 'ruidos', label: 'Hace ruidos extraños' },
   { id: 'no-calienta', label: 'No calienta / No enfría' },
   { id: 'se-apaga', label: 'Se apaga solo' },
-  { id: 'gotea', label: 'Gotea o pierde agua' },
   { id: 'display', label: 'Display apagado o parpadea' },
   { id: 'mando', label: 'No responde al mando' },
   { id: 'otro', label: 'Otro problema' },
+];
+
+// FAQ data
+const faqData = [
+  {
+    question: '¿Qué incluye el diagnóstico de 35€ + IVA?',
+    answer: 'Incluye la revisión completa de la placa electrónica por nuestros técnicos especializados, identificación del fallo y presupuesto detallado de reparación sin compromiso.'
+  },
+  {
+    question: '¿Qué pasa si acepto el presupuesto de reparación?',
+    answer: 'El coste del diagnóstico (35€ + IVA) se descuenta íntegramente del precio final de la reparación. Solo pagarás el precio de la reparación.'
+  },
+  {
+    question: '¿Qué opciones tengo si NO acepto el presupuesto?',
+    answer: 'Tienes dos opciones:\n\n• Opción 1: Nos quedamos con la placa → Te devolvemos los 9€ del envío.\n\n• Opción 2: Quieres recuperar tu placa → Pagas 35€ (diagnóstico) + 9€ (portes ida y vuelta) = 44€ + IVA total.'
+  },
+  {
+    question: '¿Cuánto tarda el diagnóstico?',
+    answer: 'Una vez recibida la placa en nuestras instalaciones, el diagnóstico se realiza en 24-48 horas laborables. Recibirás el presupuesto por email.'
+  },
+  {
+    question: '¿Qué garantía tiene la reparación?',
+    answer: 'Todas nuestras reparaciones tienen 1 año de garantía. Si la placa falla por el mismo motivo durante ese periodo, la reparamos sin coste adicional.'
+  },
 ];
 
 export default function DiagnosticoPlacasPage() {
@@ -130,7 +145,7 @@ export default function DiagnosticoPlacasPage() {
   const [modelSearch, setModelSearch] = useState('');
   const [showBrandDropdown, setShowBrandDropdown] = useState(false);
   const [showModelDropdown, setShowModelDropdown] = useState(false);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(0);
   
   const photoInputRef = useRef<HTMLInputElement>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
@@ -202,8 +217,9 @@ export default function DiagnosticoPlacasPage() {
     }
   };
   
-  const handleNext = () => { if (isStepValid(currentStep) && currentStep < 4) { setCurrentStep(prev => prev + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
-  const handlePrev = () => { if (currentStep > 1) { setCurrentStep(prev => prev - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } };
+  // Sin scroll automático
+  const handleNext = () => { if (isStepValid(currentStep) && currentStep < 4) setCurrentStep(prev => prev + 1); };
+  const handlePrev = () => { if (currentStep > 1) setCurrentStep(prev => prev - 1); };
   
   const handleSubmit = async () => {
     if (!isStepValid(4)) return;
@@ -252,19 +268,19 @@ export default function DiagnosticoPlacasPage() {
       
       <main className="min-h-screen bg-gray-50">
         {/* HERO COMPACTO */}
-        <section className="bg-gray-900 text-white py-12">
+        <section className="bg-gray-900 text-white py-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-8 items-center">
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold mb-4">
                   Reparación de placas electrónicas
                 </h1>
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-400 mb-5">
                   Diagnóstico profesional para calderas, aires acondicionados y aerotermia.
                 </p>
                 
                 {/* Checkpoints */}
-                <div className="space-y-2 mb-6">
+                <div className="space-y-2">
                   {['Técnicos especializados con +15 años de experiencia', 'Diagnóstico en 24-48 horas', '1 año de garantía en reparaciones'].map((item, i) => (
                     <div key={i} className="flex items-center gap-3 text-sm">
                       <Check className="w-4 h-4 text-orange-500 flex-shrink-0" />
@@ -272,14 +288,6 @@ export default function DiagnosticoPlacasPage() {
                     </div>
                   ))}
                 </div>
-                
-                <button
-                  onClick={() => document.getElementById('formulario')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
-                >
-                  Solicitar diagnóstico
-                  <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
               
               {/* Precios */}
@@ -292,14 +300,20 @@ export default function DiagnosticoPlacasPage() {
                   <span className="text-4xl font-bold">35€</span>
                   <span className="text-gray-400">+ IVA</span>
                 </div>
-                <div className="space-y-2 text-sm text-gray-400">
-                  <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-orange-500" />
-                    <span>Si aceptas, se descuenta del precio final</span>
+                <div className="space-y-2 text-sm text-gray-400 border-t border-gray-700 pt-4">
+                  <p className="text-gray-300 font-medium mb-2">Si aceptas la reparación:</p>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span>Los 35€ se descuentan del precio final</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-orange-500" />
-                    <span>Si no aceptas: 9€ envío de vuelta</span>
+                  <p className="text-gray-300 font-medium mb-2 mt-4">Si NO aceptas:</p>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                    <span>Nos quedamos la placa → Te devolvemos los 9€ del envío</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                    <span>Quieres recuperarla → 35€ + 9€ portes = 44€ + IVA</span>
                   </div>
                 </div>
               </div>
@@ -308,7 +322,7 @@ export default function DiagnosticoPlacasPage() {
         </section>
         
         {/* PROCESO */}
-        <section className="py-8 bg-white border-b border-gray-200">
+        <section className="py-6 bg-white border-b border-gray-200">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between overflow-x-auto gap-4 py-2">
               {[
@@ -329,21 +343,70 @@ export default function DiagnosticoPlacasPage() {
           </div>
         </section>
         
+        {/* FAQ PREMIUM - ANTES DEL FORMULARIO */}
+        <section className="py-10 bg-gradient-to-b from-gray-50 to-white">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Antes de empezar</h2>
+              <p className="text-gray-500">Información importante sobre el servicio</p>
+            </div>
+            
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              {faqData.map((faq, index) => (
+                <div 
+                  key={index} 
+                  className={`${index !== faqData.length - 1 ? 'border-b border-gray-100' : ''}`}
+                >
+                  <button
+                    onClick={() => setExpandedFaq(expandedFaq === index ? null : index)}
+                    className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <span className="font-medium text-gray-900 pr-4">{faq.question}</span>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${
+                      expandedFaq === index 
+                        ? 'bg-orange-500 text-white rotate-0' 
+                        : 'bg-gray-100 text-gray-500'
+                    }`}>
+                      {expandedFaq === index ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+                    </div>
+                  </button>
+                  
+                  <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    expandedFaq === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  }`}>
+                    <div className="px-6 pb-5">
+                      <div className="bg-orange-50 rounded-xl p-4 border-l-4 border-orange-500">
+                        <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-line">{faq.answer}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        
         {/* FORMULARIO */}
-        <section id="formulario" className="py-10">
+        <section id="formulario" className="py-10 bg-white">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* CTA para empezar */}
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Solicitar diagnóstico</h2>
+              <p className="text-gray-500">Completa el formulario en 4 sencillos pasos</p>
+            </div>
+            
             {/* Progress */}
             <div className="flex items-center justify-center gap-2 mb-8">
               {[1, 2, 3, 4].map((step) => (
                 <div key={step} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors ${
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
                     currentStep > step ? 'bg-green-500 text-white' :
-                    currentStep === step ? 'bg-orange-500 text-white' :
+                    currentStep === step ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' :
                     'bg-gray-200 text-gray-500'
                   }`}>
                     {currentStep > step ? <Check className="w-4 h-4" /> : step}
                   </div>
-                  {step < 4 && <div className={`w-8 h-0.5 ${currentStep > step ? 'bg-green-500' : 'bg-gray-200'}`} />}
+                  {step < 4 && <div className={`w-10 h-0.5 transition-colors duration-300 ${currentStep > step ? 'bg-green-500' : 'bg-gray-200'}`} />}
                 </div>
               ))}
             </div>
@@ -355,7 +418,7 @@ export default function DiagnosticoPlacasPage() {
                 {currentStep === 1 && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-1">Tu equipo</h2>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">Tu equipo</h3>
                       <p className="text-sm text-gray-500">Selecciona el tipo, marca y modelo</p>
                     </div>
                     
@@ -396,13 +459,14 @@ export default function DiagnosticoPlacasPage() {
                             value={brandSearch}
                             onChange={(e) => { setBrandSearch(e.target.value); setShowBrandDropdown(true); if (e.target.value !== formData.brandName) setFormData(prev => ({ ...prev, brandId: '', brandName: '', modelId: '', modelName: '' })); }}
                             onFocus={() => setShowBrandDropdown(true)}
+                            onBlur={() => setTimeout(() => setShowBrandDropdown(false), 200)}
                             placeholder="Buscar marca..."
                             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
                           />
                           {showBrandDropdown && brandSearch && (
                             <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                               {filteredBrands.length > 0 ? filteredBrands.map(brand => (
-                                <button key={brand.id} type="button" onClick={() => handleBrandSelect(brand)} className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">{brand.name}</button>
+                                <button key={brand.id} type="button" onMouseDown={() => handleBrandSelect(brand)} className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">{brand.name}</button>
                               )) : <div className="px-4 py-2 text-sm text-gray-500">No encontrado</div>}
                             </div>
                           )}
@@ -422,13 +486,14 @@ export default function DiagnosticoPlacasPage() {
                             value={modelSearch}
                             onChange={(e) => { setModelSearch(e.target.value); setShowModelDropdown(true); if (e.target.value !== formData.modelName) setFormData(prev => ({ ...prev, modelId: '', modelName: '' })); }}
                             onFocus={() => setShowModelDropdown(true)}
+                            onBlur={() => setTimeout(() => setShowModelDropdown(false), 200)}
                             placeholder="Buscar modelo..."
                             className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none"
                           />
                           {showModelDropdown && (
                             <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
                               {filteredModels.length > 0 ? filteredModels.map(model => (
-                                <button key={model.id} type="button" onClick={() => handleModelSelect(model)} className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">{model.name}</button>
+                                <button key={model.id} type="button" onMouseDown={() => handleModelSelect(model)} className="w-full px-4 py-2 text-left hover:bg-gray-50 text-sm">{model.name}</button>
                               )) : <div className="px-4 py-2 text-sm text-gray-500">Escribe el modelo</div>}
                             </div>
                           )}
@@ -457,7 +522,7 @@ export default function DiagnosticoPlacasPage() {
                 {currentStep === 2 && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-1">El problema</h2>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">El problema</h3>
                       <p className="text-sm text-gray-500">Describe qué le ocurre a tu equipo</p>
                     </div>
                     
@@ -467,7 +532,7 @@ export default function DiagnosticoPlacasPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {symptoms.map((s) => (
                           <label key={s.id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${formData.symptoms.includes(s.id) ? 'border-orange-500 bg-orange-50' : 'border-gray-200 hover:bg-gray-50'}`}>
-                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${formData.symptoms.includes(s.id) ? 'border-orange-500 bg-orange-500' : 'border-gray-300'}`}>
+                            <div className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${formData.symptoms.includes(s.id) ? 'border-orange-500 bg-orange-500' : 'border-gray-300'}`}>
                               {formData.symptoms.includes(s.id) && <Check className="w-3 h-3 text-white" />}
                             </div>
                             <span className="text-sm text-gray-700">{s.label}</span>
@@ -490,7 +555,7 @@ export default function DiagnosticoPlacasPage() {
                         />
                         <div className="flex flex-wrap gap-2 mt-2">
                           {suggestedErrorCodes.slice(0, 6).map(code => (
-                            <button key={code} type="button" onClick={() => setFormData(prev => ({ ...prev, errorCode: code }))} className={`px-3 py-1 text-xs font-mono rounded ${formData.errorCode === code ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{code}</button>
+                            <button key={code} type="button" onClick={() => setFormData(prev => ({ ...prev, errorCode: code }))} className={`px-3 py-1 text-xs font-mono rounded transition-colors ${formData.errorCode === code ? 'bg-orange-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>{code}</button>
                           ))}
                         </div>
                       </div>
@@ -515,8 +580,8 @@ export default function DiagnosticoPlacasPage() {
                 {currentStep === 3 && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-1">Fotos y vídeo</h2>
-                      <p className="text-sm text-gray-500">Opcional pero recomendado</p>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">Fotos y vídeo</h3>
+                      <p className="text-sm text-gray-500">Opcional pero recomendado para un mejor diagnóstico</p>
                     </div>
                     
                     {/* Tips */}
@@ -536,7 +601,7 @@ export default function DiagnosticoPlacasPage() {
                         {formData.photos.map((photo, i) => (
                           <div key={i} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
                             <img src={URL.createObjectURL(photo)} alt="" className="w-full h-full object-cover" />
-                            <button type="button" onClick={() => setFormData(prev => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }))} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center"><X className="w-3 h-3" /></button>
+                            <button type="button" onClick={() => setFormData(prev => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }))} className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"><X className="w-3 h-3" /></button>
                           </div>
                         ))}
                         {formData.photos.length < 4 && (
@@ -555,7 +620,7 @@ export default function DiagnosticoPlacasPage() {
                       {formData.video ? (
                         <div className="relative rounded-lg overflow-hidden bg-gray-900 aspect-video">
                           <video src={URL.createObjectURL(formData.video)} controls className="w-full h-full" />
-                          <button type="button" onClick={() => setFormData(prev => ({ ...prev, video: null }))} className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center"><X className="w-4 h-4" /></button>
+                          <button type="button" onClick={() => setFormData(prev => ({ ...prev, video: null }))} className="absolute top-2 right-2 w-8 h-8 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"><X className="w-4 h-4" /></button>
                         </div>
                       ) : (
                         <button type="button" onClick={() => videoInputRef.current?.click()} className="w-full py-8 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center gap-2 hover:border-orange-400 hover:bg-orange-50 transition-colors">
@@ -572,7 +637,7 @@ export default function DiagnosticoPlacasPage() {
                 {currentStep === 4 && (
                   <div className="space-y-6">
                     <div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-1">Tus datos</h2>
+                      <h3 className="text-lg font-bold text-gray-900 mb-1">Tus datos</h3>
                       <p className="text-sm text-gray-500">Para enviarte el presupuesto</p>
                     </div>
                     
@@ -631,15 +696,15 @@ export default function DiagnosticoPlacasPage() {
               
               {/* Nav */}
               <div className="px-6 sm:px-8 py-4 bg-gray-50 border-t border-gray-200 flex justify-between">
-                <button type="button" onClick={handlePrev} disabled={currentStep === 1} className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium ${currentStep === 1 ? 'text-gray-300' : 'text-gray-600 hover:bg-gray-200'}`}>
+                <button type="button" onClick={handlePrev} disabled={currentStep === 1} className={`flex items-center gap-1 px-4 py-2 rounded-lg font-medium transition-colors ${currentStep === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-600 hover:bg-gray-200'}`}>
                   <ChevronLeft className="w-4 h-4" /> Anterior
                 </button>
                 {currentStep < 4 ? (
-                  <button type="button" onClick={handleNext} disabled={!isStepValid(currentStep)} className={`flex items-center gap-1 px-5 py-2 rounded-lg font-semibold ${isStepValid(currentStep) ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-gray-200 text-gray-400'}`}>
+                  <button type="button" onClick={handleNext} disabled={!isStepValid(currentStep)} className={`flex items-center gap-1 px-5 py-2 rounded-lg font-semibold transition-all ${isStepValid(currentStep) ? 'bg-orange-500 text-white hover:bg-orange-600' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
                     Siguiente <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <button type="button" onClick={handleSubmit} disabled={!isStepValid(4) || isSubmitting} className={`flex items-center gap-2 px-5 py-2 rounded-lg font-semibold ${isStepValid(4) && !isSubmitting ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-200 text-gray-400'}`}>
+                  <button type="button" onClick={handleSubmit} disabled={!isStepValid(4) || isSubmitting} className={`flex items-center gap-2 px-5 py-2 rounded-lg font-semibold transition-all ${isStepValid(4) && !isSubmitting ? 'bg-green-500 text-white hover:bg-green-600' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
                     {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</> : <><Check className="w-4 h-4" /> Enviar</>}
                   </button>
                 )}
@@ -648,34 +713,11 @@ export default function DiagnosticoPlacasPage() {
           </div>
         </section>
         
-        {/* FAQ COMPACTO */}
-        <section className="py-10 bg-white border-t border-gray-200">
-          <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-xl font-bold text-gray-900 mb-6 text-center">Preguntas frecuentes</h2>
-            <div className="space-y-2">
-              {[
-                { q: '¿Qué incluye el diagnóstico?', a: 'Revisión completa de la placa, identificación del fallo y presupuesto detallado. Si aceptas, el diagnóstico se descuenta del precio final.' },
-                { q: '¿Qué pasa si no acepto el presupuesto?', a: 'Tienes dos opciones: nos quedamos la placa y te devolvemos el diagnóstico, o pagas 9€ de envío y te la devolvemos.' },
-                { q: '¿Cuánto tarda el diagnóstico?', a: 'Una vez recibida la placa, el diagnóstico se realiza en 24-48 horas laborables.' },
-                { q: '¿Qué garantía tiene la reparación?', a: 'Todas las reparaciones tienen 1 año de garantía.' },
-              ].map((faq, i) => (
-                <div key={i} className="border border-gray-200 rounded-lg overflow-hidden">
-                  <button onClick={() => setExpandedFaq(expandedFaq === i ? null : i)} className="w-full px-4 py-3 flex items-center justify-between text-left hover:bg-gray-50">
-                    <span className="font-medium text-gray-900 text-sm">{faq.q}</span>
-                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${expandedFaq === i ? 'rotate-180' : ''}`} />
-                  </button>
-                  {expandedFaq === i && <div className="px-4 pb-3 text-sm text-gray-600">{faq.a}</div>}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-        
         {/* CONTACTO */}
         <section className="py-8 bg-gray-900">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-gray-400 mb-4">¿Tienes dudas?</p>
-            <div className="flex items-center justify-center gap-6">
+            <div className="flex items-center justify-center gap-6 flex-wrap">
               <a href="tel:+34912345678" className="flex items-center gap-2 text-white hover:text-orange-400 transition-colors">
                 <Phone className="w-4 h-4" /> 912 345 678
               </a>
