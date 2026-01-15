@@ -306,8 +306,8 @@ export default function Footer() {
                     <Phone className="w-4 h-4 text-orange-400" />
                   </div>
                   <div>
-                    <a href="tel:911177777" className="text-white hover:text-orange-400 font-semibold transition-colors">
-                      91 117 77 77
+                    <a href="tel:912345678" className="text-white hover:text-orange-400 font-semibold transition-colors">
+                      912 345 678
                     </a>
                     <p className="text-slate-500 text-xs">Lun-Vie: 9:00-20:00</p>
                   </div>
@@ -328,8 +328,8 @@ export default function Footer() {
                     <MapPin className="w-4 h-4 text-orange-400" />
                   </div>
                   <div>
-                    <span className="text-white text-sm">Madrid, España</span>
-                    <p className="text-slate-500 text-xs">Envíos a toda España</p>
+                    <span className="text-white text-sm">C/ Grafito 12, Nave 14 A</span>
+                    <p className="text-slate-500 text-xs">28850 Torrejón de Ardoz, Madrid</p>
                   </div>
                 </li>
               </ul>
@@ -371,7 +371,7 @@ export default function Footer() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
             <p className="text-slate-500 text-xs">
-              © 2026 Uniclima Solutions S.L. Todos los derechos reservados. CIF: B12345678
+              © 2026 Uniclima Solutions S.L. Todos los derechos reservados. CIF: B21651393
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
               <Link href="/condiciones-venta" className="text-slate-500 hover:text-orange-400 transition-colors">

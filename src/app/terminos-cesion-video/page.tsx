@@ -79,8 +79,8 @@ export default function TerminosCesionVideoPage() {
             <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 El presente documento establece los términos y condiciones bajo los cuales el usuario (en adelante, "el Cedente") 
-                cede a <strong>UNICLIMA SOLUTIONS, S.L.</strong> (en adelante, "el Cesionario"), con domicilio social en España 
-                y CIF B-XXXXXXXX, todos los derechos de propiedad intelectual e industrial sobre el contenido audiovisual 
+                cede a <strong>UNICLIMA SOLUTIONS, S.L.</strong> (en adelante, "el Cesionario"), con domicilio social en Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid 
+                y CIF B21651393, todos los derechos de propiedad intelectual e industrial sobre el contenido audiovisual 
                 (en adelante, "el Vídeo") enviado a través de la plataforma web de Uniclima.
               </p>
               <p>
@@ -450,7 +450,7 @@ export default function TerminosCesionVideoPage() {
             <a href="mailto:legal@uniclima.es" className="text-orange-600 hover:underline">legal@uniclima.es</a>
           </p>
           <p className="mt-2">
-            UNICLIMA SOLUTIONS, S.L. · CIF: B-XXXXXXXX · Madrid, España
+            UNICLIMA SOLUTIONS, S.L. · CIF: B21651393 · Madrid, España
           </p>
         </div>
       </main>
