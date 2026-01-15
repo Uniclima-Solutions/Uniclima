@@ -905,16 +905,16 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
-      <section className="w-full flex justify-center py-4">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
-          <Link href="/ofertas" className="block w-full">
+      <section className="w-full flex justify-center py-6">
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+          <Link href="/ofertas" className="block w-full max-w-[90%]">
             <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet_final.png" />
               <img 
-                src="/banner_ofertas_pc.png" 
+                src="/banner_ofertas_final.png" 
                 alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-                className="w-full h-auto block rounded-xl shadow-lg"
+                className="w-full h-auto block rounded-2xl shadow-lg"
               />
             </picture>
           </Link>
@@ -941,16 +941,16 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
-      <section className="w-full flex justify-center py-4">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
-          <Link href="/pieza-gratis" className="block w-full">
+      <section className="w-full flex justify-center py-6">
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+          <Link href="/pieza-gratis" className="block w-full max-w-[90%]">
             <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet_final.png" />
               <img 
-                src="/banner_pieza_gratis_pc.png" 
+                src="/banner_pieza_gratis_final.png" 
                 alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-                className="w-full h-auto block rounded-xl shadow-lg"
+                className="w-full h-auto block rounded-2xl shadow-lg"
               />
             </picture>
           </Link>
@@ -1081,16 +1081,16 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
-      <section className="w-full flex justify-center py-4">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
-          <Link href="/reparacion-placas" className="block w-full">
+      <section className="w-full flex justify-center py-6">
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+          <Link href="/reparacion-placas" className="block w-full max-w-[90%]">
             <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_placa_mobile.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet_final.png" />
               <img 
-                src="/banner_placa_pc.png" 
+                src="/banner_placa_final.png" 
                 alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-                className="w-full h-auto block rounded-xl shadow-lg"
+                className="w-full h-auto block rounded-2xl shadow-lg"
               />
             </picture>
           </Link>
