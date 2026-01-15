@@ -61,7 +61,7 @@ export default function BrandScroller() {
 
   return (
     <section className="py-0 bg-gray-50">
-      <div className="w-full max-w-6xl mx-auto px-4">
+      <div className="w-full max-w-[1600px] mx-auto px-4">
         {/* Carrusel con scroll fluido bidireccional */}
         <div className="relative group">
           {/* Flecha izquierda */}
