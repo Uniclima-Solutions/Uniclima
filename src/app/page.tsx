@@ -906,16 +906,18 @@ export default function Home() {
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
       <section className="w-full flex justify-center py-4">
-        <Link href="/ofertas" className="block w-[95%] max-w-[1400px]">
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/banner_ofertas_mobile.png" />
-            <img 
-              src="/banner_ofertas_v3.png" 
-              alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-              className="w-full h-auto block rounded-xl shadow-lg"
-            />
-          </picture>
-        </Link>
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
+          <Link href="/ofertas" className="block w-full">
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/banner_ofertas_mobile.png" />
+              <img 
+                src="/banner_ofertas_v4.png" 
+                alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
+                className="w-full h-auto block rounded-xl shadow-md"
+              />
+            </picture>
+          </Link>
+        </div>
       </section>
 
       {/* Sección: Repuestos de Calderas */}
@@ -939,16 +941,18 @@ export default function Home() {
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
       <section className="w-full flex justify-center py-4">
-        <Link href="/pieza-gratis" className="block w-[95%] max-w-[1400px]">
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/banner_pieza_gratis_mobile.png" />
-            <img 
-              src="/banner_pieza_gratis_v3.png" 
-              alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-              className="w-full h-auto block rounded-xl shadow-lg"
-            />
-          </picture>
-        </Link>
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
+          <Link href="/pieza-gratis" className="block w-full">
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/banner_pieza_gratis_mobile.png" />
+              <img 
+                src="/banner_pieza_gratis_v4.png" 
+                alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
+                className="w-full h-auto block rounded-xl shadow-md"
+              />
+            </picture>
+          </Link>
+        </div>
       </section>
 
       {/* Categorías destacadas - Estilo PCComponentes */}
@@ -1076,16 +1080,18 @@ export default function Home() {
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
       <section className="w-full flex justify-center py-4">
-        <Link href="/reparacion-placas" className="block w-[95%] max-w-[1400px]">
-          <picture>
-            <source media="(max-width: 768px)" srcSet="/banner_placa_mobile.png" />
-            <img 
-              src="/banner_placa_v3.png" 
-              alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-              className="w-full h-auto block rounded-xl shadow-lg"
-            />
-          </picture>
-        </Link>
+        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
+          <Link href="/reparacion-placas" className="block w-full">
+            <picture>
+              <source media="(max-width: 768px)" srcSet="/banner_placa_mobile.png" />
+              <img 
+                src="/banner_placa_v4.png" 
+                alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
+                className="w-full h-auto block rounded-xl shadow-md"
+              />
+            </picture>
+          </Link>
+        </div>
       </section>
 
       {/* Marcas */}
