@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, FileText, ShieldCheck, Truck, CreditCard, AlertTriangle, Scale, Ban, Clock, Wrench, Package, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, FileText, ShoppingCart, Truck, RefreshCw, Shield, CreditCard, Scale, AlertTriangle, Info, Package, CheckCircle, XCircle, Wrench } from 'lucide-react';
 
 export default function CondicionesVentaPage() {
   return (
@@ -35,6 +35,21 @@ export default function CondicionesVentaPage() {
           {/* Contenido legal */}
           <div className="px-6 sm:px-10 py-8 space-y-8">
             
+            {/* Aviso importante sobre productos reacondicionados */}
+            <section>
+              <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-5">
+                <div className="flex items-start gap-3">
+                  <Package className="w-7 h-7 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h2 className="font-bold text-amber-900 text-lg mb-2">Aviso Importante: Productos Reacondicionados</h2>
+                    <p className="text-amber-800 leading-relaxed">
+                      <strong>Todos los productos vendidos en uniclima.es son repuestos reacondicionados</strong>, salvo que se indique expresamente lo contrario en la ficha del producto. Esto significa que han sido recuperados de equipos, revisados y probados por nuestros técnicos para garantizar su correcto funcionamiento. Pueden presentar pequeños defectos estéticos (arañazos, marcas de uso) que no afectan a su funcionalidad. Al realizar un pedido, el cliente acepta expresamente esta condición.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             {/* Sección 1 - Identificación */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -43,79 +58,53 @@ export default function CondicionesVentaPage() {
               </h2>
               <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
                 <ul className="space-y-2 text-gray-600 text-sm">
-                  <li><strong>Razón Social:</strong> Uniclima Solutions S.L.</li>
+                  <li><strong>Razón social:</strong> Uniclima Solutions S.L.</li>
                   <li><strong>CIF:</strong> B21651393</li>
-                  <li><strong>Domicilio Social:</strong> Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid, España</li>
-                  <li><strong>Correo electrónico:</strong> info@uniclima.es</li>
+                  <li><strong>Domicilio:</strong> Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid, España</li>
+                  <li><strong>Email:</strong> info@uniclima.es</li>
                   <li><strong>Teléfono:</strong> 912 345 678</li>
-                  <li><strong>Registro Mercantil:</strong> Inscrita en el Registro Mercantil de Madrid</li>
                 </ul>
               </div>
             </section>
 
-            {/* Sección 2 - Ámbito */}
+            {/* Sección 2 - Precios y Pagos */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">2</span>
-                Ámbito de aplicación y aceptación
+                Precios y métodos de pago
               </h2>
-              <p className="text-gray-600 leading-relaxed mb-3">
-                Las presentes Condiciones Generales de Venta regulan la relación comercial entre Uniclima Solutions S.L. y el cliente que realice compras a través del sitio web uniclima.es.
-              </p>
-              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p className="text-amber-800 text-sm leading-relaxed">
-                  <strong>Al realizar un pedido, el cliente declara haber leído, entendido y aceptado íntegramente las presentes Condiciones Generales de Venta.</strong> La aceptación de estas condiciones es requisito indispensable para la formalización de cualquier pedido.
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                  Todos los precios mostrados en la web incluyen el IVA vigente. Los métodos de pago aceptados son: tarjeta de crédito/débito, PayPal, Bizum y transferencia bancaria.
                 </p>
               </div>
             </section>
 
-            {/* Sección 3 - Productos */}
+            {/* Sección 3 - Envíos */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
-                Naturaleza de los productos
+                Envíos y entregas
               </h2>
-              
               <div className="space-y-4">
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Package className="w-5 h-5 text-orange-600" />
-                    <span className="font-medium text-gray-900">Productos especializados</span>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Los productos comercializados por Uniclima son <strong>repuestos y componentes técnicos especializados</strong> para sistemas de climatización (calderas, aire acondicionado, etc.). Estos productos requieren conocimientos técnicos específicos para su correcta identificación, instalación y puesta en marcha.
-                  </p>
-                </div>
-
-                {/* Tipos de productos */}
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                    <h3 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
-                      <CheckCircle className="w-5 h-5" />
-                      Productos Nuevos
-                    </h3>
-                    <p className="text-green-700 text-sm">
-                      Productos originales de fábrica con todas sus garantías. Garantía legal de <strong>3 años</strong> conforme al TRLGDCU.
-                    </p>
-                  </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                    <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                      <Wrench className="w-5 h-5" />
-                      Productos Reacondicionados
-                    </h3>
-                    <p className="text-blue-700 text-sm">
-                      Productos revisados y reparados por técnicos cualificados. Garantía de <strong>1 año</strong> (pacto expreso conforme al art. 120.2 TRLGDCU).
-                    </p>
-                  </div>
-                </div>
-
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4">
                   <div className="flex items-start gap-3">
-                    <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <Truck className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-semibold text-amber-800 mb-1">Responsabilidad del cliente</h3>
-                      <p className="text-amber-700 text-sm leading-relaxed">
-                        <strong>Es responsabilidad del cliente verificar la compatibilidad del producto con su equipo antes de realizar el pedido.</strong> Uniclima proporciona información técnica orientativa, pero el cliente debe confirmar la compatibilidad consultando con un profesional cualificado si tiene dudas.
+                      <h3 className="font-bold text-amber-900 mb-1">Gastos de envío a cargo del cliente</h3>
+                      <p className="text-amber-800 text-sm leading-relaxed">
+                        Los gastos de envío se calculan en función del peso y destino del pedido y se muestran antes de finalizar la compra. <strong>Envío gratuito para pedidos superiores a 120€</strong> en Península Ibérica.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <Info className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-semibold text-blue-800 mb-1">Responsabilidad durante el transporte</h3>
+                      <p className="text-blue-700 text-sm leading-relaxed">
+                        Conforme al Art. 66 bis del TRLGDCU, el riesgo de pérdida o deterioro del producto durante el transporte recae sobre Uniclima hasta que el cliente reciba el producto. Si el paquete llega visiblemente dañado, el cliente debe indicarlo en el albarán de entrega y comunicarlo a Uniclima en un plazo de 24 horas con fotografías del daño.
                       </p>
                     </div>
                   </div>
@@ -123,230 +112,82 @@ export default function CondicionesVentaPage() {
               </div>
             </section>
 
-            {/* Sección 4 - Proceso de compra */}
+            {/* Sección 4 - Garantía */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">4</span>
-                Proceso de compra y verificación previa
+                Garantía de productos reacondicionados
               </h2>
-              <p className="text-gray-600 leading-relaxed mb-3">
-                El cliente deberá seguir el proceso de compra establecido en el sitio web. <strong>Antes de confirmar el pedido</strong>, el cliente debe:
-              </p>
-              <ul className="space-y-2 text-gray-600 text-sm mb-4">
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
-                  <span>Verificar que el producto seleccionado corresponde exactamente con el repuesto que necesita.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
-                  <span>Comprobar la referencia, marca y modelo de su equipo.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
-                  <span>Consultar con un profesional cualificado en caso de duda.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
-                  <span>Revisar las especificaciones técnicas detalladas del producto.</span>
-                </li>
-              </ul>
+              <div className="space-y-4">
+                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Shield className="w-5 h-5 text-green-600" />
+                    <span className="font-semibold text-green-800">Garantía de 1 año</span>
+                  </div>
+                  <p className="text-green-700 text-sm leading-relaxed">
+                    Conforme al Art. 120.2 del TRLGDCU, todos nuestros productos reacondicionados tienen una <strong>garantía de 1 año</strong> desde la fecha de entrega. Al adquirir un producto reacondicionado, el cliente acepta expresamente esta reducción de garantía respecto a los productos nuevos.
+                  </p>
+                </div>
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><CheckCircle className="w-5 h-5 text-green-500" />La garantía cubre:</h3>
+                  <ul className="space-y-1 text-gray-600 text-sm">
+                    <li>• Defectos de funcionamiento que impidan el uso normal del producto</li>
+                    <li>• Fallos que se manifiesten durante el período de garantía y que no existieran en el momento de la entrega</li>
+                  </ul>
+                </div>
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+                  <h3 className="font-medium text-red-800 mb-2 flex items-center gap-2"><XCircle className="w-5 h-5 text-red-500" />La garantía NO cubre:</h3>
+                  <ul className="space-y-1 text-red-700 text-sm">
+                    <li>• Defectos estéticos menores (arañazos, marcas, decoloración) propios del reacondicionado</li>
+                    <li>• Daños causados por una instalación incorrecta o manipulación indebida</li>
+                    <li>• Desgaste normal derivado del uso</li>
+                    <li>• Daños causados por sobretensiones, cortocircuitos, agua o agentes externos</li>
+                    <li>• Productos que hayan sido modificados o reparados por terceros no autorizados</li>
+                    <li>• Incompatibilidad del producto con el equipo del cliente</li>
+                  </ul>
+                </div>
+              </div>
             </section>
 
-            {/* Sección 5 - Precios */}
+            {/* Sección 5 - Derecho de desistimiento */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">5</span>
-                Precios e impuestos
-              </h2>
-              <p className="text-gray-600 leading-relaxed">
-                Todos los precios mostrados en el Sitio Web incluyen el Impuesto sobre el Valor Añadido (IVA) aplicable. Los gastos de envío se indicarán por separado antes de finalizar la compra. Uniclima se reserva el derecho de modificar los precios en cualquier momento, si bien los precios aplicables serán los vigentes en el momento de realizar el pedido.
-              </p>
-            </section>
-
-            {/* Sección 6 - Métodos de pago */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">6</span>
-                Métodos de pago
-              </h2>
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <div className="flex items-center gap-3 mb-3">
-                  <CreditCard className="w-5 h-5 text-orange-600" />
-                  <span className="font-medium text-gray-900">Métodos aceptados:</span>
-                </div>
-                <ul className="grid grid-cols-2 gap-2 text-gray-600 text-sm">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Tarjeta de crédito/débito (Visa, Mastercard)
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    PayPal
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Bizum
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Transferencia bancaria
-                  </li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Sección 7 - Envíos */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">7</span>
-                Envíos y entregas
+                Derecho de desistimiento (devoluciones)
               </h2>
               <div className="space-y-4">
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-3">
-                    <Truck className="w-5 h-5 text-orange-600" />
-                    <span className="font-medium text-gray-900">Plazos de entrega</span>
-                  </div>
                   <p className="text-gray-600 text-sm leading-relaxed">
-                    Los plazos de entrega habituales son de 24-48 horas laborables en la península para productos en stock. Los plazos indicados son orientativos.
+                    Conforme al Art. 102 del TRLGDCU, el cliente tiene derecho a desistir del contrato en un plazo de <strong>14 días naturales</strong> desde la recepción del producto, sin necesidad de justificación.
                   </p>
                 </div>
-
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                  <h3 className="font-semibold text-green-800 mb-2">Responsabilidad durante el transporte</h3>
-                  <p className="text-green-700 text-sm leading-relaxed">
-                    Conforme al artículo 66 bis del TRLGDCU, <strong>Uniclima asume la responsabilidad por pérdida o deterioro de los productos durante el transporte</strong> hasta que el cliente o un tercero por él designado adquiera la posesión material de los bienes.
-                  </p>
-                </div>
-
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <h3 className="font-semibold text-amber-800 mb-2">Recepción del paquete</h3>
-                  <p className="text-amber-700 text-sm leading-relaxed">
-                    El cliente deberá verificar el estado del paquete en el momento de la entrega. Si el embalaje presenta daños visibles, el cliente debe:
-                  </p>
-                  <ul className="mt-2 space-y-1 text-amber-700 text-sm">
-                    <li>• Indicar las reservas por escrito al transportista</li>
-                    <li>• Fotografiar los daños antes de abrir el paquete</li>
-                    <li>• Comunicar la incidencia a Uniclima en un plazo de 24 horas</li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Sección 8 - GARANTÍA */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">8</span>
-                Garantía legal
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <ShieldCheck className="w-5 h-5 text-green-600" />
-                      <span className="font-medium text-green-800">Productos Nuevos</span>
+                
+                <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h3 className="font-bold text-amber-900 mb-2">Gastos de devolución a cargo del cliente</h3>
+                      <p className="text-amber-800 text-sm leading-relaxed">
+                        Conforme al Art. 108.1 del TRLGDCU, <strong>los gastos directos de devolución del producto corren a cargo del cliente</strong>. El cliente deberá enviar el producto a nuestra dirección utilizando el medio de transporte que prefiera, siendo responsable de que llegue en perfectas condiciones.
+                      </p>
                     </div>
-                    <p className="text-green-700 text-sm leading-relaxed">
-                      <strong>3 años de garantía legal</strong> conforme al artículo 120 del TRLGDCU. Durante los primeros 2 años, se presume que la falta de conformidad ya existía en el momento de la entrega.
-                    </p>
-                  </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      <ShieldCheck className="w-5 h-5 text-blue-600" />
-                      <span className="font-medium text-blue-800">Productos Reacondicionados</span>
-                    </div>
-                    <p className="text-blue-700 text-sm leading-relaxed">
-                      <strong>1 año de garantía</strong> (pacto expreso conforme al art. 120.2 TRLGDCU). El cliente acepta expresamente esta reducción al adquirir un producto reacondicionado.
-                    </p>
                   </div>
                 </div>
 
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-2">La garantía cubre:</h3>
-                  <ul className="space-y-1 text-gray-600 text-sm">
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Defectos de fabricación
+                  <h3 className="font-medium text-gray-900 mb-2">Condiciones para ejercer el desistimiento:</h3>
+                  <ul className="space-y-2 text-gray-600 text-sm">
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
+                      <span>El producto debe estar <strong>sin usar, sin instalar y en su embalaje original</strong> con todos sus accesorios.</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Falta de conformidad con la descripción del producto
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
+                      <span>El cliente puede manipular el producto únicamente para comprobar su naturaleza y características, de la misma forma que lo haría en una tienda física, <strong>sin conectarlo ni instalarlo</strong>.</span>
                     </li>
-                    <li className="flex items-center gap-2">
-                      <CheckCircle className="w-4 h-4 text-green-500" />
-                      Funcionamiento incorrecto no imputable al cliente
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="bg-red-50 border border-red-200 rounded-xl p-4">
-                  <h3 className="font-semibold text-red-800 mb-2">La garantía NO cubre:</h3>
-                  <ul className="space-y-1 text-red-700 text-sm">
-                    <li className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-500" />
-                      Daños causados por instalación incorrecta o no profesional
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-500" />
-                      Daños por uso indebido, negligencia o manipulación inadecuada
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-500" />
-                      Daños por sobretensiones o instalaciones eléctricas defectuosas
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-500" />
-                      Desgaste normal por uso
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <XCircle className="w-4 h-4 text-red-500" />
-                      Productos modificados o reparados por terceros no autorizados
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Sección 9 - DERECHO DE DESISTIMIENTO */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">9</span>
-                Derecho de desistimiento
-              </h2>
-              
-              <div className="space-y-4">
-                <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-                  <h3 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
-                    Plazo de 14 días naturales
-                  </h3>
-                  <p className="text-green-700 text-sm leading-relaxed">
-                    Conforme al artículo 102 del TRLGDCU, el cliente tiene derecho a desistir del contrato en un plazo de <strong>14 días naturales</strong> desde la recepción del producto, sin necesidad de justificación.
-                  </p>
-                </div>
-
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                  <h3 className="font-semibold text-amber-800 mb-2">Condiciones para ejercer el desistimiento</h3>
-                  <p className="text-amber-700 text-sm leading-relaxed mb-2">
-                    Para que la devolución sea aceptada, el producto debe cumplir las siguientes condiciones:
-                  </p>
-                  <ul className="space-y-1 text-amber-700 text-sm">
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      Estar en su embalaje original completo
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      No haber sido instalado ni conectado a ningún equipo
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      No presentar signos de uso más allá de lo necesario para verificar su naturaleza y características
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                      Incluir todos los accesorios, manuales y documentación original
+                    <li className="flex items-start gap-2">
+                      <span className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2"></span>
+                      <span>Comunicar la decisión de desistir enviando un email a info@uniclima.es dentro del plazo de 14 días.</span>
                     </li>
                   </ul>
                 </div>
@@ -355,77 +196,66 @@ export default function CondicionesVentaPage() {
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="font-bold text-red-800 mb-2">Depreciación por manipulación</h3>
+                      <h3 className="font-bold text-red-800 mb-2">Depreciación por manipulación (Art. 108.2 TRLGDCU)</h3>
                       <p className="text-red-700 text-sm leading-relaxed">
-                        Conforme al artículo 108.2 del TRLGDCU, <strong>el cliente será responsable de la disminución del valor de los bienes resultante de una manipulación de los mismos distinta a la necesaria para establecer su naturaleza, sus características o su funcionamiento</strong>.
-                      </p>
-                      <p className="text-red-700 text-sm leading-relaxed mt-2">
-                        En caso de que el producto haya sido manipulado, probado o instalado más allá de lo estrictamente necesario para verificar su conformidad, Uniclima podrá descontar del reembolso el importe correspondiente a la depreciación del producto.
+                        Si el producto devuelto muestra signos de haber sido <strong>conectado, instalado, probado en un equipo o manipulado</strong> más allá de lo necesario para verificar su estado, Uniclima podrá <strong>descontar del reembolso la depreciación</strong> correspondiente. En el caso de productos que ya no puedan venderse como reacondicionados (por ejemplo, placas electrónicas que hayan sido conectadas), la depreciación puede llegar hasta el 100% del valor del producto.
                       </p>
                     </div>
                   </div>
                 </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-2">Productos instalados</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    <strong>Los productos que hayan sido instalados o conectados a un equipo no podrán ser devueltos</strong>, ya que la instalación implica una manipulación que va más allá de lo necesario para verificar la naturaleza y características del producto, y puede causar una depreciación significativa del mismo.
-                  </p>
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-2">Gastos de devolución</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Conforme al artículo 108.1 del TRLGDCU, <strong>los gastos de devolución del producto correrán a cargo del cliente</strong>. El cliente deberá enviar el producto a nuestras instalaciones por su cuenta y riesgo.
-                  </p>
-                </div>
-
-                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <h3 className="font-semibold text-gray-900 mb-2">Proceso de devolución</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Para ejercer el derecho de desistimiento, el cliente deberá:
-                  </p>
-                  <ol className="mt-2 space-y-1 text-gray-600 text-sm list-decimal list-inside">
-                    <li>Comunicar su decisión a través de info@uniclima.es indicando el número de pedido</li>
-                    <li>Enviar el producto en su embalaje original a nuestra dirección</li>
-                    <li>Esperar la verificación del estado del producto por parte de Uniclima</li>
-                    <li>Recibir el reembolso en un plazo máximo de 14 días desde la recepción del producto</li>
-                  </ol>
-                </div>
               </div>
             </section>
 
-            {/* Sección 10 - Reclamaciones */}
+            {/* Sección 6 - Proceso de reclamación por garantía */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">10</span>
-                Reclamaciones y resolución de conflictos
+                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">6</span>
+                Reclamaciones por garantía
+              </h2>
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                <p className="text-gray-600 text-sm leading-relaxed mb-3">
+                  Si el producto presenta un defecto de funcionamiento cubierto por la garantía, el cliente debe:
+                </p>
+                <ol className="space-y-2 text-gray-600 text-sm list-decimal list-inside">
+                  <li>Contactar con Uniclima (info@uniclima.es o 912 345 678) describiendo el problema con detalle.</li>
+                  <li>Enviar el producto defectuoso a nuestra dirección. <strong>Los gastos de envío para reclamaciones por garantía corren a cargo del cliente inicialmente</strong>.</li>
+                  <li>Uniclima verificará el defecto. Si está cubierto por la garantía, procederá a la reparación, sustitución o reembolso.</li>
+                  <li><strong>Si el defecto está cubierto por la garantía</strong>, Uniclima reembolsará los gastos de envío razonables y asumirá el envío del producto reparado o sustituido.</li>
+                  <li><strong>Si el defecto NO está cubierto</strong> (por ejemplo, daño por mala instalación), el cliente asumirá todos los gastos.</li>
+                </ol>
+              </div>
+            </section>
+
+            {/* Sección 7 - Limitación de responsabilidad */}
+            <section>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">7</span>
+                Responsabilidad del cliente y limitaciones
               </h2>
               <div className="space-y-4">
-                <p className="text-gray-600 leading-relaxed">
-                  Para cualquier reclamación, el cliente puede contactar con nuestro servicio de atención al cliente a través de:
-                </p>
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <ul className="space-y-2 text-gray-600 text-sm">
-                    <li><strong>Email:</strong> info@uniclima.es</li>
-                    <li><strong>Teléfono:</strong> 912 345 678</li>
-                    <li><strong>Dirección:</strong> Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid</li>
-                  </ul>
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><Wrench className="w-5 h-5 text-orange-600" />Verificación de compatibilidad</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    La información técnica (compatibilidades, referencias, modelos) se proporciona con carácter orientativo. <strong>Es responsabilidad exclusiva del cliente verificar la compatibilidad del producto con su equipo antes de la compra e instalación</strong>, preferiblemente con la ayuda de un profesional cualificado. Uniclima no se hace responsable de los pedidos erróneos por falta de verificación.
+                  </p>
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Conforme al Reglamento (UE) 524/2013, informamos de la existencia de una plataforma europea de resolución de litigios en línea: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline">https://ec.europa.eu/consumers/odr</a>
-                </p>
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                  <h3 className="font-medium text-gray-900 mb-2">Instalación profesional</h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    Los productos comercializados son repuestos técnicos que deben ser instalados por profesionales cualificados. Uniclima no se hace responsable de los daños derivados de una instalación incorrecta, manipulación indebida o uso inadecuado del producto.
+                  </p>
+                </div>
               </div>
             </section>
 
-            {/* Sección 11 - Legislación aplicable */}
+            {/* Sección 8 - Jurisdicción */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">11</span>
-                Legislación aplicable y jurisdicción
+                <span className="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm font-bold">8</span>
+                Ley aplicable y jurisdicción
               </h2>
-              <p className="text-gray-600 leading-relaxed">
-                Las presentes Condiciones Generales de Venta se rigen por la legislación española, en particular por el Real Decreto Legislativo 1/2007, de 16 de noviembre, por el que se aprueba el texto refundido de la Ley General para la Defensa de los Consumidores y Usuarios (TRLGDCU). Para cualquier controversia que pudiera derivarse, las partes se someten a los Juzgados y Tribunales del domicilio del consumidor.
+              <p className="text-gray-600 leading-relaxed mb-4">
+                Estas condiciones se rigen por la legislación española, en particular por el Real Decreto Legislativo 1/2007 (TRLGDCU). Para cualquier controversia, el consumidor podrá acudir a los Juzgados y Tribunales de su domicilio o a la plataforma europea de resolución de litigios en línea: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener noreferrer" className="text-orange-600 hover:underline">https://ec.europa.eu/consumers/odr</a>.
               </p>
             </section>
 
