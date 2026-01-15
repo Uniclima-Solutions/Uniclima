@@ -905,7 +905,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (MÁS GRANDE) */}
-      <section className="w-full mb-0">
+      <section className="w-full my-3">
         <Link href="/ofertas" className="block w-full">
           <img 
             src="/banner_ofertas.png" 
@@ -935,7 +935,7 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full my-0">
+      <section className="w-full my-3">
         <Link href="/pieza-gratis" className="block w-full">
           <img 
             src="/banner_pieza_gratis.png" 
@@ -1069,7 +1069,7 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas */}
-      <section className="w-full mt-0 mb-2">
+      <section className="w-full my-3">
         <Link href="/reparacion-placas" className="block w-full">
           <img 
             src="/banner_placa.png" 
