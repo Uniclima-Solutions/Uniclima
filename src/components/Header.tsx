@@ -381,11 +381,11 @@ export default function Header() {
               </div>
               <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
                 <RotateCcw className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                <span className="font-medium">Devoluciones gratis</span>
+                <span className="font-medium">Devoluciones 14 días</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
                 <Shield className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                <span className="font-medium">Garantía 2 años</span>
+                <span className="font-medium">Garantía 1 año</span>
               </div>
               <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
                 <Headphones className="w-4 h-4 text-cyan-600 flex-shrink-0" />

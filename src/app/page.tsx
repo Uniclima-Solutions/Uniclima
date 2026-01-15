@@ -906,7 +906,7 @@ export default function Home() {
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.png" />
@@ -942,7 +942,7 @@ export default function Home() {
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/pieza-gratis" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.png" />
@@ -1082,7 +1082,7 @@ export default function Home() {
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/reparacion-placas" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
