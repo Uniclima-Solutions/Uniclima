@@ -904,14 +904,17 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       <Header />
 
-      {/* Hero Banner Principal - Ofertas (MÁS GRANDE) */}
-      <section className="w-full my-3">
+      {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
+      <section className="w-full">
         <Link href="/ofertas" className="block w-full">
-          <img 
-            src="/banner_ofertas.png" 
-            alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-            className="w-full h-auto object-cover"
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/banner_ofertas_mobile.png" />
+            <img 
+              src="/banner_ofertas_final.png" 
+              alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
+              className="w-full h-auto block"
+            />
+          </picture>
         </Link>
       </section>
 
@@ -934,14 +937,17 @@ export default function Home() {
         colorType="blue"
       />
 
-      {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full my-3">
+      {/* Banner Pieza Gratis - ADAPTATIVO */}
+      <section className="w-full">
         <Link href="/pieza-gratis" className="block w-full">
-          <img 
-            src="/banner_pieza_gratis.png" 
-            alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-            className="w-full h-auto object-cover"
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/banner_pieza_gratis_mobile.png" />
+            <img 
+              src="/banner_pieza_gratis_final.png" 
+              alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
+              className="w-full h-auto block"
+            />
+          </picture>
         </Link>
       </section>
 
@@ -1068,14 +1074,17 @@ export default function Home() {
       {/* Reseñas de Google */}
       <GoogleReviews />
 
-      {/* Banner Reparación de Placas */}
-      <section className="w-full my-3">
+      {/* Banner Reparación de Placas - ADAPTATIVO */}
+      <section className="w-full">
         <Link href="/reparacion-placas" className="block w-full">
-          <img 
-            src="/banner_placa.png" 
-            alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-            className="w-full h-auto object-cover"
-          />
+          <picture>
+            <source media="(max-width: 768px)" srcSet="/banner_placa_mobile.png" />
+            <img 
+              src="/banner_placa_final.png" 
+              alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
+              className="w-full h-auto block"
+            />
+          </picture>
         </Link>
       </section>
 
