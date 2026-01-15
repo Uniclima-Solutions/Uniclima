@@ -41,6 +41,30 @@ export default function TerminosCesionVideoPage() {
           </p>
         </div>
 
+        {/* AVISO IMPORTANTE - NO MOSTRAR ROSTRO */}
+        <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-6 mb-8">
+          <div className="flex items-start gap-4">
+            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="w-6 h-6 text-red-600" />
+            </div>
+            <div>
+              <h3 className="text-xl font-bold text-red-800 mb-2">REQUISITO INDISPENSABLE: NO MOSTRAR EL ROSTRO</h3>
+              <p className="text-red-700 mb-3">
+                <strong>Es condición obligatoria e indispensable</strong> que en el vídeo NO aparezca el rostro ni se revele 
+                la identidad de ninguna persona. Los vídeos que muestren caras serán <strong>automáticamente descartados</strong> 
+                o editados sin previo aviso.
+              </p>
+              <div className="bg-white rounded-lg p-4 border border-red-200">
+                <p className="text-red-800 text-sm">
+                  <strong>Recomendación:</strong> Graba enfocando únicamente el equipo (caldera o aire acondicionado), 
+                  la pieza que instalas y tus manos. Evita grabar espejos, ventanas u otras superficies reflectantes 
+                  donde pueda aparecer tu imagen. Esta medida protege tu privacidad y es un requisito para la validación del vídeo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Contenido legal */}
         <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 lg:p-10 space-y-8">
           
@@ -165,7 +189,9 @@ export default function TerminosCesionVideoPage() {
                   "Campañas de email marketing",
                   "Colaboraciones con terceros y partners",
                   "Licenciamiento a terceros con o sin contraprestación",
-                  "Cualquier otro uso comercial o no comercial"
+                  "Creación de contenido humorístico, satírico o de entretenimiento",
+                  "Compilaciones de errores comunes o situaciones didácticas",
+                  "Cualquier otro uso comercial o no comercial sin limitación"
                 ].map((uso, i) => (
                   <div key={i} className="flex items-start gap-2 bg-gray-50 rounded-lg p-3">
                     <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
@@ -176,13 +202,48 @@ export default function TerminosCesionVideoPage() {
             </div>
           </section>
 
-          {/* Sección 5: Declaraciones y garantías */}
+          {/* Sección 5: Derechos de Imagen y Privacidad - NO MOSTRAR ROSTRO */}
+          <section>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+                <Camera className="w-5 h-5 text-red-600" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">5. DERECHOS DE IMAGEN Y PRIVACIDAD</h2>
+            </div>
+            <div className="text-gray-700 space-y-4 pl-13">
+              <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4">
+                <p className="font-bold text-red-800 mb-3">CONDICIÓN INDISPENSABLE PARA LA VALIDEZ DE LA CESIÓN:</p>
+                <p className="text-red-700">
+                  Es condición <strong>indispensable</strong> para la validez de la cesión que en el Vídeo 
+                  <strong> NO aparezca el rostro ni se revele la identidad de ninguna persona</strong>. 
+                  El Cedente se compromete a grabar el Vídeo de forma que no se muestren caras ni datos personales 
+                  que permitan la identificación de individuos.
+                </p>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">Uniclima <strong>no se hace responsable</strong> de la aparición de rostros o datos personales en los Vídeos enviados.</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">En caso de que un Vídeo contenga imágenes de personas, Uniclima se reserva el derecho de <strong>descartar el Vídeo</strong> de la Promoción o de <strong>editarlo</strong> para eliminar dichas imágenes sin previo aviso ni compensación.</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <p className="text-sm">El Cedente <strong>exonera expresamente</strong> a Uniclima de cualquier responsabilidad derivada de la aparición de su imagen o la de terceros en el Vídeo.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Sección 6: Declaraciones y garantías */}
           <section>
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <Shield className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">5. DECLARACIONES Y GARANTÍAS DEL CEDENTE</h2>
+              <h2 className="text-xl font-bold text-gray-900">6. DECLARACIONES Y GARANTÍAS DEL CEDENTE</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <p>
@@ -223,7 +284,7 @@ export default function TerminosCesionVideoPage() {
               <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
                 <AlertTriangle className="w-5 h-5 text-red-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">6. RESPONSABILIDAD E INDEMNIZACIÓN</h2>
+              <h2 className="text-xl font-bold text-gray-900">7. RESPONSABILIDAD E INDEMNIZACIÓN</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
@@ -248,7 +309,7 @@ export default function TerminosCesionVideoPage() {
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <Camera className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">7. REQUISITOS TÉCNICOS DEL VÍDEO</h2>
+              <h2 className="text-xl font-bold text-gray-900">8. REQUISITOS TÉCNICOS DEL VÍDEO</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <p>
@@ -292,7 +353,7 @@ export default function TerminosCesionVideoPage() {
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <Info className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">8. PROCESO DE VALIDACIÓN Y RECOMPENSA</h2>
+              <h2 className="text-xl font-bold text-gray-900">9. PROCESO DE VALIDACIÓN Y RECOMPENSA</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <ol className="list-decimal list-inside space-y-3">
@@ -317,7 +378,7 @@ export default function TerminosCesionVideoPage() {
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <Shield className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">9. PROTECCIÓN DE DATOS PERSONALES</h2>
+              <h2 className="text-xl font-bold text-gray-900">10. PROTECCIÓN DE DATOS PERSONALES</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <p>
@@ -331,7 +392,7 @@ export default function TerminosCesionVideoPage() {
               </p>
               <p>
                 Puede ejercer sus derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición 
-                dirigiéndose a <strong>info@repuestosclima.es</strong>.
+                dirigiéndose a <strong>info@uniclima.es</strong>.
               </p>
             </div>
           </section>
@@ -342,7 +403,7 @@ export default function TerminosCesionVideoPage() {
               <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
                 <Scale className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">10. LEGISLACIÓN APLICABLE Y JURISDICCIÓN</h2>
+              <h2 className="text-xl font-bold text-gray-900">11. LEGISLACIÓN APLICABLE Y JURISDICCIÓN</h2>
             </div>
             <div className="text-gray-700 space-y-4 pl-13">
               <p>
@@ -386,7 +447,7 @@ export default function TerminosCesionVideoPage() {
         <div className="mt-8 text-center text-sm text-gray-500">
           <p>
             Para cualquier consulta sobre estos términos, contacte con nosotros en{' '}
-            <a href="mailto:legal@repuestosclima.es" className="text-orange-600 hover:underline">legal@repuestosclima.es</a>
+            <a href="mailto:legal@uniclima.es" className="text-orange-600 hover:underline">legal@uniclima.es</a>
           </p>
           <p className="mt-2">
             UNICLIMA SOLUTIONS, S.L. · CIF: B-XXXXXXXX · Madrid, España
