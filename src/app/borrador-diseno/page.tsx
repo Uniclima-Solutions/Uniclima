@@ -73,18 +73,40 @@ export default function BorradorDiseno() {
 
       {/* Inyectar Estilos Dinámicos */}
       <style jsx global>{`
-        section.w-full {
+        /* Reset Agresivo para el Borrador */
+        * {
+          margin-top: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        
+        /* Aplicar solo el margen deseado a las secciones principales */
+        section, .CategoryCarousel, .GoogleReviews, .BrandScroller {
           margin-top: ${styles.sectionPadding} !important;
           margin-bottom: ${styles.sectionPadding} !important;
+          padding-top: 0 !important;
+          padding-bottom: 0 !important;
         }
+
+        /* Banners Edge-to-Edge */
+        section.w-full {
+          width: 100% !important;
+          max-width: none !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+
         section.w-full img {
           width: ${styles.bannerWidth} !important;
-          margin-left: auto;
-          margin-right: auto;
+          display: block !important;
+          margin-left: auto !important;
+          margin-right: auto !important;
+          height: auto !important;
         }
-        section.py-2, section.py-4 {
-          padding-top: ${styles.sectionPadding} !important;
-          padding-bottom: ${styles.sectionPadding} !important;
+
+        /* Mantener el padding lateral solo para el contenido que no es banner */
+        .max-w-6xl {
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
         }
       `}</style>
 
