@@ -1,7 +1,8 @@
-'use client'
+
+'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, Cookie, Settings, BarChart3, Globe, Target, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Cookie, Settings, BarChart3, Globe, Target, ShieldCheck, Info } from 'lucide-react';
 
 export default function CookiesPage() {
   return (
@@ -35,26 +36,15 @@ export default function CookiesPage() {
           {/* Contenido legal */}
           <div className="px-6 sm:px-10 py-8 space-y-8">
             
-            {/* Información del responsable */}
-            <section>
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  <strong>Uniclima Solutions S.L.</strong> (CIF: B21651393), con domicilio en Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid, informa al usuario sobre su política de recogida y tratamiento de cookies.
-                </p>
-              </div>
-            </section>
-
             {/* Sección 1 - Qué son las cookies */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm font-bold">1</span>
                 ¿Qué son las cookies?
               </h2>
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Una cookie es un pequeño fichero de texto que un sitio web coloca en tu PC, teléfono o cualquier otro dispositivo, con información sobre tu navegación en dicho sitio. Las cookies son necesarias para facilitar la navegación y hacerla más amigable, y <strong>no dañan tu ordenador</strong>.
-                </p>
-              </div>
+              <p className="text-gray-600 leading-relaxed">
+                Una cookie es un pequeño fichero de texto que un sitio web coloca en tu dispositivo para almacenar información sobre tu navegación. Son esenciales para el funcionamiento de internet, aportando innumerables ventajas en la prestación de servicios interactivos, facilitando la navegación y usabilidad de nuestra web.
+              </p>
             </section>
 
             {/* Sección 2 - Tipos de cookies */}
@@ -64,48 +54,21 @@ export default function CookiesPage() {
                 Tipos de cookies que utilizamos
               </h2>
               <div className="space-y-4">
-                {/* Cookies técnicas */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Settings className="w-5 h-5 text-amber-600" />
-                    <span className="font-medium text-gray-900">Cookies técnicas (necesarias)</span>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Permiten la navegación y el uso de las funciones básicas del sitio web. Sin estas cookies, el sitio no funcionaría correctamente.
-                  </p>
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><Settings className="w-5 h-5 text-amber-600" />Cookies técnicas (necesarias)</h3>
+                  <p className="text-gray-600 text-sm">Permiten la navegación y el uso de las funciones básicas (ej. gestionar el carrito de compra, proceso de pago). No requieren consentimiento.</p>
                 </div>
-
-                {/* Cookies de personalización */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Globe className="w-5 h-5 text-amber-600" />
-                    <span className="font-medium text-gray-900">Cookies de personalización</span>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Permiten recordar tus preferencias (idioma, región, productos vistos) para ofrecerte una experiencia personalizada.
-                  </p>
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><Globe className="w-5 h-5 text-amber-600" />Cookies de personalización</h3>
+                  <p className="text-gray-600 text-sm">Permiten recordar tus preferencias (idioma, región) para ofrecerte una experiencia personalizada.</p>
                 </div>
-
-                {/* Cookies de análisis */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-2">
-                    <BarChart3 className="w-5 h-5 text-amber-600" />
-                    <span className="font-medium text-gray-900">Cookies de análisis</span>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Nos permiten medir y analizar el uso del sitio web para mejorar nuestros servicios. Utilizamos Google Analytics para este fin.
-                  </p>
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-amber-600" />Cookies de análisis</h3>
+                  <p className="text-gray-600 text-sm">Nos permiten medir y analizar el uso del sitio web de forma agregada para mejorar nuestros servicios. Utilizamos Google Analytics.</p>
                 </div>
-
-                {/* Cookies publicitarias */}
                 <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Target className="w-5 h-5 text-amber-600" />
-                    <span className="font-medium text-gray-900">Cookies publicitarias</span>
-                  </div>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    Permiten mostrar publicidad relevante basada en tus intereses. Pueden ser instaladas por terceros (Google Ads, Facebook Pixel, etc.).
-                  </p>
+                  <h3 className="font-medium text-gray-900 mb-2 flex items-center gap-2"><Target className="w-5 h-5 text-amber-600" />Cookies publicitarias</h3>
+                  <p className="text-gray-600 text-sm">Permiten mostrar publicidad relevante basada en tus intereses. Pueden ser instaladas por terceros (Google Ads, Facebook Pixel).</p>
                 </div>
               </div>
             </section>
@@ -116,80 +79,70 @@ export default function CookiesPage() {
                 <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm font-bold">3</span>
                 Listado de cookies utilizadas
               </h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm border-collapse">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="text-left p-3 font-medium text-gray-900 border border-gray-200">Cookie</th>
-                      <th className="text-left p-3 font-medium text-gray-900 border border-gray-200">Proveedor</th>
-                      <th className="text-left p-3 font-medium text-gray-900 border border-gray-200">Tipo</th>
-                      <th className="text-left p-3 font-medium text-gray-900 border border-gray-200">Duración</th>
+              <div className="overflow-x-auto rounded-lg border border-gray-200">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="text-left p-3 font-medium text-gray-900">Cookie</th>
+                      <th className="text-left p-3 font-medium text-gray-900">Proveedor</th>
+                      <th className="text-left p-3 font-medium text-gray-900">Finalidad</th>
+                      <th className="text-left p-3 font-medium text-gray-900">Duración</th>
                     </tr>
                   </thead>
                   <tbody className="text-gray-600">
-                    <tr>
-                      <td className="p-3 border border-gray-200">_ga</td>
-                      <td className="p-3 border border-gray-200">Google Analytics</td>
-                      <td className="p-3 border border-gray-200">Análisis</td>
-                      <td className="p-3 border border-gray-200">2 años</td>
+                    <tr className="border-t border-gray-200"><td colSpan={4} className="p-2 bg-gray-100 font-semibold text-gray-800">Técnicas</td></tr>
+                    <tr className="border-t border-gray-200">
+                      <td className="p-3">cookie_consent</td>
+                      <td className="p-3">Uniclima</td>
+                      <td className="p-3">Almacena el consentimiento de cookies</td>
+                      <td className="p-3">1 año</td>
                     </tr>
-                    <tr className="bg-gray-50">
-                      <td className="p-3 border border-gray-200">_gid</td>
-                      <td className="p-3 border border-gray-200">Google Analytics</td>
-                      <td className="p-3 border border-gray-200">Análisis</td>
-                      <td className="p-3 border border-gray-200">24 horas</td>
+                    <tr className="border-t border-gray-200 bg-gray-50">
+                      <td className="p-3">cart_session</td>
+                      <td className="p-3">Uniclima</td>
+                      <td className="p-3">Mantiene los productos en el carrito</td>
+                      <td className="p-3">Sesión</td>
                     </tr>
-                    <tr>
-                      <td className="p-3 border border-gray-200">_gat</td>
-                      <td className="p-3 border border-gray-200">Google Analytics</td>
-                      <td className="p-3 border border-gray-200">Análisis</td>
-                      <td className="p-3 border border-gray-200">1 minuto</td>
+                    <tr className="border-t border-gray-200"><td colSpan={4} className="p-2 bg-gray-100 font-semibold text-gray-800">Análisis</td></tr>
+                    <tr className="border-t border-gray-200">
+                      <td className="p-3">_ga, _gid, _gat</td>
+                      <td className="p-3">Google Analytics</td>
+                      <td className="p-3">Análisis del tráfico y uso del sitio web</td>
+                      <td className="p-3">Hasta 2 años</td>
                     </tr>
-                    <tr className="bg-gray-50">
-                      <td className="p-3 border border-gray-200">_fbp</td>
-                      <td className="p-3 border border-gray-200">Facebook</td>
-                      <td className="p-3 border border-gray-200">Publicidad</td>
-                      <td className="p-3 border border-gray-200">3 meses</td>
+                    <tr className="border-t border-gray-200"><td colSpan={4} className="p-2 bg-gray-100 font-semibold text-gray-800">Publicidad</td></tr>
+                    <tr className="border-t border-gray-200">
+                      <td className="p-3">_fbp</td>
+                      <td className="p-3">Facebook</td>
+                      <td className="p-3">Remarketing y medición de campañas</td>
+                      <td className="p-3">3 meses</td>
                     </tr>
-                    <tr>
-                      <td className="p-3 border border-gray-200">cart_session</td>
-                      <td className="p-3 border border-gray-200">Uniclima</td>
-                      <td className="p-3 border border-gray-200">Técnica</td>
-                      <td className="p-3 border border-gray-200">Sesión</td>
-                    </tr>
-                    <tr className="bg-gray-50">
-                      <td className="p-3 border border-gray-200">user_preferences</td>
-                      <td className="p-3 border border-gray-200">Uniclima</td>
-                      <td className="p-3 border border-gray-200">Personalización</td>
-                      <td className="p-3 border border-gray-200">1 año</td>
-                    </tr>
-                    <tr>
-                      <td className="p-3 border border-gray-200">cookie_consent</td>
-                      <td className="p-3 border border-gray-200">Uniclima</td>
-                      <td className="p-3 border border-gray-200">Técnica</td>
-                      <td className="p-3 border border-gray-200">1 año</td>
+                     <tr className="border-t border-gray-200 bg-gray-50">
+                      <td className="p-3">IDE, 1P_JAR</td>
+                      <td className="p-3">Google Ads</td>
+                      <td className="p-3">Publicidad personalizada y remarketing</td>
+                      <td className="p-3">Hasta 1 año</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </section>
 
-            {/* Sección 4 - Cookies de terceros */}
+            {/* Sección 4 - Transferencias internacionales */}
             <section>
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm font-bold">4</span>
-                Cookies de terceros
+                Transferencias internacionales de datos
               </h2>
               <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-                <p className="text-amber-800 text-sm leading-relaxed mb-3">
-                  Este sitio web utiliza servicios de terceros que pueden instalar sus propias cookies:
-                </p>
-                <ul className="space-y-2 text-amber-800 text-sm">
-                  <li>• <strong>Google Analytics:</strong> Para análisis de tráfico web. <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="underline">Política de privacidad de Google</a></li>
-                  <li>• <strong>Google Ads:</strong> Para publicidad personalizada. <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" className="underline">Configuración de anuncios</a></li>
-                  <li>• <strong>Facebook Pixel:</strong> Para remarketing y análisis. <a href="https://www.facebook.com/policies/cookies/" target="_blank" rel="noopener noreferrer" className="underline">Política de cookies de Facebook</a></li>
-                  <li>• <strong>Stripe/PayPal:</strong> Para procesamiento de pagos seguros.</li>
-                </ul>
+                <div className="flex items-start gap-3">
+                  <Info className="w-6 h-6 text-amber-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-amber-800 text-sm leading-relaxed">
+                      El uso de cookies de terceros (Google, Facebook) puede implicar una transferencia de tus datos a Estados Unidos. Estas transferencias se realizan bajo el marco del <strong>Data Privacy Framework</strong> entre la UE y EE.UU., que proporciona garantías adecuadas. Puedes obtener más información en las políticas de privacidad de cada proveedor.
+                    </p>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -200,84 +153,30 @@ export default function CookiesPage() {
                 ¿Cómo gestionar o desactivar las cookies?
               </h2>
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                Puedes permitir, bloquear o eliminar las cookies instaladas en tu equipo mediante la configuración de las opciones del navegador. A continuación, te ofrecemos enlaces con información para los principales navegadores:
+                Puedes aceptar, rechazar o configurar las cookies a través de nuestro <strong>panel de configuración de cookies</strong> (que aparecerá en tu primera visita) o mediante la configuración de tu navegador.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <a 
-                  href="https://support.google.com/chrome/answer/95647" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors"
-                >
+                <a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener noreferrer" className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors">
                   <span className="font-medium text-gray-900">Google Chrome</span>
-                  <p className="text-gray-500 text-xs mt-1">support.google.com</p>
                 </a>
-                <a 
-                  href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors"
-                >
+                <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank" rel="noopener noreferrer" className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors">
                   <span className="font-medium text-gray-900">Mozilla Firefox</span>
-                  <p className="text-gray-500 text-xs mt-1">support.mozilla.org</p>
                 </a>
-                <a 
-                  href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors"
-                >
+                <a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank" rel="noopener noreferrer" className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors">
                   <span className="font-medium text-gray-900">Microsoft Edge</span>
-                  <p className="text-gray-500 text-xs mt-1">support.microsoft.com</p>
                 </a>
-                <a 
-                  href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors"
-                >
+                <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank" rel="noopener noreferrer" className="bg-gray-50 rounded-xl p-4 border border-gray-100 hover:border-amber-300 hover:bg-amber-50 transition-colors">
                   <span className="font-medium text-gray-900">Safari</span>
-                  <p className="text-gray-500 text-xs mt-1">support.apple.com</p>
                 </a>
               </div>
             </section>
 
-            {/* Sección 6 - Consentimiento */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm font-bold">6</span>
-                Consentimiento
-              </h2>
-              <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
-                <div className="flex items-center gap-3 mb-3">
-                  <ShieldCheck className="w-5 h-5 text-amber-600" />
-                  <span className="font-medium text-gray-900">Tu consentimiento</span>
-                </div>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Al navegar y continuar en nuestro sitio web, estarás consintiendo el uso de las cookies en las condiciones contenidas en la presente Política de Cookies. <strong>Puedes modificar tu consentimiento en cualquier momento a través del banner de cookies o la configuración de tu navegador.</strong>
-                </p>
-              </div>
-            </section>
-
-            {/* Sección 7 - Actualizaciones */}
-            <section>
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <span className="w-8 h-8 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm font-bold">7</span>
-                Actualizaciones de esta política
-              </h2>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Uniclima Solutions S.L. puede modificar esta Política de Cookies en función de exigencias legislativas, reglamentarias, o con la finalidad de adaptar dicha política a las instrucciones dictadas por la Agencia Española de Protección de Datos. Te recomendamos revisar esta política periódicamente.
-              </p>
-            </section>
-
-            {/* Datos de contacto finales */}
-            <section className="border-t border-gray-200 pt-6">
+            {/* Pie del documento */}
+            <div className="border-t border-gray-200 pt-6 mt-8">
               <p className="text-gray-500 text-sm text-center">
-                <strong>Uniclima Solutions S.L.</strong> · CIF: B21651393<br />
-                Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid<br />
-                info@uniclima.es · 912 345 678
+                Uniclima Solutions S.L. · CIF: B21651393 · Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid
               </p>
-            </section>
+            </div>
 
           </div>
         </div>
