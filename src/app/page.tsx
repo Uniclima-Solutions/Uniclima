@@ -905,12 +905,12 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (MÁS GRANDE) */}
-      <section className="w-full mb-1">
+      <section className="w-full mb-0">
         <Link href="/ofertas" className="block w-full">
           <img 
             src="/banner_ofertas.png" 
             alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+            className="w-full h-auto object-cover"
           />
         </Link>
       </section>
@@ -935,12 +935,12 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full my-1">
+      <section className="w-full my-0">
         <Link href="/pieza-gratis" className="block w-full">
           <img 
             src="/banner_pieza_gratis.png" 
             alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+            className="w-full h-auto object-cover"
           />
         </Link>
       </section>
@@ -1069,12 +1069,12 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas */}
-      <section className="w-full my-1">
+      <section className="w-full mt-0 mb-2">
         <Link href="/reparacion-placas" className="block w-full">
           <img 
             src="/banner_placa.png" 
             alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-            className="w-full h-auto object-cover hover:opacity-95 transition-opacity duration-300"
+            className="w-full h-auto object-cover"
           />
         </Link>
       </section>
