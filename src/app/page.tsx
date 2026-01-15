@@ -905,14 +905,14 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
-      <section className="w-full">
-        <Link href="/ofertas" className="block w-full">
+      <section className="w-full flex justify-center py-4">
+        <Link href="/ofertas" className="block w-[95%] max-w-[1400px]">
           <picture>
             <source media="(max-width: 768px)" srcSet="/banner_ofertas_mobile.png" />
             <img 
-              src="/banner_ofertas_final.png" 
+              src="/banner_ofertas_v3.png" 
               alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-              className="w-full h-auto block"
+              className="w-full h-auto block rounded-xl shadow-lg"
             />
           </picture>
         </Link>
@@ -938,14 +938,14 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
-      <section className="w-full">
-        <Link href="/pieza-gratis" className="block w-full">
+      <section className="w-full flex justify-center py-4">
+        <Link href="/pieza-gratis" className="block w-[95%] max-w-[1400px]">
           <picture>
             <source media="(max-width: 768px)" srcSet="/banner_pieza_gratis_mobile.png" />
             <img 
-              src="/banner_pieza_gratis_final.png" 
+              src="/banner_pieza_gratis_v3.png" 
               alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-              className="w-full h-auto block"
+              className="w-full h-auto block rounded-xl shadow-lg"
             />
           </picture>
         </Link>
@@ -1075,14 +1075,14 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
-      <section className="w-full">
-        <Link href="/reparacion-placas" className="block w-full">
+      <section className="w-full flex justify-center py-4">
+        <Link href="/reparacion-placas" className="block w-[95%] max-w-[1400px]">
           <picture>
             <source media="(max-width: 768px)" srcSet="/banner_placa_mobile.png" />
             <img 
-              src="/banner_placa_final.png" 
+              src="/banner_placa_v3.png" 
               alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-              className="w-full h-auto block"
+              className="w-full h-auto block rounded-xl shadow-lg"
             />
           </picture>
         </Link>

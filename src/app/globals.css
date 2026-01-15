@@ -320,21 +320,14 @@ body {
  * Solución para espacios fantasma y control de márgenes
  */
 
-/* Forzar que las imágenes de los banners no dejen espacio inferior y controlar altura */
+/* Forzar que las imágenes de los banners no dejen espacio inferior */
 section.w-full img {
   display: block !important;
   width: 100% !important;
-  max-height: 350px !important; /* Reducimos la altura máxima para que no sean tan invasivos */
-  object-fit: cover !important; /* Aseguramos que la imagen cubra el área sin deformarse */
+  height: auto !important;
   margin: 0 !important;
   padding: 0 !important;
   vertical-align: middle !important;
-}
-
-@media (max-width: 768px) {
-  section.w-full img {
-    max-height: 250px !important; /* Altura más pequeña para móviles */
-  }
 }
 
 /* Contenedor de banners para evitar colapso de márgenes */
