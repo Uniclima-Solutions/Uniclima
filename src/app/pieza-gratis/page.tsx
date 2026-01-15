@@ -516,157 +516,168 @@ export default function PiezaGratisPage() {
         </div>
       </header>
 
-      {/* Hero Section - Diseño Profesional */}
-      <section className="py-8 sm:py-12 px-4 relative overflow-hidden">
-        {/* Fondo decorativo */}
-        <div className="absolute inset-0 bg-gradient-to-b from-orange-50/50 to-transparent pointer-events-none"></div>
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-200/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-200/20 rounded-full blur-3xl pointer-events-none"></div>
-        
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center gap-2 bg-white text-orange-600 px-5 py-2.5 rounded-full text-sm font-semibold mb-6 shadow-md border border-orange-100">
-            <Sparkles className="w-4 h-4" />
-            Promoción exclusiva para profesionales
+      {/* Hero Section - Diseño Premium Limpio */}
+      <section className="py-12 sm:py-16 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Badge sutil */}
+          <div className="inline-flex items-center gap-2 text-orange-600 text-sm font-medium mb-6">
+            <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
+            Promoción activa
           </div>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-5 leading-tight">
-            Pieza reacondicionada <br className="sm:hidden" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">GRATIS</span>
+          
+          {/* Título principal */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
+            Consigue tu pieza
+            <span className="block text-orange-600">completamente gratis</span>
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-xl mx-auto leading-relaxed">
-            Comparte tu reparación en vídeo y recibe una pieza reacondicionada gratis o el reembolso de tu compra.
+          
+          {/* Descripción */}
+          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
+            Comparte un vídeo de tu reparación y te regalamos una pieza reacondicionada o te devolvemos el importe de tu compra.
           </p>
           
-          {/* Stats rápidos */}
-          <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <div className="flex items-center gap-2 text-gray-600">
-              <div className="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center">
-                <CheckCircle className="w-5 h-5 text-green-600" />
+          {/* CTA y garantías */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
+            <a href="#formulario" className="w-full sm:w-auto px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-xl hover:shadow-orange-600/30">
+              Empezar ahora
+            </a>
+            <Link href="/terminos-cesion-video" className="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium transition-colors">
+              <Info className="w-4 h-4" />
+              Ver términos y condiciones
+            </Link>
+          </div>
+          
+          {/* Garantías en línea */}
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-gray-400">
+            <span className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              Sin compromiso
+            </span>
+            <span className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              Validación en 48-72h
+            </span>
+            <span className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              +500 vídeos aprobados
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Beneficios - Diseño Premium Limpio */}
+      <section className="px-4 pb-16">
+        <div className="max-w-4xl mx-auto">
+          {/* Título de sección */}
+          <div className="text-center mb-12">
+            <p className="text-orange-600 font-semibold text-sm uppercase tracking-wider mb-3">Proceso simple</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">¿Cómo funciona?</h2>
+          </div>
+          
+          {/* Timeline vertical en móvil, horizontal en desktop */}
+          <div className="relative">
+            {/* Línea conectora */}
+            <div className="hidden sm:block absolute top-8 left-[calc(16.67%-12px)] right-[calc(16.67%-12px)] h-0.5 bg-gradient-to-r from-orange-200 via-orange-300 to-orange-200"></div>
+            
+            <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
+              {/* Paso 1 */}
+              <div className="relative">
+                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
+                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
+                      <Video className="w-6 h-6 text-orange-600" />
+                    </div>
+                  </div>
+                  <div className="flex-1 sm:text-center">
+                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 1</span>
+                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Graba tu reparación</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">Mínimo 7 minutos mostrando el proceso completo de diagnóstico y reparación.</p>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm font-medium">+500 vídeos validados</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
-                <Clock className="w-5 h-5 text-blue-600" />
+              
+              {/* Paso 2 */}
+              <div className="relative">
+                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
+                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-orange-600" />
+                    </div>
+                  </div>
+                  <div className="flex-1 sm:text-center">
+                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 2</span>
+                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Validación profesional</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">Nuestro equipo técnico verifica la calidad y utilidad del contenido en 48-72h.</p>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm font-medium">Validación en 48-72h</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-600">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
-                <Gift className="w-5 h-5 text-orange-600" />
+              
+              {/* Paso 3 */}
+              <div className="relative">
+                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
+                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
+                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
+                      <Gift className="w-6 h-6 text-orange-600" />
+                    </div>
+                  </div>
+                  <div className="flex-1 sm:text-center">
+                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 3</span>
+                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Recibe tu recompensa</h3>
+                    <p className="text-gray-500 text-sm leading-relaxed">Pieza reacondicionada gratis o reembolso completo de tu compra anterior.</p>
+                  </div>
+                </div>
               </div>
-              <span className="text-sm font-medium">100% gratis</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Beneficios - Diseño Profesional */}
-      <section className="px-4 pb-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-6 sm:p-10 shadow-2xl">
-            <div className="text-center mb-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">¿Cómo funciona?</h2>
-              <p className="text-gray-400 text-sm">Tres simples pasos para obtener tu recompensa</p>
-            </div>
-            <div className="grid sm:grid-cols-3 gap-6">
-              <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 h-full">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Video className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-4xl font-black text-gray-700/50">01</span>
-                  </div>
-                  <h3 className="font-bold text-white text-lg mb-2">Graba tu reparación</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">Mínimo 7 minutos mostrando el proceso completo de diagnóstico y reparación.</p>
-                </div>
-              </div>
-              <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 h-full">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Shield className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-4xl font-black text-gray-700/50">02</span>
-                  </div>
-                  <h3 className="font-bold text-white text-lg mb-2">Validación profesional</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">Nuestro equipo técnico verifica la calidad y utilidad del contenido en 48-72h.</p>
-                </div>
-              </div>
-              <div className="relative group">
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-700/50 h-full">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Award className="w-6 h-6 text-white" />
-                    </div>
-                    <span className="text-4xl font-black text-gray-700/50">03</span>
-                  </div>
-                  <h3 className="font-bold text-white text-lg mb-2">Recibe tu recompensa</h3>
-                  <p className="text-gray-400 text-sm leading-relaxed">Pieza reacondicionada gratis o reembolso completo de tu compra anterior.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Indicador de pasos - Diseño Profesional */}
-      <section className="px-4 pb-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
-            <div className="flex items-center justify-between relative">
-              {/* Línea de progreso */}
-              <div className="absolute top-6 left-[10%] right-[10%] h-1 bg-gray-100 rounded-full">
-                <div 
-                  className="h-full bg-gradient-to-r from-orange-500 to-amber-500 rounded-full transition-all duration-500 ease-out"
-                  style={{ width: `${((paso - 1) / 3) * 100}%` }}
-                />
-              </div>
-              {[
-                { num: 1, label: 'Equipo', icon: Wrench },
-                { num: 2, label: 'Problema', icon: AlertCircle },
-                { num: 3, label: 'Vídeo', icon: Video },
-                { num: 4, label: 'Enviar', icon: Gift }
-              ].map((step) => (
-                <div key={step.num} className="flex flex-col items-center z-10">
-                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm transition-all duration-300 ${
+      {/* Indicador de pasos - Diseño Premium Minimalista */}
+      <section className="px-4 pb-8" id="formulario">
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between">
+            {[
+              { num: 1, label: 'Equipo' },
+              { num: 2, label: 'Problema' },
+              { num: 3, label: 'Vídeo' },
+              { num: 4, label: 'Enviar' }
+            ].map((step, index) => (
+              <div key={step.num} className="flex items-center flex-1">
+                <div className="flex flex-col items-center">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
                     paso > step.num 
-                      ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30' 
+                      ? 'bg-green-500 text-white' 
                       : paso === step.num
-                        ? 'bg-gradient-to-br from-orange-500 to-amber-500 text-white shadow-lg shadow-orange-500/30 scale-110'
+                        ? 'bg-orange-600 text-white ring-4 ring-orange-100'
                         : 'bg-gray-100 text-gray-400'
                   }`}>
                     {paso > step.num ? (
-                      <CheckCircle className="w-6 h-6" />
+                      <CheckCircle className="w-5 h-5" />
                     ) : (
-                      <step.icon className="w-5 h-5" />
+                      step.num
                     )}
                   </div>
-                  <span className={`text-xs mt-2 font-semibold transition-colors ${
-                    paso > step.num 
-                      ? 'text-green-600' 
-                      : paso === step.num 
-                        ? 'text-orange-600' 
-                        : 'text-gray-400'
+                  <span className={`text-xs mt-2 font-medium hidden sm:block ${
+                    paso >= step.num ? 'text-gray-700' : 'text-gray-400'
                   }`}>
                     {step.label}
                   </span>
                 </div>
-              ))}
-            </div>
+                {index < 3 && (
+                  <div className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors duration-300 ${
+                    paso > step.num ? 'bg-green-500' : 'bg-gray-200'
+                  }`} />
+                )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Formulario */}
       <section className="px-4 pb-16">
-        <div className="max-w-3xl mx-auto">
-          <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden relative">
-            {/* Decoración superior */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-500"></div>
+        <div className="max-w-2xl mx-auto">
+          <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
             
             {/* Errores */}
             {errores.length > 0 && (
