@@ -60,7 +60,7 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-4 sm:py-6 bg-gray-50">
+    <section className="py-2 bg-gray-50">
       <div className="w-full max-w-6xl mx-auto px-4">
         {/* Carrusel con scroll fluido bidireccional */}
         <div className="relative group">

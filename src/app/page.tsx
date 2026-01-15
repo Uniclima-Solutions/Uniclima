@@ -407,10 +407,10 @@ function CategoryCarousel({
   };
 
   return (
-    <section className="py-4 sm:py-6 bg-white">
+    <section className="py-2 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
+        <div className="flex items-center justify-between mb-1">
           <div>
             <h2 className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900">{title}</h2>
             {subtitle && <p className="text-gray-500 text-[10px] sm:text-xs lg:text-sm mt-0.5 hidden sm:block">{subtitle}</p>}
@@ -823,10 +823,10 @@ function MaintenanceSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="py-4 sm:py-6 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-2 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-2 px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             Contratos de <span className="text-orange-500">Mantenimiento</span>
           </h2>
@@ -836,7 +836,7 @@ function MaintenanceSection() {
         </div>
         
         {/* Tabs con colores corporativos */}
-        <div className="flex justify-center mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center mb-2 px-4 sm:px-6 lg:px-8">
           <div className="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
             <button
               onClick={() => setActiveTab('calderas')}
@@ -905,7 +905,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (MÁS GRANDE) */}
-      <section className="w-full mb-4 sm:mb-6">
+      <section className="w-full mb-1">
         <Link href="/ofertas" className="block w-full">
           <img 
             src="/banner_ofertas.png" 
@@ -935,7 +935,7 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full my-4 sm:my-6">
+      <section className="w-full my-1">
         <Link href="/pieza-gratis" className="block w-full">
           <img 
             src="/banner_pieza_gratis.png" 
@@ -946,7 +946,7 @@ export default function Home() {
       </section>
 
       {/* Categorías destacadas - Estilo PCComponentes */}
-      <section className="py-4 sm:py-6 bg-gray-50">
+      <section className="py-2 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
@@ -975,7 +975,7 @@ export default function Home() {
       </section>
 
       {/* Banner CTA Profesionales - Diseño Premium */}
-      <section className="py-4 sm:py-6 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
+      <section className="py-2 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
         <div className="w-[90%] max-w-6xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -1069,7 +1069,7 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas */}
-      <section className="w-full my-4 sm:mb-6">
+      <section className="w-full my-1">
         <Link href="/reparacion-placas" className="block w-full">
           <img 
             src="/banner_placa.png" 
