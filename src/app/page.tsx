@@ -906,7 +906,7 @@ export default function Home() {
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full max-w-[90%]">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.png" />
@@ -942,7 +942,7 @@ export default function Home() {
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/pieza-gratis" className="block w-full max-w-[90%]">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.png" />
@@ -959,7 +959,7 @@ export default function Home() {
 
       {/* Categorías destacadas - Estilo PCComponentes */}
       <section className="py-2 bg-gray-50">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
               <Link key={cat.id} href={`/c/${cat.slug}`}>
@@ -988,7 +988,7 @@ export default function Home() {
 
       {/* Banner CTA Profesionales - Diseño Premium */}
       <section className="py-2 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
-        <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
               {/* Contenido izquierdo */}
@@ -1082,7 +1082,7 @@ export default function Home() {
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
-        <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/reparacion-placas" className="block w-full max-w-[90%]">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
