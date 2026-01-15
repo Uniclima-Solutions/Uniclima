@@ -260,47 +260,35 @@ export default function Footer() {
               </ul>
             </FooterAccordion>
 
-            {/* Columna 4: Ayuda (Acordeón en móvil) */}
+            {/* Columna 4: Información Legal (Acordeón en móvil) */}
             <FooterAccordion 
-              title="Ayuda" 
-              isOpen={openSection === 'ayuda'}
-              onToggle={() => toggleSection('ayuda')}
+              title="Legal" 
+              isOpen={openSection === 'legal'}
+              onToggle={() => toggleSection('legal')}
             >
               <ul className="space-y-2.5">
                 <li>
-                  <Link href="/sobre-nosotros" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
+                  <Link href="/condiciones-venta" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Sobre Nosotros
+                    Condiciones de Venta
                   </Link>
                 </li>
                 <li>
-                  <Link href="/envios" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
+                  <Link href="/aviso-legal" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Envíos y Entregas
+                    Aviso Legal
                   </Link>
                 </li>
                 <li>
-                  <Link href="/devoluciones" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
+                  <Link href="/privacidad" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Devoluciones
+                    Política de Privacidad
                   </Link>
                 </li>
                 <li>
-                  <Link href="/garantia" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
+                  <Link href="/cookies" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
                     <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Garantía
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/faq" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Preguntas Frecuentes
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/marcas" className="text-slate-400 hover:text-orange-400 text-sm transition-colors flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 bg-orange-500 rounded-full"></span>
-                    Marcas
+                    Política de Cookies
                   </Link>
                 </li>
               </ul>
@@ -386,6 +374,9 @@ export default function Footer() {
               © 2026 Uniclima Solutions S.L. Todos los derechos reservados. CIF: B12345678
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 text-xs">
+              <Link href="/condiciones-venta" className="text-slate-500 hover:text-orange-400 transition-colors">
+                Condiciones de Venta
+              </Link>
               <Link href="/aviso-legal" className="text-slate-500 hover:text-orange-400 transition-colors">
                 Aviso Legal
               </Link>
@@ -394,9 +385,6 @@ export default function Footer() {
               </Link>
               <Link href="/cookies" className="text-slate-500 hover:text-orange-400 transition-colors">
                 Cookies
-              </Link>
-              <Link href="/condiciones-uso" className="text-slate-500 hover:text-orange-400 transition-colors">
-                Condiciones
               </Link>
             </div>
           </div>
