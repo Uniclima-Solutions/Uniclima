@@ -118,7 +118,7 @@ export default function Footer() {
 
       {/* Sección principal con acordeones */}
       <div className="w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-0 lg:gap-8">
             
             {/* Columna 1: Logo y descripción (siempre visible) */}

@@ -824,9 +824,9 @@ function MaintenanceSection() {
 
   return (
     <section className="py-2 bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-2 px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-2">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             Contratos de <span className="text-orange-500">Mantenimiento</span>
           </h2>
@@ -836,7 +836,7 @@ function MaintenanceSection() {
         </div>
         
         {/* Tabs con colores corporativos */}
-        <div className="flex justify-center mb-2 px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-center mb-2">
           <div className="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
             <button
               onClick={() => setActiveTab('calderas')}
@@ -864,7 +864,7 @@ function MaintenanceSection() {
         </div>
         
         {/* Indicador de scroll en móvil */}
-        <div className="md:hidden flex items-center justify-center gap-2 mb-4 px-4">
+        <div className="md:hidden flex items-center justify-center gap-2 mb-4">
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <ChevronLeft className="w-4 h-4 animate-pulse" />
             <span>Desliza para ver todos los planes</span>
@@ -875,7 +875,7 @@ function MaintenanceSection() {
         {/* Tarjetas con scroll horizontal en móvil */}
         <div 
           ref={scrollContainerRef}
-          className="flex md:grid md:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto pt-4 scrollbar-hide"
+          className="flex md:grid md:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4 scrollbar-hide"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {planes.map((plan) => (
@@ -907,7 +907,7 @@ export default function Home() {
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
       <section className="w-full flex justify-center py-6">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Link href="/ofertas" className="block w-full max-w-[90%]">
+          <Link href="/ofertas" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.png" />
               <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet_final.png" />
@@ -943,7 +943,7 @@ export default function Home() {
       {/* Banner Pieza Gratis - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Link href="/pieza-gratis" className="block w-full max-w-[90%]">
+          <Link href="/pieza-gratis" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.png" />
               <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet_final.png" />
@@ -1083,7 +1083,7 @@ export default function Home() {
       {/* Banner Reparación de Placas - ADAPTATIVO */}
       <section className="w-full flex justify-center py-6">
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Link href="/reparacion-placas" className="block w-full max-w-[90%]">
+          <Link href="/reparacion-placas" className="block w-full">
             <picture>
               <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
               <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet_final.png" />

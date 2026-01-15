@@ -181,7 +181,7 @@ export default function Header() {
     <>
       {/* Barra superior - Solo desktop */}
       <div className="hidden lg:block bg-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-9 text-xs">
             {/* Izquierda - Contacto */}
             <div className="flex items-center gap-6">
@@ -220,7 +220,7 @@ export default function Header() {
 
       {/* Header Principal */}
       <header className={`sticky top-0 z-40 bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : "shadow-sm"}`}>
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-6 h-14 lg:h-18">
             {/* Botón menú móvil - Hamburguesa con estilo */}
             <button
@@ -369,7 +369,7 @@ export default function Header() {
 
         {/* Barra de beneficios - Solo visible en desktop */}
         <div className="hidden md:block bg-gray-50 border-t border-gray-100">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-center gap-8 py-2">
               <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
                 <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
