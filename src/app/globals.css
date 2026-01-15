@@ -314,3 +314,40 @@ body {
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
 }
+
+/* 
+ * ESTILOS PARA BANNERS Y SECCIONES (Uniclima Solutions)
+ * Solución para espacios fantasma y control de márgenes
+ */
+
+/* Forzar que las imágenes de los banners no dejen espacio inferior */
+section.w-full img {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
+}
+
+/* Contenedor de banners para evitar colapso de márgenes */
+section.w-full {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* Reset de márgenes para secciones que van pegadas a banners */
+.CategoryCarousel, .GoogleReviews, .BrandScroller, section {
+  position: relative;
+}
+
+/* Asegurar que el contenido principal no tenga paddings ocultos que empujen los banners */
+main, .min-h-screen {
+  display: flex;
+  flex-direction: column;
+}
