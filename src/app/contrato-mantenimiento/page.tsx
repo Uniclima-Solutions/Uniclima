@@ -284,33 +284,39 @@ function ContratoMantenimientoContent() {
   
   // Buscar direcciones con debounce (usando Nominatim/OpenStreetMap)
   useEffect(() => {
+    // Si ya seleccionó una dirección, no buscar más
     if (direccionSeleccionada) {
-      setDireccionSeleccionada(false);
-      setDireccionOpen(false);
-      setDireccionesFiltradas([]);
       return;
     }
     
+    // Limpiar si hay menos de 3 caracteres
+    if (formData.direccion.length < 3) {
+      setDireccionesFiltradas([]);
+      setDireccionOpen(false);
+      return;
+    }
+    
+    // Debounce de 600ms para no interferir con la escritura
     const timeoutId = setTimeout(async () => {
-      if (formData.direccion.length >= 3) {
+      if (formData.direccion.length >= 3 && !direccionSeleccionada) {
         setBuscandoDirecciones(true);
         try {
           const resultados = await buscarDirecciones(formData.direccion);
           setDireccionesFiltradas(resultados);
-          setDireccionOpen(resultados.length > 0);
+          // Solo abrir si hay resultados y el usuario sigue escribiendo
+          if (resultados.length > 0) {
+            setDireccionOpen(true);
+          }
         } catch (error) {
           console.error('Error buscando direcciones:', error);
         } finally {
           setBuscandoDirecciones(false);
         }
-      } else if (formData.direccion.length < 3) {
-        setDireccionesFiltradas([]);
-        setDireccionOpen(false);
       }
-    }, 500);
+    }, 600);
     
     return () => clearTimeout(timeoutId);
-  }, [formData.direccion, direccionSeleccionada]);
+  }, [formData.direccion]);
   
   // Obtener tipo de aparato seleccionado
   const tipoSeleccionado = tiposAparato.find(t => t.value === formData.tipoAparato);
@@ -361,7 +367,9 @@ function ContratoMantenimientoContent() {
   
   // Manejar selección de dirección (usando Nominatim)
   const handleDireccionSelect = (resultado: AddressResult) => {
+    // Cerrar dropdown inmediatamente
     setDireccionOpen(false);
+    setDireccionesFiltradas([]);
     setDireccionSeleccionada(true);
     
     // Obtener detalles de la dirección seleccionada
@@ -370,6 +378,7 @@ function ContratoMantenimientoContent() {
     // Construir dirección formateada (calle y número)
     let direccionFormateada = detalles.formattedAddress;
     
+    // Actualizar todos los campos de una vez
     setFormData(prev => ({
       ...prev,
       direccion: direccionFormateada,
@@ -377,6 +386,11 @@ function ContratoMantenimientoContent() {
       codigoPostal: detalles.postalCode || prev.codigoPostal,
       provincia: detalles.administrativeArea || 'Madrid'
     }));
+    
+    // Quitar el foco del input para evitar que se vuelva a abrir
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
   };
   
   // Validaciones
@@ -580,50 +594,59 @@ function ContratoMantenimientoContent() {
                   
                   <div className="sm:col-span-2">
                     <Label>Dirección <span className="text-orange-500">*</span></Label>
-                    <Popover open={direccionOpen} onOpenChange={setDireccionOpen}>
-                      <PopoverTrigger asChild>
-                        <div className="relative mt-1">
-                          <input
-                            type="text"
-                            value={formData.direccion}
-                            onChange={(e) => updateField('direccion', e.target.value)}
-                            placeholder="Escribe tu dirección..."
-                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                          />
-                          {buscandoDirecciones && (
-                            <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-gray-400" />
-                          )}
-                          {!buscandoDirecciones && formData.direccion && (
-                            <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
-                          )}
-                        </div>
-                      </PopoverTrigger>
-                      {direccionesFiltradas.length > 0 && (
-                        <PopoverContent className="w-[400px] p-0" align="start">
-                          <Command>
-                            <CommandList>
-                              <CommandGroup heading="Sugerencias">
-                                {direccionesFiltradas.map((resultado) => (
-                                  <CommandItem
-                                    key={resultado.placeId}
-                                    onSelect={() => handleDireccionSelect(resultado)}
-                                    className="cursor-pointer"
-                                  >
-                                    <MapPin className="mr-2 h-4 w-4 text-gray-400" />
-                                    <div>
-                                      <p className="font-medium">{resultado.mainText}</p>
-                                      <p className="text-xs text-gray-500">{resultado.secondaryText}</p>
-                                    </div>
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
+                    <div className="relative mt-1">
+                      <input
+                        type="text"
+                        value={formData.direccion}
+                        onChange={(e) => {
+                          updateField('direccion', e.target.value);
+                          setDireccionSeleccionada(false);
+                        }}
+                        onFocus={() => {
+                          if (direccionesFiltradas.length > 0 && !direccionSeleccionada) {
+                            setDireccionOpen(true);
+                          }
+                        }}
+                        placeholder="Escribe tu calle (ej: Calle Gran Vía 25)..."
+                        className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                        
+                        autoComplete="off"
+                      />
+                      {buscandoDirecciones && (
+                        <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-orange-500" />
                       )}
-                    </Popover>
+                      {!buscandoDirecciones && formData.direccion && direccionSeleccionada && (
+                        <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
+                      )}
+                      {!buscandoDirecciones && formData.direccion && !direccionSeleccionada && (
+                        <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      )}
+                      
+                      {/* Dropdown de sugerencias */}
+                      {direccionOpen && direccionesFiltradas.length > 0 && !direccionSeleccionada && (
+                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                          <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100 bg-gray-50">
+                            Selecciona una dirección:
+                          </div>
+                          {direccionesFiltradas.map((resultado) => (
+                            <button
+                              key={resultado.placeId}
+                              type="button"
+                              onClick={() => handleDireccionSelect(resultado)}
+                              className="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-orange-50 transition-colors border-b border-gray-50 last:border-0"
+                            >
+                              <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">{resultado.mainText}</p>
+                                <p className="text-xs text-gray-500 truncate">{resultado.secondaryText}</p>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-500 mt-1">
-                      Empieza a escribir y selecciona de las sugerencias de Google
+                      Escribe al menos 3 caracteres y selecciona de las sugerencias
                     </p>
                   </div>
                   

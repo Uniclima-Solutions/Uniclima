@@ -100,12 +100,19 @@ export default function Header() {
   const ResultItem = ({ result, onClick }: { result: SearchResult; onClick: () => void }) => {
     const rating = result.item.rating || 4.5;
     const reviewCount = result.item.reviewCount || 0;
+    const { addItem, openCart } = useCart();
     
     const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      // TODO: Añadir al carrito
-      console.log('Añadir al carrito:', result.item.id);
+      addItem({
+        id: result.item.id,
+        name: result.item.title,
+        price: result.item.price || 0,
+        image: result.item.image || '',
+        reference: result.item.subtitle || ''
+      });
+      openCart();
     };
     
     return (
@@ -215,12 +222,16 @@ export default function Header() {
       <header className={`sticky top-0 z-40 bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : "shadow-sm"}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-6 h-14 lg:h-18">
-            {/* Botón menú móvil */}
+            {/* Botón menú móvil - Hamburguesa con estilo */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-1.5 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors flex-shrink-0"
+              className="lg:hidden p-2 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0"
             >
-              <Menu className="w-5 h-5" />
+              <div className="w-6 h-5 flex flex-col justify-between">
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
+                <span className="w-4/5 h-0.5 bg-current rounded-full"></span>
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
+              </div>
             </button>
 
             {/* Logo */}
@@ -253,7 +264,6 @@ export default function Header() {
                   onFocus={() => setSearchFocused(true)}
                   placeholder="Buscar..."
                   className="w-full h-9 sm:h-10 lg:h-12 pl-2.5 sm:pl-3 lg:pl-4 pr-14 sm:pr-16 lg:pr-12 bg-gray-100 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-lg sm:rounded-xl text-base outline-none"
-                  style={{ fontSize: '16px' }}
                 />
                 {searchQuery && (
                   <button 
@@ -270,7 +280,7 @@ export default function Header() {
 
               {/* Resultados de búsqueda - Solo productos con scroll adaptativo */}
               {showResults && (
-                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 lg:left-auto lg:right-auto lg:w-[500px]">
+                <div className="fixed lg:absolute top-[60px] lg:top-full left-0 right-0 lg:left-auto lg:right-auto mt-0 lg:mt-2 bg-white lg:rounded-2xl shadow-2xl border-0 lg:border border-gray-100 overflow-hidden z-50 lg:w-[500px] max-h-[calc(100vh-60px)] lg:max-h-none">
                   {/* Corrección ortográfica */}
                   {searchResults.correction && (
                     <div className="px-4 py-2 bg-orange-50 border-b border-orange-100">
@@ -331,8 +341,8 @@ export default function Header() {
               </Link>
 
               {/* Botón usuario - Mobile */}
-              <Link href="/login" className="lg:hidden flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition-colors flex-shrink-0">
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <Link href="/login" className="lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0">
+                <User className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
               </Link>
 
               {/* Favoritos - Desktop */}
@@ -343,9 +353,9 @@ export default function Header() {
               {/* Carrito */}
               <button
                 onClick={openCart}
-                className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 lg:w-auto lg:h-auto lg:gap-2 lg:px-4 lg:py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-lg lg:rounded-xl transition-colors relative flex-shrink-0"
+                className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-auto lg:h-auto lg:gap-2 lg:px-4 lg:py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors relative flex-shrink-0"
               >
-                <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
+                <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1.5 -right-1.5 w-4 h-4 lg:w-5 lg:h-5 bg-gray-900 text-white text-[9px] sm:text-[10px] lg:text-xs font-bold rounded-full flex items-center justify-center">
                     {totalItems > 9 ? "9+" : totalItems}

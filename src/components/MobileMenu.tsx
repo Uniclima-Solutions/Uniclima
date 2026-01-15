@@ -374,7 +374,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     >
       <a
         href="/catalogo"
-        className="flex items-center gap-2 px-3 py-2.5 mb-3 bg-[#2E86AB] text-white rounded-lg font-semibold text-sm hover:bg-[#1B4F72] transition-colors"
+        className="flex items-center gap-2 px-3 py-2.5 mb-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
       >
         <LayoutGrid className="w-4 h-4" />
         <span>Ver catálogo</span>
@@ -394,10 +394,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <div key={cat.id}>
                 <button
                   onClick={() => toggleAccordion(cat.id)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors group"
+                  className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
                 >
-                  <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-[#5DADE2]/20 transition-colors">
-                    <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#1B4F72]" />
+                  <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                    <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-orange-600" />
                   </div>
                   <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
                   <ChevronDown className={`w-4 h-4 text-gray-400 ml-auto transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -417,10 +417,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                           <button
                             key={subItem.id}
                             onClick={() => setCurrentView(subItem.view)}
-                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors group"
+                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
                           >
-                            <div className="w-6 h-6 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-[#5DADE2]/20 transition-colors">
-                              <SubIcon className="w-3 h-3 text-gray-500 group-hover:text-[#1B4F72]" />
+                            <div className="w-6 h-6 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                              <SubIcon className="w-3 h-3 text-gray-500 group-hover:text-orange-600" />
                             </div>
                             <span className="font-medium text-gray-700 text-[12px]">{subItem.name}</span>
                             <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
@@ -439,10 +439,10 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <button
               key={cat.id}
               onClick={() => setCurrentView(cat.view as MenuView)}
-              className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors group"
+              className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
             >
-              <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-[#5DADE2]/20 transition-colors">
-                <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-[#1B4F72]" />
+              <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-orange-600" />
               </div>
               <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
               <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
@@ -465,7 +465,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">Repuestos Calderas</h2>
-      <a href="/repuestos-calderas" className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href="/repuestos-calderas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todo →
       </a>
 
@@ -478,7 +478,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               setSelectedMarca(marca.name);
               setCurrentView("marca-caldera");
             }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
           >
             <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
             <div className="flex items-center gap-1">
@@ -503,7 +503,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">Repuestos Aire Acondicionado</h2>
-      <a href="/repuestos-aire" className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href="/repuestos-aire" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todo →
       </a>
 
@@ -516,7 +516,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               setSelectedMarca(marca.name);
               setCurrentView("marca-aire");
             }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
           >
             <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
             <div className="flex items-center gap-1">
@@ -541,7 +541,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/repuestos-calderas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href={`/repuestos-calderas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todos los repuestos →
       </a>
 
@@ -552,7 +552,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           return (
             <button
               key={cat.name}
-              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Icon className="w-4 h-4 text-gray-400" />
@@ -578,7 +578,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/repuestos-aire/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href={`/repuestos-aire/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todos los repuestos →
       </a>
 
@@ -589,7 +589,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           return (
             <button
               key={cat.name}
-              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
             >
               <div className="flex items-center gap-2">
                 <Icon className="w-4 h-4 text-gray-400" />
@@ -615,7 +615,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">Calderas Nuevas</h2>
-      <a href="/calderas-nuevas" className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href="/calderas-nuevas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todas →
       </a>
 
@@ -630,7 +630,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               setCurrentView("marca-caldera-nueva");
               setExpandedAccordion(null);
             }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
           >
             <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
             <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -652,7 +652,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">Aires Acondicionados Nuevos</h2>
-      <a href="/aires-nuevos" className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href="/aires-nuevos" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todos →
       </a>
 
@@ -667,7 +667,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               setCurrentView("marca-aire-nuevo");
               setExpandedAccordion(null);
             }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-blue-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
           >
             <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
             <ChevronRight className="w-4 h-4 text-gray-400" />
@@ -689,7 +689,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/calderas-nuevas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href={`/calderas-nuevas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todos los productos →
       </a>
 
@@ -705,7 +705,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div key={productoKey} className="border border-slate-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleAccordion(productoKey)}
-                className="w-full flex items-center justify-between p-2.5 bg-blue-50 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-gray-500" />
@@ -726,7 +726,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       {categoria.options.map((option) => (
                         <button
                           key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-[#1B4F72] py-1.5 px-2 hover:bg-blue-50 rounded transition-colors"
+                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
                         >
                           {option}
                         </button>
@@ -754,7 +754,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/aires-nuevos/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href={`/aires-nuevos/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todos los productos →
       </a>
 
@@ -770,7 +770,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div key={productoKey} className="border border-slate-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleAccordion(productoKey)}
-                className="w-full flex items-center justify-between p-2.5 bg-blue-50 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
                   <Icon className="w-4 h-4 text-gray-500" />
@@ -791,7 +791,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       {categoria.options.map((option) => (
                         <button
                           key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-[#1B4F72] py-1.5 px-2 hover:bg-blue-50 rounded transition-colors"
+                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
                         >
                           {option}
                         </button>
@@ -819,7 +819,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       className="p-3"
     >
       <h2 className="text-base font-bold text-gray-900 mb-0.5">Calderas Reacondicionadas</h2>
-      <a href="/calderas-reacondicionadas" className="text-[#1B4F72] font-medium text-xs mb-3 inline-block hover:underline">
+      <a href="/calderas-reacondicionadas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
         Ver todas →
       </a>
 
@@ -831,7 +831,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div key={cat.name} className="border border-slate-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleAccordion(cat.name)}
-                className="w-full flex items-center justify-between p-2.5 bg-blue-50 hover:bg-gray-100 transition-colors"
+                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
               >
                 <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
                 <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -849,7 +849,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       {cat.options.map((option) => (
                         <button
                           key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-[#1B4F72] py-1.5 px-2 hover:bg-blue-50 rounded transition-colors"
+                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
                         >
                           {option}
                         </button>
@@ -912,7 +912,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             <div key={index} className="border border-slate-200 rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleAccordion(`faq-${index}`)}
-                className="w-full flex items-center justify-between p-2.5 bg-blue-50 hover:bg-gray-100 transition-colors text-left"
+                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors text-left"
               >
                 <span className="font-medium text-gray-800 text-[13px] pr-2">{faq.q}</span>
                 <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
@@ -953,24 +953,24 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       <h2 className="text-base font-bold text-gray-900 mb-3">Contacto</h2>
 
       <div className="space-y-3">
-        <div className="p-3 bg-blue-50 rounded-lg">
+        <div className="p-3 bg-orange-50 rounded-lg">
           <div className="flex items-center gap-2 mb-1">
-            <Phone className="w-4 h-4 text-[#2E86AB]" />
+            <Phone className="w-4 h-4 text-orange-500" />
             <span className="text-base font-bold text-gray-800">91 117 77 77</span>
           </div>
           <p className="text-xs text-gray-600">Lunes a Viernes: 9:00 - 20:00</p>
           <p className="text-xs text-gray-600">Sábados: 10:00 - 14:00</p>
         </div>
 
-        <div className="p-3 bg-blue-50 rounded-lg">
+        <div className="p-3 bg-orange-50 rounded-lg">
           <div className="flex items-center gap-2 mb-1">
-            <Mail className="w-4 h-4 text-[#2E86AB]" />
+            <Mail className="w-4 h-4 text-orange-500" />
             <span className="text-[13px] font-medium text-gray-800">info@repuestosclima.es</span>
           </div>
           <p className="text-xs text-gray-600">Respuesta en menos de 24h</p>
         </div>
 
-        <button className="w-full py-2.5 bg-[#2E86AB] hover:bg-[#1B4F72] text-white font-semibold text-sm rounded-lg transition-colors">
+        <button className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm rounded-lg transition-colors">
           Enviar mensaje
         </button>
       </div>
@@ -1019,23 +1019,28 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             variants={menuVariants}
             className="fixed left-0 top-0 h-full w-[85%] max-w-[340px] bg-white z-50 shadow-2xl flex flex-col overflow-hidden"
           >
-            {/* Header */}
-            <div className="bg-[#1B4F72] text-white px-3 py-2.5 flex items-center justify-between flex-shrink-0">
+            {/* Header Premium */}
+            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
               {currentView !== "main" ? (
                 <button 
                   onClick={handleBack}
-                  className="flex items-center gap-1 text-white font-medium text-sm"
+                  className="flex items-center gap-1.5 text-white font-medium text-sm hover:bg-white/10 px-2 py-1 rounded-lg transition-colors"
                 >
-                  <ChevronsLeft className="w-5 h-5" />
+                  <ChevronLeft className="w-5 h-5" />
                   <span>Volver</span>
                 </button>
               ) : (
-                <span className="font-bold text-base">Menú</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                    <span className="text-orange-500 font-black text-lg">U</span>
+                  </div>
+                  <span className="font-bold text-lg">Uniclima</span>
+                </div>
               )}
               
               <button 
                 onClick={handleClose}
-                className="p-1.5 hover:bg-white/10 rounded-full transition-colors"
+                className="p-2 hover:bg-white/20 rounded-full transition-colors"
                 aria-label="Cerrar menú"
               >
                 <X className="w-5 h-5" />
@@ -1061,7 +1066,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                     <a
                       key={product.id}
                       href="#"
-                      className="flex items-center gap-2 p-2 hover:bg-blue-50 border-b border-slate-100 last:border-0"
+                      className="flex items-center gap-2 p-2 hover:bg-orange-50 border-b border-slate-100 last:border-0"
                     >
                       <img 
                         src={product.imagen} 
@@ -1071,7 +1076,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-gray-900 text-xs truncate">{product.name}</p>
                         <p className="text-xs text-gray-500">{product.marca}</p>
-                        <p className="text-xs font-bold text-[#1B4F72]">{product.precio.toFixed(2)}€</p>
+                        <p className="text-xs font-bold text-orange-600">{product.precio.toFixed(2)}€</p>
                       </div>
                     </a>
                   ))}
@@ -1093,13 +1098,13 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </motion.div>
 
             {/* Footer con contacto */}
-            <div className="p-3 border-t border-slate-200 bg-blue-50 flex-shrink-0">
+            <div className="p-3 border-t border-slate-200 bg-orange-50 flex-shrink-0">
               <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
-                <Phone className="w-3.5 h-3.5 text-[#2E86AB]" />
+                <Phone className="w-3.5 h-3.5 text-orange-500" />
                 <span className="font-medium">91 117 77 77</span>
               </div>
               <div className="flex items-center gap-2 text-xs text-gray-600">
-                <Mail className="w-3.5 h-3.5 text-[#2E86AB]" />
+                <Mail className="w-3.5 h-3.5 text-orange-500" />
                 <span>info@repuestosclima.es</span>
               </div>
             </div>

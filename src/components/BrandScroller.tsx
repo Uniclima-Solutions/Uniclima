@@ -5,7 +5,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Lista completa de marcas con logos HD procesados
 const marcasLogos = [
-  // Calderas
   { name: "Vaillant", logo: "/images/marcas/vaillant.png" },
   { name: "Junkers", logo: "/images/marcas/junkers.png" },
   { name: "Baxi", logo: "/images/marcas/baxi.png" },
@@ -18,13 +17,11 @@ const marcasLogos = [
   { name: "Biasi", logo: "/images/marcas/biasi.png" },
   { name: "Tifell", logo: "/images/marcas/tifell.png" },
   { name: "Manaut", logo: "/images/marcas/manaut.png" },
-  { name: "Hermann", logo: "/images/marcas/hermann.png" },
   { name: "Lamborghini", logo: "/images/marcas/lamborghini.png" },
   { name: "Immergas", logo: "/images/marcas/immergas.png" },
   { name: "Intergas", logo: "/images/marcas/intergas.png" },
   { name: "Domusa", logo: "/images/marcas/domusa.png" },
   { name: "Fagor", logo: "/images/marcas/fagor.png" },
-  // Aire acondicionado
   { name: "Daikin", logo: "/images/marcas/daikin.png" },
   { name: "Mitsubishi", logo: "/images/marcas/mitsubishi.png" },
   { name: "Fujitsu", logo: "/images/marcas/fujitsu.png" },
@@ -42,40 +39,17 @@ const marcasLogos = [
 
 export default function BrandScroller() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Detectar si el componente está montado (para evitar errores de SSR)
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Actualizar estado de scroll
-  const updateScrollState = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      setCanScrollLeft(container.scrollLeft > 0);
-      setCanScrollRight(
-        container.scrollLeft < container.scrollWidth - container.clientWidth - 10
-      );
-    }
-  };
-
-  useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener("scroll", updateScrollState);
-      updateScrollState();
-      return () => container.removeEventListener("scroll", updateScrollState);
-    }
-  }, []);
-
-  // Scroll con flechas
+  // Scroll fluido con flechas
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (container) {
-      const scrollAmount = 300;
+      const scrollAmount = container.clientWidth * 0.8;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -88,35 +62,22 @@ export default function BrandScroller() {
   return (
     <section className="py-10 sm:py-16 bg-gray-50">
       <div className="w-full max-w-6xl mx-auto px-4">
-        <div className="mb-8 sm:mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center">
-            Trabajamos con las mejores marcas
-          </h2>
-          <p className="text-gray-600 text-center mt-2 text-sm sm:text-base">
-            Repuestos originales y compatibles de los principales fabricantes
-          </p>
-        </div>
-
-        {/* Carrusel con scroll horizontal y flechas */}
+        {/* Carrusel con scroll fluido bidireccional */}
         <div className="relative group">
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl ${
-              canScrollLeft
-                ? "opacity-100 -translate-x-1/2"
-                : "opacity-0 pointer-events-none -translate-x-full"
-            }`}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
             aria-label="Anterior"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
           </button>
 
-          {/* Contenedor de scroll */}
+          {/* Contenedor de scroll fluido */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-2 py-2"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth px-2 py-2"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
           >
             {marcasLogos.map((brand, idx) => (
               <div
@@ -138,33 +99,21 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl ${
-              canScrollRight
-                ? "opacity-100 translate-x-1/2"
-                : "opacity-0 pointer-events-none translate-x-full"
-            }`}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
             aria-label="Siguiente"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
           </button>
 
           {/* Gradientes de fade en los bordes */}
-          <div
-            className={`absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none transition-opacity duration-300 ${
-              canScrollLeft ? "opacity-100" : "opacity-0"
-            }`}
-          />
-          <div
-            className={`absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none transition-opacity duration-300 ${
-              canScrollRight ? "opacity-100" : "opacity-0"
-            }`}
-          />
+          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" />
         </div>
       </div>
 
-      {/* Ocultar scrollbar */}
       <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
+        .scrollbar-hide::-webkit-scrollbar,
+        div[style*="scrollbarWidth"]::-webkit-scrollbar {
           display: none;
         }
       `}</style>

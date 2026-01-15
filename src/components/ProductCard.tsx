@@ -24,7 +24,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
-  const { addItem } = useCart();
+  const { addItem, openCart } = useCart();
   const [isAdded, setIsAdded] = useState(false);
   
   const discount = product.originalPrice 
@@ -34,8 +34,15 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    addItem(product);
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      reference: product.reference
+    });
     setIsAdded(true);
+    openCart();
     toast.success("Producto añadido al carrito");
     setTimeout(() => setIsAdded(false), 2000);
   };

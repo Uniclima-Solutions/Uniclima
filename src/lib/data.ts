@@ -241,7 +241,7 @@ export const products: Product[] = [
     partType: "Válvulas de gas",
     price: 89.90,
     originalPrice: 112.00,
-    image: "/images/category-valvulas.jpg",
+    image: "/images/boiler-parts/valvula-gas.png",
     images: [
       { id: "1-1", url: "/images/category-valvulas.jpg", alt: "Válvula de Gas Honeywell VK4105M - Vista frontal", isPrimary: true },
       { id: "1-2", url: "/images/category-intercambiadores.jpg", alt: "Válvula de Gas Honeywell VK4105M - Vista lateral", isPrimary: false },
@@ -353,7 +353,7 @@ Esta válvula de gas combinada integra todas las funciones necesarias para el co
     brand: "Vaillant",
     partType: "Intercambiadores",
     price: 145.50,
-    image: "/images/category-intercambiadores.jpg",
+    image: "/images/boiler-parts/intercambiador-placas.png",
     images: [
       { id: "2-1", url: "/images/category-intercambiadores.jpg", alt: "Intercambiador de Placas 14P - Vista frontal", isPrimary: true },
       { id: "2-2", url: "/images/category-valvulas.jpg", alt: "Intercambiador de Placas 14P - Vista lateral", isPrimary: false },
@@ -448,7 +448,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     partType: "Placas electrónicas",
     price: 178.00,
     originalPrice: 210.00,
-    image: "/images/category-placas.jpg",
+    image: "/images/boiler-parts/placa-electronica.png",
     images: [
       { id: "3-1", url: "/images/category-placas.jpg", alt: "Placa Electrónica Thema Condens - Vista frontal", isPrimary: true },
       { id: "3-2", url: "/images/category-valvulas.jpg", alt: "Placa Electrónica Thema Condens - Conectores", isPrimary: false },
@@ -522,7 +522,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     brand: "Ferroli",
     partType: "Bombas de circulación",
     price: 198.00,
-    image: "/images/hero-calderas.jpg",
+    image: "/images/boiler-parts/bomba-circulacion.png",
     images: [
       { id: "4-1", url: "/images/hero-calderas.jpg", alt: "Bomba Grundfos UPS 15-60 - Vista frontal", isPrimary: true },
       { id: "4-2", url: "/images/category-valvulas.jpg", alt: "Bomba Grundfos UPS 15-60 - Vista lateral", isPrimary: false },
@@ -601,7 +601,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     brand: "Baxi / BaxiRoca",
     partType: "Electrodos de encendido",
     price: 24.90,
-    image: "/images/category-valvulas.jpg",
+    image: "/images/boiler-parts/valvula-gas.png",
     images: [
       { id: "5-1", url: "/images/category-valvulas.jpg", alt: "Electrodo de Encendido - Vista frontal", isPrimary: true },
     ],
@@ -653,7 +653,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     partType: "Compresores",
     price: 456.00,
     originalPrice: 520.00,
-    image: "/images/category-quemadores.jpg",
+    image: "/images/boiler-parts/quemador.png",
     images: [
       { id: "6-1", url: "/images/category-quemadores.jpg", alt: "Compresor Scroll JT90 - Vista frontal", isPrimary: true },
       { id: "6-2", url: "/images/category-intercambiadores.jpg", alt: "Compresor Scroll JT90 - Vista lateral", isPrimary: false },
@@ -733,7 +733,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     brand: "Mitsubishi Electric",
     partType: "Motores ventilador",
     price: 134.50,
-    image: "/images/category-intercambiadores.jpg",
+    image: "/images/boiler-parts/intercambiador-placas.png",
     images: [
       { id: "7-1", url: "/images/category-intercambiadores.jpg", alt: "Motor Ventilador Interior - Vista frontal", isPrimary: true },
     ],
@@ -787,7 +787,7 @@ Este intercambiador secundario es el encargado de transferir el calor del circui
     brand: "Fujitsu",
     partType: "Placas electrónicas",
     price: 189.00,
-    image: "/images/category-placas.jpg",
+    image: "/images/boiler-parts/placa-electronica.png",
     images: [
       { id: "8-1", url: "/images/category-placas.jpg", alt: "Placa Electrónica ASYG - Vista frontal", isPrimary: true },
     ],
@@ -857,7 +857,7 @@ export const featuredCategories = [
     id: "valvulas",
     name: "Válvulas de gas",
     count: 320,
-    image: "/images/category-valvulas.jpg",
+    image: "/images/boiler-parts/valvula-gas.png",
     href: "/repuestos/calderas/valvulas-gas",
     category: "calderas" as const
   },
@@ -865,7 +865,7 @@ export const featuredCategories = [
     id: "intercambiadores",
     name: "Intercambiadores",
     count: 185,
-    image: "/images/category-intercambiadores.jpg",
+    image: "/images/boiler-parts/intercambiador-placas.png",
     href: "/repuestos/calderas/intercambiadores",
     category: "calderas" as const
   },
@@ -873,7 +873,7 @@ export const featuredCategories = [
     id: "bombas",
     name: "Bombas de circulación",
     count: 156,
-    image: "/images/hero-calderas.jpg",
+    image: "/images/boiler-parts/bomba-circulacion.png",
     href: "/repuestos/calderas/bombas",
     category: "calderas" as const
   },
@@ -881,7 +881,7 @@ export const featuredCategories = [
     id: "placas",
     name: "Placas electrónicas",
     count: 278,
-    image: "/images/category-placas.jpg",
+    image: "/images/boiler-parts/placa-electronica.png",
     href: "/repuestos/calderas/placas-electronicas",
     category: "calderas" as const
   },
@@ -889,7 +889,7 @@ export const featuredCategories = [
     id: "compresores",
     name: "Compresores",
     count: 187,
-    image: "/images/category-quemadores.jpg",
+    image: "/images/boiler-parts/quemador.png",
     href: "/repuestos/aire/compresores",
     category: "aire-acondicionado" as const
   },
@@ -897,7 +897,7 @@ export const featuredCategories = [
     id: "motores",
     name: "Motores ventilador",
     count: 156,
-    image: "/images/category-intercambiadores.jpg",
+    image: "/images/boiler-parts/intercambiador-placas.png",
     href: "/repuestos/aire/motores",
     category: "aire-acondicionado" as const
   }

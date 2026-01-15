@@ -307,7 +307,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   return (
     <Link href={`${basePath}/${category.slug}`}>
       <div 
-        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-300 rounded-xl sm:rounded-2xl relative aspect-[4/5] sm:aspect-square"
+        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl lg:rounded-2xl relative aspect-square"
       >
         {/* Banner con forma de onda - posicionado detrás */}
         <div className="absolute bottom-0 left-0 right-0 h-[45%]">
@@ -323,9 +323,9 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
                 x2={gradientVariant === 0 ? "100%" : gradientVariant === 1 ? "0%" : "50%"} 
                 y2="100%"
               >
-                <stop offset="0%" stopColor={isOrange ? '#ffab66' : '#7dd3fc'} />
-                <stop offset="50%" stopColor={isOrange ? '#ff6900' : '#0ea5e9'} />
-                <stop offset="100%" stopColor={isOrange ? '#cc5500' : '#0369a1'} />
+                <stop offset="0%" stopColor={isOrange ? '#ffab66' : '#818cf8'} />
+                <stop offset="50%" stopColor={isOrange ? '#ff6900' : '#6366f1'} />
+                <stop offset="100%" stopColor={isOrange ? '#cc5500' : '#4f46e5'} />
               </linearGradient>
             </defs>
             <path d={wavePath} fill={`url(#gradient-${isOrange ? 'orange' : 'blue'}-${category.slug})`} />
@@ -343,8 +343,8 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         </div>
         
         {/* Texto blanco en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-2 sm:pb-4 px-1 sm:px-3">
-          <h3 className="text-white font-bold text-[10px] sm:text-sm md:text-base leading-tight text-center drop-shadow-lg">
+        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3 sm:pb-5 px-1 sm:px-3">
+          <h3 className="text-white font-extrabold text-[11px] sm:text-sm lg:text-base leading-tight text-center drop-shadow-lg uppercase tracking-wide">
             {category.name}
           </h3>
         </div>
@@ -396,7 +396,9 @@ function CategoryCarousel({
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (container) {
-      const scrollAmount = 300;
+      const cardWidth = 200; // Ancho aproximado de cada tarjeta
+      const visibleCards = Math.floor(container.clientWidth / cardWidth);
+      const scrollAmount = cardWidth * Math.max(1, visibleCards - 1);
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -405,7 +407,7 @@ function CategoryCarousel({
   };
 
   return (
-    <section className="py-2 sm:py-3 lg:py-4 bg-white">
+    <section className="py-6 sm:py-8 lg:py-10 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-3 sm:mb-4 lg:mb-6">
@@ -443,7 +445,7 @@ function CategoryCarousel({
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="flex-shrink-0 w-[280px] sm:w-[220px] lg:w-[240px]"
+                className="flex-shrink-0 w-[160px] sm:w-[200px] lg:w-[240px]"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
@@ -821,7 +823,7 @@ function MaintenanceSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-6 sm:py-8 lg:py-10 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-6 sm:mb-8 px-4 sm:px-6 lg:px-8">
@@ -908,8 +910,8 @@ export default function Home() {
           <img 
             src="/images/banner-ofertas-principal.png" 
             alt="Ofertas en Repuestos para Calderas y Aire Acondicionado" 
-            className="w-full h-auto"
-            style={{ display: 'block', minHeight: '200px', maxHeight: '500px', objectFit: 'cover' }}
+            className="w-full h-auto object-contain sm:object-cover"
+            style={{ display: 'block', height: 'auto', maxHeight: '400px' }}
           />
         </Link>
       </section>
@@ -923,18 +925,6 @@ export default function Home() {
         basePath="/c/calderas"
       />
 
-      {/* Banner Reparación de Placas - Después de calderas (relacionado) */}
-      <section className="w-full overflow-hidden my-2">
-        <Link href="/reparacion-placas" className="block">
-          <img 
-            src="/images/banner-reparacion-placas.png" 
-            alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-            className="w-full h-auto object-cover"
-            style={{ display: 'block', maxHeight: '350px', objectFit: 'cover' }}
-          />
-        </Link>
-      </section>
-
       {/* Sección: Repuestos de Aire Acondicionado */}
       <CategoryCarousel
         title="Repuestos de Aire Acondicionado"
@@ -946,19 +936,19 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - Después de aire acondicionado */}
-      <section className="w-full overflow-hidden my-2">
+      <section className="w-full overflow-hidden my-6 sm:my-8 lg:my-10">
         <Link href="/pieza-gratis" className="block">
           <img 
             src="/images/banner-pieza-gratis.png" 
             alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-            className="w-full h-auto object-cover"
-            style={{ display: 'block', maxHeight: '350px', objectFit: 'cover' }}
+            className="w-full h-auto object-contain sm:object-cover"
+            style={{ display: 'block', height: 'auto', maxHeight: '400px' }}
           />
         </Link>
       </section>
 
       {/* Categorías destacadas - Estilo PCComponentes */}
-      <section className="py-3 sm:py-4 lg:py-6 bg-gray-50">
+      <section className="py-6 sm:py-8 lg:py-10 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
@@ -987,7 +977,7 @@ export default function Home() {
       </section>
 
       {/* Banner CTA Profesionales - Diseño Premium */}
-      <section className="py-4 sm:py-6 lg:py-8 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
+      <section className="py-6 sm:py-8 lg:py-10 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
         <div className="w-[90%] max-w-6xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -1079,6 +1069,18 @@ export default function Home() {
 
       {/* Reseñas de Google */}
       <GoogleReviews />
+
+      {/* Banner Reparación de Placas */}
+      <section className="w-full overflow-hidden my-6 sm:my-8 lg:my-10">
+        <Link href="/reparacion-placas" className="block">
+          <img 
+            src="/images/banner-reparacion-placas.png" 
+            alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
+            className="w-full h-auto object-contain sm:object-cover"
+            style={{ display: 'block', height: 'auto', maxHeight: '400px' }}
+          />
+        </Link>
+      </section>
 
       {/* Marcas */}
       <BrandScroller />

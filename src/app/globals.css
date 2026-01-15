@@ -136,7 +136,16 @@
   border-color: var(--border);
 }
 
+html {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+}
+
 body {
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  position: relative;
+  width: 100%;
   background-color: var(--background);
   color: var(--foreground);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -286,4 +295,22 @@ body {
   left: 0;
   right: 0;
   margin-top: 0.5rem;
+}
+
+/* Scroll fluido mejorado para carruseles */
+.scroll-smooth {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Transición suave para elementos del carrusel */
+.carousel-item {
+  transition: transform 0.3s ease-out;
+}
+
+/* Mejora del rendimiento del scroll */
+.scrollbar-hide {
+  will-change: scroll-position;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
