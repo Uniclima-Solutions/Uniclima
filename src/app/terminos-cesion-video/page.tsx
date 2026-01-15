@@ -33,7 +33,7 @@ export default function TerminosCesionVideoPage() {
             <Scale className="w-4 h-4" />
             Documento Legal
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 leading-tight">
             Términos y Condiciones de Cesión de Derechos de Vídeo
           </h1>
           <p className="text-gray-600">
@@ -42,13 +42,13 @@ export default function TerminosCesionVideoPage() {
         </div>
 
         {/* AVISO IMPORTANTE - NO MOSTRAR ROSTRO */}
-        <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-6 mb-8">
-          <div className="flex items-start gap-4">
+        <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-4 sm:p-6 mb-8">
+          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="w-6 h-6 text-red-600" />
             </div>
             <div>
-              <h3 className="text-xl font-bold text-red-800 mb-2">REQUISITO INDISPENSABLE: NO MOSTRAR EL ROSTRO</h3>
+              <h3 className="text-base sm:text-xl font-bold text-red-800 mb-2">REQUISITO INDISPENSABLE: NO MOSTRAR EL ROSTRO</h3>
               <p className="text-red-700 mb-3">
                 <strong>Es condición obligatoria e indispensable</strong> que en el vídeo NO aparezca el rostro ni se revele 
                 la identidad de ninguna persona. Los vídeos que muestren caras serán <strong>automáticamente descartados</strong> 
@@ -66,17 +66,17 @@ export default function TerminosCesionVideoPage() {
         </div>
 
         {/* Contenido legal */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 sm:p-8 lg:p-10 space-y-8">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8">
           
           {/* Sección 1: Objeto */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <FileText className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">1. OBJETO DEL CONTRATO</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">1. OBJETO DEL CONTRATO</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 El presente documento establece los términos y condiciones bajo los cuales el usuario (en adelante, "el Cedente") 
                 cede a <strong>UNICLIMA SOLUTIONS, S.L.</strong> (en adelante, "el Cesionario"), con domicilio social en España 
@@ -93,12 +93,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 2: Cesión de derechos */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Shield className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">2. CESIÓN DE DERECHOS DE PROPIEDAD INTELECTUAL</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">2. CESIÓN DE DERECHOS DE PROPIEDAD INTELECTUAL</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 De conformidad con lo establecido en el <strong>Real Decreto Legislativo 1/1996, de 12 de abril</strong>, 
                 por el que se aprueba el Texto Refundido de la Ley de Propiedad Intelectual (TRLPI), el Cedente transmite 
@@ -148,12 +148,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 3: Alcance territorial y temporal */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Scale className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">3. ALCANCE TERRITORIAL Y TEMPORAL</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">3. ALCANCE TERRITORIAL Y TEMPORAL</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 La cesión de derechos se realiza con el siguiente alcance:
               </p>
@@ -169,16 +169,16 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 4: Usos autorizados */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Camera className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">4. USOS AUTORIZADOS DEL VÍDEO</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">4. USOS AUTORIZADOS DEL VÍDEO</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 El Cesionario queda expresamente autorizado para utilizar el Vídeo, total o parcialmente, para los siguientes fines:
               </p>
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
                   "Publicación en la web corporativa de Uniclima",
                   "Difusión en redes sociales (YouTube, Instagram, TikTok, Facebook, LinkedIn, X, etc.)",
@@ -205,12 +205,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 5: Derechos de Imagen y Privacidad - NO MOSTRAR ROSTRO */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Camera className="w-5 h-5 text-red-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">5. DERECHOS DE IMAGEN Y PRIVACIDAD</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">5. DERECHOS DE IMAGEN Y PRIVACIDAD</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <div className="bg-red-50 border-2 border-red-300 rounded-xl p-4">
                 <p className="font-bold text-red-800 mb-3">CONDICIÓN INDISPENSABLE PARA LA VALIDEZ DE LA CESIÓN:</p>
                 <p className="text-red-700">
@@ -240,12 +240,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 6: Declaraciones y garantías */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Shield className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">6. DECLARACIONES Y GARANTÍAS DEL CEDENTE</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">6. DECLARACIONES Y GARANTÍAS DEL CEDENTE</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 El Cedente declara y garantiza bajo su exclusiva responsabilidad que:
               </p>
@@ -281,12 +281,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 6: Indemnización */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <AlertTriangle className="w-5 h-5 text-red-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">7. RESPONSABILIDAD E INDEMNIZACIÓN</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">7. RESPONSABILIDAD E INDEMNIZACIÓN</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <div className="bg-red-50 border border-red-200 rounded-xl p-4">
                 <p className="font-medium text-red-800 mb-3">El Cedente se compromete a:</p>
                 <ul className="list-disc list-inside space-y-2 text-sm text-red-700">
@@ -306,16 +306,16 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 7: Requisitos técnicos */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Camera className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">8. REQUISITOS TÉCNICOS DEL VÍDEO</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">8. REQUISITOS TÉCNICOS DEL VÍDEO</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 Para que el Vídeo sea aceptado y validado, deberá cumplir los siguientes requisitos técnicos mínimos:
               </p>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-gray-50 rounded-xl p-4">
                   <h4 className="font-bold text-gray-900 mb-3">Calidad técnica</h4>
                   <ul className="space-y-2 text-sm">
@@ -350,12 +350,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 8: Proceso de validación */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Info className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">9. PROCESO DE VALIDACIÓN Y RECOMPENSA</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">9. PROCESO DE VALIDACIÓN Y RECOMPENSA</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <ol className="list-decimal list-inside space-y-3">
                 <li><strong>Recepción:</strong> El Vídeo será recibido y registrado en nuestro sistema con un identificador único.</li>
                 <li><strong>Revisión técnica:</strong> Nuestro equipo verificará que el Vídeo cumple los requisitos técnicos (48-72 horas).</li>
@@ -375,12 +375,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 9: Protección de datos */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Shield className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">10. PROTECCIÓN DE DATOS PERSONALES</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">10. PROTECCIÓN DE DATOS PERSONALES</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 De conformidad con el <strong>Reglamento (UE) 2016/679</strong> (RGPD) y la <strong>Ley Orgánica 3/2018</strong> (LOPDGDD), 
                 le informamos que los datos personales facilitados serán tratados por UNICLIMA SOLUTIONS, S.L. con la finalidad 
@@ -400,12 +400,12 @@ export default function TerminosCesionVideoPage() {
           {/* Sección 10: Legislación aplicable */}
           <section>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
                 <Scale className="w-5 h-5 text-orange-600" />
               </div>
-              <h2 className="text-xl font-bold text-gray-900">11. LEGISLACIÓN APLICABLE Y JURISDICCIÓN</h2>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900">11. LEGISLACIÓN APLICABLE Y JURISDICCIÓN</h2>
             </div>
-            <div className="text-gray-700 space-y-4 pl-13">
+            <div className="text-sm sm:text-base text-gray-700 space-y-4 pl-0 sm:pl-4">
               <p>
                 El presente contrato se regirá e interpretará de conformidad con la legislación española, 
                 siendo de aplicación, entre otras, las siguientes normas:
