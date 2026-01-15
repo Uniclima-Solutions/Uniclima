@@ -909,11 +909,12 @@ export default function Home() {
         <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
           <Link href="/ofertas" className="block w-full">
             <picture>
-              <source media="(max-width: 768px)" srcSet="/banner_ofertas_mobile.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet.png" />
               <img 
-                src="/banner_ofertas_v4.png" 
+                src="/banner_ofertas_pc.png" 
                 alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
-                className="w-full h-auto block rounded-xl shadow-md"
+                className="w-full h-auto block rounded-xl shadow-lg"
               />
             </picture>
           </Link>
@@ -944,11 +945,12 @@ export default function Home() {
         <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
           <Link href="/pieza-gratis" className="block w-full">
             <picture>
-              <source media="(max-width: 768px)" srcSet="/banner_pieza_gratis_mobile.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet.png" />
               <img 
-                src="/banner_pieza_gratis_v4.png" 
+                src="/banner_pieza_gratis_pc.png" 
                 alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
-                className="w-full h-auto block rounded-xl shadow-md"
+                className="w-full h-auto block rounded-xl shadow-lg"
               />
             </picture>
           </Link>
@@ -1083,11 +1085,12 @@ export default function Home() {
         <div className="w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
           <Link href="/reparacion-placas" className="block w-full">
             <picture>
-              <source media="(max-width: 768px)" srcSet="/banner_placa_mobile.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_placa_mobile.png" />
+              <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet.png" />
               <img 
-                src="/banner_placa_v4.png" 
+                src="/banner_placa_pc.png" 
                 alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-                className="w-full h-auto block rounded-xl shadow-md"
+                className="w-full h-auto block rounded-xl shadow-lg"
               />
             </picture>
           </Link>
