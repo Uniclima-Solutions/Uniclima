@@ -1,23 +1,20 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Gift, Video, CheckCircle, AlertCircle, ArrowLeft, Wrench, 
-  Upload, Camera, Mic, MicOff, X, FileVideo, Play, Pause, 
+  Upload, Camera, Mic, MicOff, X, FileVideo,
   Square, Clock, HardDrive, Sparkles, Shield, Award, 
-  ChevronDown, ChevronUp, Info, ExternalLink, Flame, Snowflake
+  ChevronRight, Info, ExternalLink
 } from 'lucide-react';
 
-// Datos de marcas para autocompletado
-const marcasCalderas = [
+// Datos de marcas para autocompletado (todas las marcas juntas)
+const todasLasMarcas = [
   'Junkers / Bosch', 'Vaillant', 'Saunier Duval', 'Ferroli', 'Baxi / BaxiRoca',
   'Ariston', 'Beretta', 'Roca', 'Cointra', 'Chaffoteaux', 'Hermann', 'Manaut',
   'Fondital', 'Immergas', 'Viessmann', 'Wolf', 'De Dietrich', 'Lamborghini',
-  'Fagor', 'Sime', 'Buderus', 'Atlantic', 'Thermor', 'Tesy'
-];
-
-const marcasAire = [
+  'Fagor', 'Sime', 'Buderus', 'Atlantic', 'Thermor', 'Tesy',
   'Daikin', 'Mitsubishi Electric', 'Fujitsu', 'LG', 'Samsung', 'Panasonic',
   'Toshiba', 'Hitachi', 'Carrier', 'Hisense', 'Haier', 'Midea', 'Gree',
   'General (Fujitsu)', 'Johnson', 'Mundoclima', 'Kosner', 'HTW', 'Infiniton'
@@ -38,49 +35,40 @@ const modelosPorMarca: { [key: string]: string[] } = {
   'Samsung': ['WindFree', 'WindFree Elite', 'WindFree Avant', 'Luzon', 'Maldives', 'AR'],
 };
 
-// Tipos de piezas
-const tiposPiezas = {
-  calderas: [
-    'Válvula de gas', 'Placa electrónica', 'Intercambiador primario', 'Intercambiador ACS',
-    'Bomba de circulación', 'Ventilador / Extractor', 'Electrodo de encendido', 'Electrodo de ionización',
-    'Presostato de agua', 'Presostato de humos', 'Termostato', 'Sonda NTC', 'Vaso de expansión',
-    'Válvula de 3 vías', 'Motor de 3 vías', 'Grifo de llenado', 'Cuerpo de agua', 'Manómetro',
-    'Junta / Retén', 'Quemador', 'Cámara de combustión', 'Transformador de encendido'
-  ],
-  aire: [
-    'Placa electrónica interior', 'Placa electrónica exterior', 'Compresor', 'Motor ventilador interior',
-    'Motor ventilador exterior', 'Turbina', 'Condensador', 'Evaporador', 'Válvula de expansión',
-    'Sensor de temperatura', 'Sensor de humedad', 'Mando a distancia', 'Receptor IR', 'Filtro',
-    'Bobina / Solenoide', 'Tarjeta de control', 'Capacitador', 'Relé', 'Termistor'
-  ]
-};
+// Tipos de piezas (todas juntas)
+const todasLasPiezas = [
+  'Válvula de gas', 'Placa electrónica', 'Intercambiador primario', 'Intercambiador ACS',
+  'Bomba de circulación', 'Ventilador / Extractor', 'Electrodo de encendido', 'Electrodo de ionización',
+  'Presostato de agua', 'Presostato de humos', 'Termostato', 'Sonda NTC', 'Vaso de expansión',
+  'Válvula de 3 vías', 'Motor de 3 vías', 'Grifo de llenado', 'Cuerpo de agua', 'Manómetro',
+  'Junta / Retén', 'Quemador', 'Cámara de combustión', 'Transformador de encendido',
+  'Placa electrónica interior', 'Placa electrónica exterior', 'Compresor', 'Motor ventilador interior',
+  'Motor ventilador exterior', 'Turbina', 'Condensador', 'Evaporador', 'Válvula de expansión',
+  'Sensor de temperatura', 'Sensor de humedad', 'Mando a distancia', 'Receptor IR', 'Filtro',
+  'Bobina / Solenoide', 'Tarjeta de control', 'Capacitador', 'Relé', 'Termistor'
+];
 
-// Errores comunes
-const erroresComunes = {
-  calderas: [
-    'Error F28 - Fallo de encendido', 'Error F29 - Llama se apaga', 'Error F22 - Falta de agua',
-    'Error F75 - Fallo bomba/presostato', 'Error F20 - Sobrecalentamiento', 'Error F27 - Llama parásita',
-    'Error F24 - Calentamiento rápido', 'Error F25 - Gases de combustión', 'Error F05 - Sonda ACS',
-    'Error F10 - Sonda NTC ida', 'Error F11 - Sonda NTC retorno', 'Error A01 - Sin llama',
-    'Error E01 - Fallo general', 'Error E02 - Termostato seguridad', 'Error E03 - Presostato humos',
-    'Error E04 - Fallo ionización', 'Error E05 - Sonda calefacción', 'Error E06 - Sonda ACS',
-    'No enciende', 'No calienta agua', 'No calienta calefacción', 'Hace ruido', 'Pierde agua',
-    'Presión baja', 'Presión alta', 'Se apaga solo', 'Tarda en encender'
-  ],
-  aire: [
-    'Error E1 - Sensor temperatura', 'Error E2 - Sensor evaporador', 'Error E3 - Sensor condensador',
-    'Error E4 - Protección compresor', 'Error E5 - Comunicación', 'Error E6 - Motor ventilador',
-    'Error F1 - Sensor interior', 'Error F2 - Sensor exterior', 'Error F3 - Sensor descarga',
-    'Error H1 - Descongelación', 'Error H3 - Protección alta presión', 'Error H6 - Sensor posición',
-    'No enfría', 'No calienta', 'No arranca', 'Hace ruido', 'Gotea agua', 'Mal olor',
-    'Mando no funciona', 'Parpadean luces', 'Se para solo', 'Hielo en unidad exterior'
-  ]
-};
+// Errores comunes (todos juntos)
+const todosLosErrores = [
+  'Error F28 - Fallo de encendido', 'Error F29 - Llama se apaga', 'Error F22 - Falta de agua',
+  'Error F75 - Fallo bomba/presostato', 'Error F20 - Sobrecalentamiento', 'Error F27 - Llama parásita',
+  'Error F24 - Calentamiento rápido', 'Error F25 - Gases de combustión', 'Error F05 - Sonda ACS',
+  'Error F10 - Sonda NTC ida', 'Error F11 - Sonda NTC retorno', 'Error A01 - Sin llama',
+  'Error E01 - Fallo general', 'Error E02 - Termostato seguridad', 'Error E03 - Presostato humos',
+  'Error E04 - Fallo ionización', 'Error E05 - Sonda calefacción', 'Error E06 - Sonda ACS',
+  'No enciende', 'No calienta agua', 'No calienta calefacción', 'Hace ruido', 'Pierde agua',
+  'Presión baja', 'Presión alta', 'Se apaga solo', 'Tarda en encender',
+  'Error E1 - Sensor temperatura', 'Error E2 - Sensor evaporador', 'Error E3 - Sensor condensador',
+  'Error E4 - Protección compresor', 'Error E5 - Comunicación', 'Error E6 - Motor ventilador',
+  'Error F1 - Sensor interior', 'Error F2 - Sensor exterior', 'Error F3 - Sensor descarga',
+  'Error H1 - Descongelación', 'Error H3 - Protección alta presión', 'Error H6 - Sensor posición',
+  'No enfría', 'No calienta', 'No arranca', 'Gotea agua', 'Mal olor',
+  'Mando no funciona', 'Parpadean luces', 'Se para solo', 'Hielo en unidad exterior'
+];
 
 export default function PiezaGratisPage() {
   // Estados del formulario
   const [formData, setFormData] = useState({
-    tipoEquipo: '' as '' | 'caldera' | 'split' | 'cassette' | 'conductos',
     marca: '',
     modelo: '',
     error: '',
@@ -118,18 +106,19 @@ export default function PiezaGratisPage() {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [recordedChunks, setRecordedChunks] = useState<Blob[]>([]);
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [showCamera, setShowCamera] = useState(false);
   
   // Estados de voz
   const [isListening, setIsListening] = useState(false);
   const [speechSupported, setSpeechSupported] = useState(false);
+  const [voiceError, setVoiceError] = useState<string | null>(null);
   
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   
   // Verificar soporte de Speech Recognition
   useEffect(() => {
@@ -154,27 +143,11 @@ export default function PiezaGratisPage() {
     };
   }, [cameraStream, videoPreview]);
   
-  // Obtener categoría del equipo
-  const getEquipoCategoria = () => {
-    if (formData.tipoEquipo === 'caldera') return 'calderas';
-    if (['split', 'cassette', 'conductos'].includes(formData.tipoEquipo)) return 'aire';
-    return null;
-  };
-  
-  // Filtrar marcas según tipo de equipo
-  const getMarcasDisponibles = () => {
-    const categoria = getEquipoCategoria();
-    if (categoria === 'calderas') return marcasCalderas;
-    if (categoria === 'aire') return marcasAire;
-    return [...marcasCalderas, ...marcasAire];
-  };
-  
   // Manejar cambio de marca
   const handleMarcaChange = (value: string) => {
     setFormData({ ...formData, marca: value, modelo: '' });
-    const marcas = getMarcasDisponibles();
     if (value.length > 0) {
-      const filtered = marcas.filter(m => 
+      const filtered = todasLasMarcas.filter(m => 
         m.toLowerCase().includes(value.toLowerCase())
       );
       setMarcasSugeridas(filtered);
@@ -207,16 +180,14 @@ export default function PiezaGratisPage() {
   // Manejar cambio de pieza
   const handlePiezaChange = (value: string) => {
     setFormData({ ...formData, pieza: value });
-    const categoria = getEquipoCategoria();
-    const piezas = categoria ? tiposPiezas[categoria] : [...tiposPiezas.calderas, ...tiposPiezas.aire];
     if (value.length > 0) {
-      const filtered = piezas.filter(p => 
+      const filtered = todasLasPiezas.filter(p => 
         p.toLowerCase().includes(value.toLowerCase())
       );
       setPiezasSugeridas(filtered);
       setShowPiezas(filtered.length > 0);
     } else {
-      setPiezasSugeridas(piezas.slice(0, 10));
+      setPiezasSugeridas(todasLasPiezas.slice(0, 10));
       setShowPiezas(true);
     }
   };
@@ -224,44 +195,73 @@ export default function PiezaGratisPage() {
   // Manejar cambio de error
   const handleErrorChange = (value: string) => {
     setFormData({ ...formData, error: value });
-    const categoria = getEquipoCategoria();
-    const erroresLista = categoria ? erroresComunes[categoria] : [...erroresComunes.calderas, ...erroresComunes.aire];
     if (value.length > 0) {
-      const filtered = erroresLista.filter(e => 
+      const filtered = todosLosErrores.filter(e => 
         e.toLowerCase().includes(value.toLowerCase())
       );
       setErroresSugeridos(filtered);
       setShowErrores(filtered.length > 0);
     } else {
-      setErroresSugeridos(erroresLista.slice(0, 8));
+      setErroresSugeridos(todosLosErrores.slice(0, 8));
       setShowErrores(true);
     }
   };
   
   // Manejar reconocimiento de voz
   const handleVoiceInput = () => {
-    if (!speechSupported) return;
+    if (!speechSupported) {
+      setVoiceError('Tu navegador no soporta reconocimiento de voz');
+      return;
+    }
     
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    const recognition = new SpeechRecognition();
+    setVoiceError(null);
     
-    recognition.lang = 'es-ES';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    
-    recognition.onstart = () => setIsListening(true);
-    recognition.onend = () => setIsListening(false);
-    recognition.onerror = () => setIsListening(false);
-    
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setFormData(prev => ({
-        ...prev,
-        descripcion: prev.descripcion + (prev.descripcion ? ' ' : '') + transcript
-      }));
-    };
-    
-    recognition.start();
+    try {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      
+      recognition.lang = 'es-ES';
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      
+      recognition.onstart = () => {
+        setIsListening(true);
+        setVoiceError(null);
+      };
+      
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+      
+      recognition.onerror = (event: any) => {
+        setIsListening(false);
+        if (event.error === 'no-speech') {
+          setVoiceError('No se detectó voz. Intenta de nuevo.');
+        } else if (event.error === 'not-allowed') {
+          setVoiceError('Permiso de micrófono denegado. Actívalo en tu navegador.');
+        } else {
+          setVoiceError('Error al escuchar. Intenta de nuevo.');
+        }
+      };
+      
+      recognition.onresult = (event: any) => {
+        const transcript = event.results[0][0].transcript;
+        setFormData(prev => ({
+          ...prev,
+          descripcion: prev.descripcion + (prev.descripcion ? ' ' : '') + transcript
+        }));
+        // Enfocar el textarea después de añadir texto
+        if (textareaRef.current) {
+          textareaRef.current.focus();
+        }
+      };
+      
+      recognition.start();
+    } catch (error) {
+      setVoiceError('Error al iniciar el reconocimiento de voz');
+      setIsListening(false);
+    }
   };
   
   // Manejar drag & drop
@@ -354,7 +354,6 @@ export default function PiezaGratisPage() {
       };
       
       setMediaRecorder(recorder);
-      setRecordedChunks([]);
       recorder.start(1000);
       setIsRecording(true);
       setRecordingTime(0);
@@ -424,7 +423,6 @@ export default function PiezaGratisPage() {
     const nuevosErrores: string[] = [];
     
     if (step === 1) {
-      if (!formData.tipoEquipo) nuevosErrores.push('Selecciona el tipo de equipo');
       if (!formData.marca) nuevosErrores.push('Indica la marca del equipo');
       if (!formData.modelo) nuevosErrores.push('Indica el modelo del equipo');
     } else if (step === 2) {
@@ -572,7 +570,7 @@ export default function PiezaGratisPage() {
               />
             </div>
             {[
-              { num: 1, label: 'Equipo', icon: formData.tipoEquipo === 'caldera' ? Flame : Snowflake },
+              { num: 1, label: 'Equipo', icon: Wrench },
               { num: 2, label: 'Problema', icon: AlertCircle },
               { num: 3, label: 'Vídeo', icon: Video },
               { num: 4, label: 'Enviar', icon: Gift }
@@ -627,36 +625,7 @@ export default function PiezaGratisPage() {
                 <div className="space-y-6">
                   <div className="text-center mb-8">
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Datos del equipo</h2>
-                    <p className="text-gray-600">Indica el tipo, marca y modelo del equipo reparado</p>
-                  </div>
-                  
-                  {/* Tipo de equipo */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">
-                      Tipo de equipo *
-                    </label>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {[
-                        { value: 'caldera', label: 'Caldera', icon: Flame },
-                        { value: 'split', label: 'Split', icon: Snowflake },
-                        { value: 'cassette', label: 'Cassette', icon: Snowflake },
-                        { value: 'conductos', label: 'Conductos', icon: Snowflake }
-                      ].map((tipo) => (
-                        <button
-                          key={tipo.value}
-                          type="button"
-                          onClick={() => setFormData({ ...formData, tipoEquipo: tipo.value as any, marca: '', modelo: '' })}
-                          className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center gap-2 ${
-                            formData.tipoEquipo === tipo.value
-                              ? 'border-orange-500 bg-orange-50 text-orange-700'
-                              : 'border-gray-200 hover:border-orange-300 text-gray-600 hover:bg-gray-50'
-                          }`}
-                        >
-                          <tipo.icon className="w-6 h-6" />
-                          <span className="text-sm font-medium">{tipo.label}</span>
-                        </button>
-                      ))}
-                    </div>
+                    <p className="text-gray-600">Indica la marca y modelo del equipo reparado</p>
                   </div>
                   
                   {/* Marca con autocompletado */}
@@ -670,7 +639,7 @@ export default function PiezaGratisPage() {
                       onChange={(e) => handleMarcaChange(e.target.value)}
                       onFocus={() => {
                         if (formData.marca.length === 0) {
-                          setMarcasSugeridas(getMarcasDisponibles().slice(0, 10));
+                          setMarcasSugeridas(todasLasMarcas.slice(0, 10));
                           setShowMarcas(true);
                         }
                       }}
@@ -756,9 +725,7 @@ export default function PiezaGratisPage() {
                       value={formData.error}
                       onChange={(e) => handleErrorChange(e.target.value)}
                       onFocus={() => {
-                        const categoria = getEquipoCategoria();
-                        const erroresLista = categoria ? erroresComunes[categoria] : [...erroresComunes.calderas, ...erroresComunes.aire];
-                        setErroresSugeridos(erroresLista.slice(0, 8));
+                        setErroresSugeridos(todosLosErrores.slice(0, 8));
                         setShowErrores(true);
                       }}
                       onBlur={() => setTimeout(() => setShowErrores(false), 200)}
@@ -794,9 +761,7 @@ export default function PiezaGratisPage() {
                       value={formData.pieza}
                       onChange={(e) => handlePiezaChange(e.target.value)}
                       onFocus={() => {
-                        const categoria = getEquipoCategoria();
-                        const piezas = categoria ? tiposPiezas[categoria] : [...tiposPiezas.calderas, ...tiposPiezas.aire];
-                        setPiezasSugeridas(piezas.slice(0, 10));
+                        setPiezasSugeridas(todasLasPiezas.slice(0, 10));
                         setShowPiezas(true);
                       }}
                       onBlur={() => setTimeout(() => setShowPiezas(false), 200)}
@@ -822,34 +787,62 @@ export default function PiezaGratisPage() {
                     )}
                   </div>
                   
-                  {/* Descripción con voz */}
+                  {/* Descripción con micrófono integrado */}
                   <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <label className="block text-sm font-semibold text-gray-700">
-                        Descripción adicional (opcional)
-                      </label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Descripción adicional (opcional)
+                    </label>
+                    <div className="relative">
+                      <textarea
+                        ref={textareaRef}
+                        value={formData.descripcion}
+                        onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+                        placeholder="Describe brevemente el proceso de diagnóstico y reparación... o pulsa el micrófono para dictar"
+                        rows={4}
+                        className="w-full px-4 py-3.5 pr-20 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base resize-none"
+                      />
+                      {/* Botón de micrófono grande y atractivo */}
                       {speechSupported && (
                         <button
                           type="button"
                           onClick={handleVoiceInput}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                          className={`absolute right-3 top-3 w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 ${
                             isListening 
-                              ? 'bg-red-100 text-red-700 animate-pulse' 
-                              : 'bg-gray-100 text-gray-600 hover:bg-orange-100 hover:text-orange-700'
+                              ? 'bg-gradient-to-br from-red-500 to-red-600 animate-pulse' 
+                              : 'bg-gradient-to-br from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'
                           }`}
+                          title={isListening ? 'Escuchando...' : 'Pulsa para dictar'}
                         >
-                          {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-                          {isListening ? 'Escuchando...' : 'Dictar'}
+                          {isListening ? (
+                            <MicOff className="w-7 h-7 text-white" />
+                          ) : (
+                            <Mic className="w-7 h-7 text-white" />
+                          )}
                         </button>
                       )}
                     </div>
-                    <textarea
-                      value={formData.descripcion}
-                      onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-                      placeholder="Describe brevemente el proceso de diagnóstico y reparación..."
-                      rows={4}
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base resize-none"
-                    />
+                    {/* Indicador de estado del micrófono */}
+                    {isListening && (
+                      <div className="mt-2 flex items-center gap-2 text-orange-600">
+                        <div className="flex gap-1">
+                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                        </div>
+                        <span className="text-sm font-medium">Escuchando... habla ahora</span>
+                      </div>
+                    )}
+                    {voiceError && (
+                      <div className="mt-2 flex items-center gap-2 text-red-600">
+                        <AlertCircle className="w-4 h-4" />
+                        <span className="text-sm">{voiceError}</span>
+                      </div>
+                    )}
+                    {!speechSupported && (
+                      <p className="mt-2 text-xs text-gray-500">
+                        Tu navegador no soporta dictado por voz. Usa Chrome o Edge para esta función.
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -1135,7 +1128,7 @@ export default function PiezaGratisPage() {
                     className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
                   >
                     Siguiente
-                    <ChevronDown className="w-4 h-4 rotate-[-90deg]" />
+                    <ChevronRight className="w-4 h-4" />
                   </button>
                 ) : (
                   <button
