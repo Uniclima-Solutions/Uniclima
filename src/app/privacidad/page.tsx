@@ -1,24 +1,19 @@
 
 'use client';
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
 import Link from 'next/link';
 import { ArrowLeft, Shield, Database, Clock, Users, Lock, FileText, Mail, AlertTriangle, Scale } from 'lucide-react';
 
 export default function PrivacidadPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-4xl mx-auto px-4 py-4">
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-orange-600 transition-colors">
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium">Volver a Uniclima</span>
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <Header />
 
       {/* Contenido */}
-      <main className="max-w-4xl mx-auto px-4 py-12">
+      <main className="flex-1 max-w-4xl mx-auto px-4 py-12 w-full">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           {/* Cabecera del documento */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 sm:px-10 py-8 text-white">
@@ -189,6 +184,8 @@ export default function PrivacidadPage() {
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 }
