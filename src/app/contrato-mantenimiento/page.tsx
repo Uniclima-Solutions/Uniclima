@@ -743,7 +743,7 @@ function ContratoMantenimientoContent() {
                       className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                     />
                     <span className="text-sm text-gray-600">
-                      Acepto los <Link href="/terminos-condiciones" className="text-orange-500 hover:underline">términos y condiciones</Link> del servicio de mantenimiento
+                      Acepto los <Link href="/condiciones-venta" className="text-orange-500 hover:underline">términos y condiciones</Link> del servicio de mantenimiento
                     </span>
                   </label>
                   
@@ -755,7 +755,7 @@ function ContratoMantenimientoContent() {
                       className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
                     />
                     <span className="text-sm text-gray-600">
-                      He leído y acepto la <Link href="/politica-privacidad" className="text-orange-500 hover:underline">política de privacidad</Link>
+                      He leído y acepto la <Link href="/privacidad" className="text-orange-500 hover:underline">política de privacidad</Link>
                     </span>
                   </label>
                 </div>
