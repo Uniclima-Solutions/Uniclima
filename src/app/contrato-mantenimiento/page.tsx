@@ -1,9 +1,9 @@
 "use client";
 
 /**
- * Contrato de Mantenimiento - Formulario completo
+ * Contrato de Mantenimiento - Formulario completo con visualización de contrato
  * Uniclima Solutions - CIF B21651393
- * Con calculadora de precios con descuento por volumen
+ * Con calculadora de precios, firma digital, visualización PDF y pago Stripe
  */
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -57,7 +57,10 @@ import {
   CreditCard,
   ShoppingCart,
   Eye,
-  Download
+  Download,
+  ZoomIn,
+  Printer,
+  X
 } from "lucide-react";
 import { poblacionesMadrid, validarNifCif } from "@/data/poblacionesMadrid";
 import { 
@@ -67,7 +70,8 @@ import {
 } from "@/services/addressAutocompleteService";
 import { cn } from "@/lib/utils";
 import SignaturePad from "@/components/SignaturePad";
-import ContratoDocumento from "@/components/ContratoMantenimiento";
+import ContratoCaldera from "@/components/contratos/ContratoCaldera";
+import ContratoAireAcondicionado from "@/components/contratos/ContratoAireAcondicionado";
 import dynamic from 'next/dynamic';
 
 // Cargar Stripe dinámicamente para evitar SSR
@@ -80,8 +84,8 @@ const StripePaymentForm = dynamic(() => import('@/components/StripePaymentForm')
 const EMPRESA = {
   nombre: "Uniclima Solutions",
   cif: "B21651393",
-  direccion: "C/ Grafito 27, 28770 Colmenar Viejo, Madrid",
-  telefono: "91 117 77 77",
+  direccion: "Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid",
+  telefono: "912 345 678",
   email: "info@uniclima.es",
   web: "www.uniclima.es",
 };
@@ -168,13 +172,13 @@ const preciosPorPlan = {
 
 // Tipos de aparato con precios base
 const tiposAparato = [
-  { value: "aire-split", label: "Aire A. Split", precio: 120, tipo: "aire" },
-  { value: "aire-conductos", label: "Aire A. Conductos", precio: 120, tipo: "aire" },
-  { value: "aire-cassette", label: "Aire A. Cassette", precio: 120, tipo: "aire" },
-  { value: "aire-varios", label: "Aire A. Varios", precio: 120, tipo: "aire" },
-  { value: "caldera-atmosferica", label: "Caldera Atmosférica", precio: 140, tipo: "caldera" },
-  { value: "caldera-estanca", label: "Caldera Estanca", precio: 140, tipo: "caldera" },
-  { value: "caldera-condensacion", label: "Caldera Condensación", precio: 140, tipo: "caldera" },
+  { value: "aire-split", label: "Aire A. Split", tipo: "aire", precios: preciosPorPlan.aire },
+  { value: "aire-conductos", label: "Aire A. Conductos", tipo: "aire", precios: preciosPorPlan.aire },
+  { value: "aire-cassette", label: "Aire A. Cassette", tipo: "aire", precios: preciosPorPlan.aire },
+  { value: "aire-varios", label: "Aire A. Varios", tipo: "aire", precios: preciosPorPlan.aire },
+  { value: "caldera-atmosferica", label: "Caldera Atmosférica", tipo: "caldera", precios: preciosPorPlan.caldera },
+  { value: "caldera-estanca", label: "Caldera Estanca", tipo: "caldera", precios: preciosPorPlan.caldera },
+  { value: "caldera-condensacion", label: "Caldera Condensación", tipo: "caldera", precios: preciosPorPlan.caldera },
 ];
 
 // Función para redondear a la baja al múltiplo de 5 más cercano
@@ -207,6 +211,16 @@ function calcularPrecioConDescuentos(precioBase: number, cantidad: number): { to
   }
   
   return { total, desglose };
+}
+
+// Generar número de contrato único
+function generarNumeroContrato(tipo: string): string {
+  const prefijo = tipo === 'caldera' ? 'CAL' : 'AIR';
+  const fecha = new Date();
+  const año = fecha.getFullYear().toString().slice(-2);
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return `${prefijo}-${año}${mes}-${random}`;
 }
 
 interface FormData {
@@ -242,17 +256,15 @@ interface FieldErrors {
 // Componente interno que usa useSearchParams
 function ContratoMantenimientoContent() {
   const searchParams = useSearchParams();
+  const contratoRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [poblacionOpen, setPoblacionOpen] = useState(false);
   const [direccionOpen, setDireccionOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [showPayment, setShowPayment] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
-  const [showContrato, setShowContrato] = useState(false);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const [paso, setPaso] = useState<'formulario' | 'contrato' | 'pago' | 'completado'>('formulario');
   const [numeroContrato, setNumeroContrato] = useState<string>('');
-  const [planSeleccionado, setPlanSeleccionado] = useState<string>("Premium");
+  const [planSeleccionado, setPlanSeleccionado] = useState<string>("Esencial");
+  const [contratoAmpliado, setContratoAmpliado] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     razonSocial: "",
     nif: "",
@@ -304,28 +316,22 @@ function ContratoMantenimientoContent() {
     }
   }, [searchParams]);
   
-  // Buscar direcciones con debounce (usando Nominatim/OpenStreetMap)
+  // Buscar direcciones con debounce
   useEffect(() => {
-    // Si ya seleccionó una dirección, no buscar más
-    if (direccionSeleccionada) {
-      return;
-    }
+    if (direccionSeleccionada) return;
     
-    // Limpiar si hay menos de 3 caracteres
     if (formData.direccion.length < 3) {
       setDireccionesFiltradas([]);
       setDireccionOpen(false);
       return;
     }
     
-    // Debounce de 600ms para no interferir con la escritura
     const timeoutId = setTimeout(async () => {
       if (formData.direccion.length >= 3 && !direccionSeleccionada) {
         setBuscandoDirecciones(true);
         try {
           const resultados = await buscarDirecciones(formData.direccion);
           setDireccionesFiltradas(resultados);
-          // Solo abrir si hay resultados y el usuario sigue escribiendo
           if (resultados.length > 0) {
             setDireccionOpen(true);
           }
@@ -338,90 +344,20 @@ function ContratoMantenimientoContent() {
     }, 600);
     
     return () => clearTimeout(timeoutId);
-  }, [formData.direccion]);
+  }, [formData.direccion, direccionSeleccionada]);
   
-  // Obtener tipo de aparato seleccionado
-  const tipoSeleccionado = tiposAparato.find(t => t.value === formData.tipoAparato);
-  
-  // Calcular precio según plan
-  const obtenerPrecioSegunPlan = () => {
-    if (!tipoSeleccionado) return 0;
-    const tipoEquipo = tipoSeleccionado.tipo as 'caldera' | 'aire';
-    const preciosDelTipo = preciosPorPlan[tipoEquipo];
-    if (preciosDelTipo && planSeleccionado in preciosDelTipo) {
-      return preciosDelTipo[planSeleccionado as keyof typeof preciosDelTipo];
-    }
-    return tipoSeleccionado.precio;
-  };
-  
-  // Calcular precios con descuentos
-  const precioUnitario = obtenerPrecioSegunPlan();
-  const { total: precioConDescuentos, desglose: desglosePrecios } = calcularPrecioConDescuentos(precioUnitario, formData.cantidad);
-  const precioTotal = precioConDescuentos - formData.descuentoCupon;
-  const precioSinDescuentos = precioUnitario * formData.cantidad;
-  const ahorroTotal = precioSinDescuentos - precioConDescuentos;
-  
-  // Determinar tipo
-  const esAire = tipoSeleccionado?.tipo === "aire";
-  const esCaldera = tipoSeleccionado?.tipo === "caldera";
-  
-  // Actualizar campo
-  const updateField = (field: keyof FormData, value: string | number | boolean) => {
+  // Función para actualizar campos del formulario
+  const updateField = (field: keyof FormData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    if (field in fieldErrors) {
-      setFieldErrors(prev => ({ ...prev, [field]: undefined }));
-    }
   };
   
-  // Manejar selección de población
-  const handlePoblacionSelect = (nombrePoblacion: string) => {
-    const poblacion = poblacionesMadrid.find(p => p.nombre === nombrePoblacion);
-    if (poblacion) {
-      setFormData(prev => ({
-        ...prev,
-        poblacion: poblacion.nombre,
-        codigoPostal: poblacion.codigoPostal,
-        provincia: "Madrid"
-      }));
-    }
-    setPoblacionOpen(false);
-  };
-  
-  // Manejar selección de dirección (usando Nominatim)
-  const handleDireccionSelect = (resultado: AddressResult) => {
-    // Cerrar dropdown inmediatamente
-    setDireccionOpen(false);
-    setDireccionesFiltradas([]);
-    setDireccionSeleccionada(true);
-    
-    // Obtener detalles de la dirección seleccionada
-    const detalles = obtenerDetalles(resultado);
-    
-    // Construir dirección formateada (calle y número)
-    let direccionFormateada = detalles.formattedAddress;
-    
-    // Actualizar todos los campos de una vez
-    setFormData(prev => ({
-      ...prev,
-      direccion: direccionFormateada,
-      poblacion: detalles.locality || prev.poblacion,
-      codigoPostal: detalles.postalCode || prev.codigoPostal,
-      provincia: detalles.administrativeArea || 'Madrid'
-    }));
-    
-    // Quitar el foco del input para evitar que se vuelva a abrir
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
-  };
-  
-  // Validaciones
-  const validateNif = (value: string) => {
-    if (!value) {
+  // Validar NIF/CIF
+  const validateNif = (nif: string) => {
+    if (!nif) {
       setFieldErrors(prev => ({ ...prev, nif: undefined }));
       return;
     }
-    const resultado = validarNifCif(value);
+    const resultado = validarNifCif(nif);
     if (!resultado.valido) {
       setFieldErrors(prev => ({ ...prev, nif: resultado.mensaje }));
     } else {
@@ -429,669 +365,879 @@ function ContratoMantenimientoContent() {
     }
   };
   
-  const validateEmail = (value: string) => {
-    if (!value) {
-      setFieldErrors(prev => ({ ...prev, email: undefined }));
-      return;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(value)) {
-      setFieldErrors(prev => ({ ...prev, email: "Email no válido" }));
-    } else {
-      setFieldErrors(prev => ({ ...prev, email: undefined }));
-    }
-  };
-  
-  const validateTelefono = (value: string) => {
-    if (!value) {
-      setFieldErrors(prev => ({ ...prev, telefono: undefined }));
-      return;
-    }
-    const telefonoLimpio = value.replace(/\s/g, "");
-    if (telefonoLimpio.length < 9) {
-      setFieldErrors(prev => ({ ...prev, telefono: "Teléfono debe tener al menos 9 dígitos" }));
-    } else {
-      setFieldErrors(prev => ({ ...prev, telefono: undefined }));
-    }
-  };
-  
-  // Enviar formulario
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Manejar selección de dirección
+  const handleDireccionSelect = async (resultado: AddressResult) => {
+    setDireccionSeleccionada(true);
+    setDireccionOpen(false);
     
-    if (!formData.aceptaTerminos || !formData.aceptaPrivacidad) {
-      alert("Debe aceptar los términos y condiciones y la política de privacidad");
-      return;
+    try {
+      const detalles = await obtenerDetalles(resultado.placeId);
+      
+      setFormData(prev => ({
+        ...prev,
+        direccion: detalles.direccion || resultado.mainText,
+        codigoPostal: detalles.codigoPostal || '',
+        poblacion: detalles.poblacion || '',
+        provincia: detalles.provincia || 'Madrid',
+      }));
+    } catch (error) {
+      setFormData(prev => ({
+        ...prev,
+        direccion: resultado.mainText,
+      }));
     }
+  };
+  
+  // Obtener tipo seleccionado
+  const tipoSeleccionado = tiposAparato.find(t => t.value === formData.tipoAparato);
+  const esCaldera = tipoSeleccionado?.tipo === 'caldera';
+  
+  // Calcular precios
+  const precioUnitario = tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0;
+  const { total: precioSinIVA, desglose: desglosePrecios } = calcularPrecioConDescuentos(precioUnitario, formData.cantidad);
+  const precioTotal = Math.round(precioSinIVA * 1.21);
+  const ahorroTotal = (precioUnitario * formData.cantidad) - precioSinIVA;
+  
+  // Calcular precio para una sola máquina (sin descuento)
+  const calcularPrecio = (cantidad: number, precioBase: number) => {
+    return calcularPrecioConDescuentos(precioBase, cantidad);
+  };
+  
+  // Verificar si el formulario está completo
+  const formularioCompleto = formData.razonSocial && 
+    formData.nif && 
+    !fieldErrors.nif &&
+    formData.direccion && 
+    formData.poblacion && 
+    formData.telefono && 
+    formData.email && 
+    formData.tipoAparato &&
+    formData.aceptaTerminos &&
+    formData.aceptaPrivacidad &&
+    formData.firma;
+  
+  // Generar contrato y pasar al siguiente paso
+  const generarContrato = () => {
+    const numero = generarNumeroContrato(tipoSeleccionado?.tipo || 'caldera');
+    setNumeroContrato(numero);
+    setPaso('contrato');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  // Función para descargar PDF
+  const descargarPDF = async () => {
+    if (!contratoRef.current) return;
     
     setIsLoading(true);
-    
-    // Simular envío
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    alert("¡Contrato enviado correctamente! Nos pondremos en contacto contigo pronto.");
-    setIsLoading(false);
+    try {
+      // Usar html2canvas y jsPDF para generar el PDF
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      
+      const canvas = await html2canvas(contratoRef.current, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const pageHeight = 297;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      pdf.save(`Contrato_${numeroContrato}.pdf`);
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      alert('Error al generar el PDF. Por favor, intenta de nuevo.');
+    } finally {
+      setIsLoading(false);
+    }
   };
-
+  
+  // Imprimir contrato
+  const imprimirContrato = () => {
+    window.print();
+  };
+  
+  // Proceder al pago
+  const procederAlPago = () => {
+    setPaso('pago');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  // Manejar pago exitoso
+  const handlePaymentSuccess = async (paymentIntentId: string) => {
+    // Aquí enviaríamos el email con el contrato
+    // Por ahora, simulamos el envío
+    console.log('Pago exitoso:', paymentIntentId);
+    console.log('Enviando contrato por email a:', formData.email);
+    
+    // Guardar en localStorage para historial
+    const contrato = {
+      numeroContrato,
+      tipo: tipoSeleccionado?.tipo,
+      plan: planSeleccionado,
+      cliente: formData,
+      precioTotal,
+      fechaCreacion: new Date().toISOString(),
+      paymentIntentId,
+    };
+    
+    const contratos = JSON.parse(localStorage.getItem('uniclima_contratos') || '[]');
+    contratos.push(contrato);
+    localStorage.setItem('uniclima_contratos', JSON.stringify(contratos));
+    
+    setPaso('completado');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
+  // Datos para el contrato
+  const datosCliente = {
+    razonSocial: formData.razonSocial,
+    nif: formData.nif,
+    direccion: formData.direccion,
+    poblacion: formData.poblacion,
+    codigoPostal: formData.codigoPostal,
+    provincia: formData.provincia,
+    telefono: formData.telefono,
+    email: formData.email,
+    esChalet: formData.esChalet,
+    portal: formData.portal,
+    escalera: formData.escalera,
+    piso: formData.piso,
+    puerta: formData.puerta,
+  };
+  
+  const datosContrato = {
+    numeroContrato: numeroContrato,
+    plan: planSeleccionado,
+    cantidad: formData.cantidad,
+    precioAnual: precioSinIVA,
+    precioConIVA: precioTotal,
+    fechaInicio: new Date().toISOString(),
+    fechaFin: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+  };
+  
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
       <Breadcrumbs items={breadcrumbsConfig.contratoMantenimiento} />
       
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Contrato de <span className="text-orange-500">Mantenimiento</span>
-          </h1>
-          <p className="text-gray-600">
-            Protege tu inversión con nuestros planes de mantenimiento preventivo
-          </p>
-        </div>
-        
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Formulario */}
-          <div className="lg:col-span-2">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Selección de Plan */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-orange-500" />
-                  Selecciona tu Plan
-                </h2>
-                
-                <div className="grid grid-cols-3 gap-3 mb-4">
-                  {['Esencial', 'Confort', 'Premium'].map((plan) => (
-                    <button
-                      key={plan}
-                      type="button"
-                      onClick={() => setPlanSeleccionado(plan)}
-                      className={cn(
-                        "p-4 rounded-xl border-2 transition-all text-center",
-                        planSeleccionado === plan
-                          ? "border-orange-500 bg-orange-50"
-                          : "border-gray-200 hover:border-orange-300"
-                      )}
-                    >
-                      <div className="mb-2">
-                        {plan === 'Esencial' && <Shield className="w-6 h-6 mx-auto text-orange-400" />}
-                        {plan === 'Confort' && <Star className="w-6 h-6 mx-auto text-orange-500" />}
-                        {plan === 'Premium' && <Crown className="w-6 h-6 mx-auto text-orange-600" />}
-                      </div>
-                      <p className="font-semibold text-gray-900">{plan}</p>
-                      {plan === 'Confort' && (
-                        <span className="text-[10px] bg-yellow-400 text-gray-900 px-2 py-0.5 rounded-full">
-                          RECOMENDADO
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-                
-                {/* Tipo de aparato */}
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label>Tipo de Aparato <span className="text-orange-500">*</span></Label>
-                    <Select
-                      value={formData.tipoAparato}
-                      onValueChange={(value) => updateField('tipoAparato', value)}
-                    >
-                      <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Selecciona tipo" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="header-calderas" disabled className="font-semibold text-orange-600">
-                          <div className="flex items-center gap-2">
-                            <Flame className="w-4 h-4" /> Calderas
-                          </div>
-                        </SelectItem>
-                        {tiposAparato.filter(t => t.tipo === 'caldera').map(tipo => (
-                          <SelectItem key={tipo.value} value={tipo.value}>
-                            {tipo.label}
-                          </SelectItem>
-                        ))}
-                        <SelectItem value="header-aire" disabled className="font-semibold text-blue-600">
-                          <div className="flex items-center gap-2">
-                            <Wind className="w-4 h-4" /> Aire Acondicionado
-                          </div>
-                        </SelectItem>
-                        {tiposAparato.filter(t => t.tipo === 'aire').map(tipo => (
-                          <SelectItem key={tipo.value} value={tipo.value}>
-                            {tipo.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <Label>Cantidad de Equipos</Label>
-                    <div className="flex items-center gap-3 mt-1">
-                      <button
-                        type="button"
-                        onClick={() => updateField('cantidad', Math.max(1, formData.cantidad - 1))}
-                        className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="text-xl font-bold w-12 text-center">{formData.cantidad}</span>
-                      <button
-                        type="button"
-                        onClick={() => updateField('cantidad', formData.cantidad + 1)}
-                        className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Datos del Cliente */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Building className="w-5 h-5 text-orange-500" />
-                  Datos del Cliente
-                </h2>
-                
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <InputConValidacion
-                    id="razonSocial"
-                    label="Nombre / Razón Social"
-                    value={formData.razonSocial}
-                    onChange={(value) => updateField('razonSocial', value)}
-                    placeholder="Nombre completo o empresa"
-                    required
-                  />
-                  
-                  <InputConValidacion
-                    id="nif"
-                    label="NIF/CIF"
-                    value={formData.nif}
-                    onChange={(value) => updateField('nif', value.toUpperCase())}
-                    onBlur={() => validateNif(formData.nif)}
-                    error={fieldErrors.nif}
-                    placeholder="12345678A"
-                    required
-                  />
-                  
-                  <div className="sm:col-span-2">
-                    <Label>Dirección <span className="text-orange-500">*</span></Label>
-                    <div className="relative mt-1">
-                      <input
-                        type="text"
-                        value={formData.direccion}
-                        onChange={(e) => {
-                          updateField('direccion', e.target.value);
-                          setDireccionSeleccionada(false);
-                        }}
-                        onFocus={() => {
-                          if (direccionesFiltradas.length > 0 && !direccionSeleccionada) {
-                            setDireccionOpen(true);
-                          }
-                        }}
-                        placeholder="Escribe tu calle (ej: Calle Gran Vía 25)..."
-                        className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
-                        
-                        autoComplete="off"
-                      />
-                      {buscandoDirecciones && (
-                        <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-orange-500" />
-                      )}
-                      {!buscandoDirecciones && formData.direccion && direccionSeleccionada && (
-                        <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
-                      )}
-                      {!buscandoDirecciones && formData.direccion && !direccionSeleccionada && (
-                        <MapPin className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                      )}
-                      
-                      {/* Dropdown de sugerencias */}
-                      {direccionOpen && direccionesFiltradas.length > 0 && !direccionSeleccionada && (
-                        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
-                          <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100 bg-gray-50">
-                            Selecciona una dirección:
-                          </div>
-                          {direccionesFiltradas.map((resultado) => (
-                            <button
-                              key={resultado.placeId}
-                              type="button"
-                              onClick={() => handleDireccionSelect(resultado)}
-                              className="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-orange-50 transition-colors border-b border-gray-50 last:border-0"
-                            >
-                              <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-gray-900 truncate">{resultado.mainText}</p>
-                                <p className="text-xs text-gray-500 truncate">{resultado.secondaryText}</p>
-                              </div>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Escribe al menos 3 caracteres y selecciona de las sugerencias
-                    </p>
-                  </div>
-                  
-                  {/* Checkbox Chalet */}
-                  <div className="sm:col-span-2">
-                    <label className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                      <input
-                        type="checkbox"
-                        checked={formData.esChalet}
-                        onChange={(e) => updateField('esChalet', e.target.checked)}
-                        className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <div>
-                        <span className="text-sm font-medium text-gray-900">Es un chalet o vivienda unifamiliar</span>
-                        <p className="text-xs text-gray-500">Marca esta opción si no hay portal, escalera ni piso</p>
-                      </div>
-                    </label>
-                  </div>
-                  
-                  {/* Campos de portal/escalera/piso/puerta - Solo si NO es chalet */}
-                  {!formData.esChalet && (
-                    <>
-                      <InputConValidacion
-                        id="portal"
-                        label="Portal/Bloque"
-                        value={formData.portal}
-                        onChange={(value) => updateField('portal', value)}
-                        placeholder="1, A, etc."
-                      />
-                      
-                      <InputConValidacion
-                        id="escalera"
-                        label="Escalera"
-                        value={formData.escalera}
-                        onChange={(value) => updateField('escalera', value)}
-                        placeholder="Izq, Dcha, etc."
-                      />
-                      
-                      <InputConValidacion
-                        id="piso"
-                        label="Piso"
-                        value={formData.piso}
-                        onChange={(value) => updateField('piso', value)}
-                        placeholder="1º, 2º, etc."
-                      />
-                      
-                      <InputConValidacion
-                        id="puerta"
-                        label="Puerta"
-                        value={formData.puerta}
-                        onChange={(value) => updateField('puerta', value)}
-                        placeholder="A, B, 1, etc."
-                      />
-                    </>
-                  )}
-                  
-                  <div>
-                    <Label>Población <span className="text-orange-500">*</span></Label>
-                    <Popover open={poblacionOpen} onOpenChange={setPoblacionOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className="w-full justify-between mt-1"
-                        >
-                          {formData.poblacion || "Selecciona población"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[300px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Buscar población..." />
-                          <CommandList>
-                            <CommandEmpty>No se encontró la población</CommandEmpty>
-                            <CommandGroup>
-                              {poblacionesMadrid.map((poblacion) => (
-                                <CommandItem
-                                  key={poblacion.nombre}
-                                  onSelect={() => handlePoblacionSelect(poblacion.nombre)}
-                                >
-                                  <Check
-                                    className={cn(
-                                      "mr-2 h-4 w-4",
-                                      formData.poblacion === poblacion.nombre ? "opacity-100" : "opacity-0"
-                                    )}
-                                  />
-                                  {poblacion.nombre}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  
-                  <InputConValidacion
-                    id="codigoPostal"
-                    label="Código Postal"
-                    value={formData.codigoPostal}
-                    onChange={(value) => updateField('codigoPostal', value)}
-                    placeholder="28XXX"
-                    required
-                  />
-                  
-                  <InputConValidacion
-                    id="telefono"
-                    label="Teléfono"
-                    value={formData.telefono}
-                    onChange={(value) => updateField('telefono', value)}
-                    onBlur={() => validateTelefono(formData.telefono)}
-                    error={fieldErrors.telefono}
-                    placeholder="612 345 678"
-                    type="tel"
-                    required
-                  />
-                  
-                  <InputConValidacion
-                    id="email"
-                    label="Email"
-                    value={formData.email}
-                    onChange={(value) => updateField('email', value)}
-                    onBlur={() => validateEmail(formData.email)}
-                    error={fieldErrors.email}
-                    placeholder="tu@email.com"
-                    type="email"
-                    required
-                  />
-                </div>
-              </div>
-              
-              {/* Términos y Condiciones */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-orange-500" />
-                  Términos y Condiciones
-                </h2>
-                
-                <div className="space-y-3">
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.aceptaTerminos}
-                      onChange={(e) => updateField('aceptaTerminos', e.target.checked)}
-                      className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span className="text-sm text-gray-600">
-                      Acepto los <Link href="/terminos-mantenimiento" className="text-orange-500 hover:underline">términos y condiciones</Link> del servicio de mantenimiento
-                    </span>
-                  </label>
-                  
-                  <label className="flex items-start gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.aceptaPrivacidad}
-                      onChange={(e) => updateField('aceptaPrivacidad', e.target.checked)}
-                      className="mt-1 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                    />
-                    <span className="text-sm text-gray-600">
-                      He leído y acepto la <Link href="/privacidad" className="text-orange-500 hover:underline">política de privacidad</Link>
-                    </span>
-                  </label>
-                </div>
-              </div>
-              
-              {/* Firma Digital */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-orange-500" />
-                  Firma del Contrato
-                </h2>
-                
-                <SignaturePad
-                  onSignatureChange={(signature) => updateField('firma', signature)}
-                  label="Firma del cliente"
-                  required={true}
-                  error={!formData.firma && formData.aceptaTerminos && formData.aceptaPrivacidad ? 'La firma es obligatoria para continuar' : undefined}
-                />
-              </div>
-              
-              {/* Botones de Acción */}
-              {!addedToCart ? (
-                <div className="space-y-3">
-                  {/* Botón Ver Contrato */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!numeroContrato) {
-                        // Generar número de contrato único
-                        const fecha = new Date();
-                        const num = `UC-${fecha.getFullYear()}${String(fecha.getMonth() + 1).padStart(2, '0')}${String(fecha.getDate()).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-                        setNumeroContrato(num);
-                      }
-                      setShowContrato(true);
-                    }}
-                    disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado || !formData.razonSocial || !formData.nif || !formData.direccion}
-                    className="w-full bg-white border-2 border-orange-500 text-orange-500 py-3 rounded-xl text-base font-semibold hover:bg-orange-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    <Eye className="w-5 h-5" />
-                    Ver Contrato Generado
-                  </button>
-                  
-                  {/* Botón Añadir al Carrito */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!numeroContrato) {
-                        const fecha = new Date();
-                        const num = `UC-${fecha.getFullYear()}${String(fecha.getMonth() + 1).padStart(2, '0')}${String(fecha.getDate()).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-                        setNumeroContrato(num);
-                      }
-                      // Añadir al carrito (localStorage)
-                      const cartItem = {
-                        id: numeroContrato || `UC-${Date.now()}`,
-                        tipo: 'contrato_mantenimiento',
-                        nombre: `Contrato Mantenimiento ${planSeleccionado} - ${tipoSeleccionado?.label || formData.tipoAparato}`,
-                        plan: planSeleccionado,
-                        tipoAparato: formData.tipoAparato,
-                        cantidad: formData.cantidad,
-                        precio: precioTotal,
-                        precioSinIVA: calcularPrecio(formData.cantidad, tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0).total,
-                        cliente: {
-                          razonSocial: formData.razonSocial,
-                          nif: formData.nif,
-                          direccion: formData.direccion,
-                          esChalet: formData.esChalet,
-                          portal: formData.portal,
-                          escalera: formData.escalera,
-                          piso: formData.piso,
-                          puerta: formData.puerta,
-                          poblacion: formData.poblacion,
-                          codigoPostal: formData.codigoPostal,
-                          telefono: formData.telefono,
-                          email: formData.email,
-                        },
-                        firma: formData.firma,
-                        fechaCreacion: new Date().toISOString(),
-                        renovacionAnual: true,
-                      };
-                      
-                      // Guardar en localStorage
-                      const cart = JSON.parse(localStorage.getItem('uniclima_cart') || '[]');
-                      cart.push(cartItem);
-                      localStorage.setItem('uniclima_cart', JSON.stringify(cart));
-                      
-                      // Disparar evento para actualizar el contador del carrito
-                      window.dispatchEvent(new Event('cartUpdated'));
-                      
-                      setAddedToCart(true);
-                    }}
-                    disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado || !formData.razonSocial || !formData.nif || !formData.direccion || !formData.poblacion || !formData.telefono || !formData.email}
-                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    <ShoppingCart className="w-5 h-5" />
-                    Añadir al Carrito
-                  </button>
-                  
-                  <p className="text-xs text-gray-500 text-center">
-                    El pago se realizará mediante Stripe. La suscripción se renovará automáticamente cada año.
-                  </p>
-                </div>
-              ) : (
-                <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-                  <div className="text-center">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <CheckCircle2 className="w-8 h-8 text-green-600" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">¡Añadido al Carrito!</h3>
-                    <p className="text-gray-600 mb-2">Tu contrato de mantenimiento ha sido añadido correctamente.</p>
-                    <p className="text-sm text-gray-500 mb-4">Nº Contrato: <span className="font-mono font-semibold">{numeroContrato}</span></p>
-                    
-                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                      <Link
-                        href="/checkout"
-                        className="inline-flex items-center justify-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
-                      >
-                        <CreditCard className="w-4 h-4" />
-                        Ir al Checkout
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => setShowContrato(true)}
-                        className="inline-flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
-                      >
-                        <Eye className="w-4 h-4" />
-                        Ver Contrato
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-              
-              {/* Modal del Contrato */}
-              {showContrato && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                  <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-                    <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-                      <h2 className="text-lg font-bold text-gray-900">Contrato de Mantenimiento</h2>
-                      <button
-                        onClick={() => setShowContrato(false)}
-                        className="text-gray-500 hover:text-gray-700 p-2"
-                      >
-                        ✕
-                      </button>
-                    </div>
-                    <div className="p-4">
-                      <ContratoDocumento
-                        datosCliente={{
-                          razonSocial: formData.razonSocial,
-                          nif: formData.nif,
-                          direccion: formData.direccion,
-                          poblacion: formData.poblacion,
-                          codigoPostal: formData.codigoPostal,
-                          provincia: formData.provincia,
-                          escalera: formData.escalera,
-                          piso: formData.piso,
-                          letra: formData.puerta,
-                          bloque: formData.portal,
-                          esChalet: formData.esChalet,
-                          telefono: formData.telefono,
-                          email: formData.email,
-                        }}
-                        datosContrato={{
-                          plan: planSeleccionado,
-                          tipoAparato: tipoSeleccionado?.label || formData.tipoAparato,
-                          cantidad: formData.cantidad,
-                          precioAnual: calcularPrecio(formData.cantidad, tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0).total,
-                          precioConIVA: precioTotal,
-                          fechaInicio: new Date().toISOString(),
-                          fechaFin: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-                          numeroContrato: numeroContrato,
-                        }}
-                        firmaCliente={formData.firma || undefined}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </form>
-          </div>
+      <main className="flex-1 py-8">
+        <div className="max-w-6xl mx-auto px-4">
           
-          {/* Calculadora y Resumen */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-4 space-y-6">
-              {/* Calculadora de Precios */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Calculator className="w-5 h-5 text-orange-500" />
-                  Calculadora de Precios
-                </h2>
-                
-                {tipoSeleccionado ? (
-                  <div className="space-y-4">
-                    {/* Plan seleccionado */}
-                    <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                      <span className="text-sm text-gray-600">Plan {planSeleccionado}</span>
-                      <span className="font-bold text-orange-600">€{precioUnitario}/equipo</span>
-                    </div>
+          {/* Paso 1: Formulario */}
+          {paso === 'formulario' && (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Formulario Principal */}
+              <div className="lg:col-span-2">
+                <form className="space-y-6">
+                  {/* Selección de Plan */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-orange-500" />
+                      Selecciona tu Plan
+                    </h2>
                     
-                    {/* Desglose por máquina */}
-                    {formData.cantidad > 1 && (
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-gray-500 uppercase">Desglose por equipo:</p>
-                        {desglosePrecios.map((item) => (
-                          <div key={item.maquina} className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600">
-                              Equipo {item.maquina}
-                              {item.descuento > 0 && (
-                                <span className="text-green-600 text-xs ml-1">(-{item.descuento}%)</span>
-                              )}
-                            </span>
-                            <span className="font-medium">€{item.precio}</span>
+                    <div className="grid grid-cols-3 gap-3 mb-4">
+                      {['Esencial', 'Confort', 'Premium'].map((plan) => (
+                        <button
+                          key={plan}
+                          type="button"
+                          onClick={() => setPlanSeleccionado(plan)}
+                          className={cn(
+                            "p-4 rounded-xl border-2 transition-all text-center",
+                            planSeleccionado === plan
+                              ? "border-orange-500 bg-orange-50"
+                              : "border-gray-200 hover:border-orange-300"
+                          )}
+                        >
+                          <div className="mb-2">
+                            {plan === 'Esencial' && <Shield className="w-6 h-6 mx-auto text-orange-400" />}
+                            {plan === 'Confort' && <Star className="w-6 h-6 mx-auto text-orange-500" />}
+                            {plan === 'Premium' && <Crown className="w-6 h-6 mx-auto text-orange-600" />}
                           </div>
-                        ))}
-                      </div>
-                    )}
+                          <p className="font-semibold text-gray-900">{plan}</p>
+                          {plan === 'Confort' && (
+                            <span className="text-[10px] bg-yellow-400 text-gray-900 px-2 py-0.5 rounded-full">
+                              RECOMENDADO
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
                     
-                    {/* Ahorro */}
-                    {ahorroTotal > 0 && (
-                      <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                        <span className="text-sm text-green-700">¡Ahorro por volumen!</span>
-                        <span className="font-bold text-green-600">-€{ahorroTotal}</span>
+                    {/* Tipo de aparato */}
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label>Tipo de Aparato <span className="text-orange-500">*</span></Label>
+                        <Select
+                          value={formData.tipoAparato}
+                          onValueChange={(value) => updateField('tipoAparato', value)}
+                        >
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Selecciona tipo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="header-calderas" disabled className="font-semibold text-orange-600">
+                              <div className="flex items-center gap-2">
+                                <Flame className="w-4 h-4" /> Calderas
+                              </div>
+                            </SelectItem>
+                            {tiposAparato.filter(t => t.tipo === 'caldera').map(tipo => (
+                              <SelectItem key={tipo.value} value={tipo.value}>
+                                {tipo.label}
+                              </SelectItem>
+                            ))}
+                            <SelectItem value="header-aire" disabled className="font-semibold text-blue-600">
+                              <div className="flex items-center gap-2">
+                                <Wind className="w-4 h-4" /> Aire Acondicionado
+                              </div>
+                            </SelectItem>
+                            {tiposAparato.filter(t => t.tipo === 'aire').map(tipo => (
+                              <SelectItem key={tipo.value} value={tipo.value}>
+                                {tipo.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
-                    )}
-                    
-                    {/* Total */}
-                    <div className="pt-4 border-t border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-semibold text-gray-900">Total Anual</span>
-                        <span className="text-2xl font-black text-orange-600">€{precioTotal}</span>
+                      
+                      <div>
+                        <Label>Cantidad de Equipos</Label>
+                        <div className="flex items-center gap-3 mt-1">
+                          <button
+                            type="button"
+                            onClick={() => updateField('cantidad', Math.max(1, formData.cantidad - 1))}
+                            className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                          >
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="text-xl font-bold w-12 text-center">{formData.cantidad}</span>
+                          <button
+                            type="button"
+                            onClick={() => updateField('cantidad', formData.cantidad + 1)}
+                            className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                          >
+                            <Plus className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1">IVA incluido</p>
                     </div>
                   </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    <Calculator className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p>Selecciona un tipo de aparato para ver el precio</p>
+                  
+                  {/* Datos del Cliente */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Building className="w-5 h-5 text-orange-500" />
+                      Datos del Cliente
+                    </h2>
+                    
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <InputConValidacion
+                        id="razonSocial"
+                        label="Nombre / Razón Social"
+                        value={formData.razonSocial}
+                        onChange={(value) => updateField('razonSocial', value)}
+                        placeholder="Nombre completo o empresa"
+                        required
+                      />
+                      
+                      <InputConValidacion
+                        id="nif"
+                        label="NIF/CIF"
+                        value={formData.nif}
+                        onChange={(value) => updateField('nif', value.toUpperCase())}
+                        onBlur={() => validateNif(formData.nif)}
+                        error={fieldErrors.nif}
+                        placeholder="12345678A"
+                        required
+                      />
+                      
+                      <div className="sm:col-span-2">
+                        <Label>Dirección <span className="text-orange-500">*</span></Label>
+                        <div className="relative mt-1">
+                          <input
+                            type="text"
+                            value={formData.direccion}
+                            onChange={(e) => {
+                              updateField('direccion', e.target.value);
+                              setDireccionSeleccionada(false);
+                            }}
+                            onFocus={() => {
+                              if (direccionesFiltradas.length > 0 && !direccionSeleccionada) {
+                                setDireccionOpen(true);
+                              }
+                            }}
+                            placeholder="Escribe tu calle (ej: Calle Gran Vía 25)..."
+                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                            autoComplete="off"
+                          />
+                          {buscandoDirecciones && (
+                            <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 animate-spin text-orange-500" />
+                          )}
+                          {!buscandoDirecciones && formData.direccion && direccionSeleccionada && (
+                            <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
+                          )}
+                          
+                          {/* Dropdown de sugerencias */}
+                          {direccionOpen && direccionesFiltradas.length > 0 && !direccionSeleccionada && (
+                            <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
+                              <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100 bg-gray-50">
+                                Selecciona una dirección:
+                              </div>
+                              {direccionesFiltradas.map((resultado) => (
+                                <button
+                                  key={resultado.placeId}
+                                  type="button"
+                                  onClick={() => handleDireccionSelect(resultado)}
+                                  className="w-full flex items-start gap-3 px-3 py-3 text-left hover:bg-orange-50 transition-colors border-b border-gray-50 last:border-0"
+                                >
+                                  <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                                  <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900 truncate">{resultado.mainText}</p>
+                                    <p className="text-xs text-gray-500 truncate">{resultado.secondaryText}</p>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">
+                          Escribe al menos 3 caracteres y selecciona de las sugerencias
+                        </p>
+                      </div>
+                      
+                      {/* Checkbox Chalet */}
+                      <div className="sm:col-span-2">
+                        <label className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                          <input
+                            type="checkbox"
+                            checked={formData.esChalet}
+                            onChange={(e) => updateField('esChalet', e.target.checked)}
+                            className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                          />
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">Es un chalet o vivienda unifamiliar</span>
+                            <p className="text-xs text-gray-500">Marca esta opción si no hay portal, escalera ni piso</p>
+                          </div>
+                        </label>
+                      </div>
+                      
+                      {/* Campos de portal/escalera/piso/puerta - Solo si NO es chalet */}
+                      {!formData.esChalet && (
+                        <>
+                          <InputConValidacion
+                            id="portal"
+                            label="Portal/Bloque"
+                            value={formData.portal}
+                            onChange={(value) => updateField('portal', value)}
+                            placeholder="1, A, etc."
+                          />
+                          
+                          <InputConValidacion
+                            id="escalera"
+                            label="Escalera"
+                            value={formData.escalera}
+                            onChange={(value) => updateField('escalera', value)}
+                            placeholder="Izq, Dcha, etc."
+                          />
+                          
+                          <InputConValidacion
+                            id="piso"
+                            label="Piso"
+                            value={formData.piso}
+                            onChange={(value) => updateField('piso', value)}
+                            placeholder="1º, 2º, etc."
+                          />
+                          
+                          <InputConValidacion
+                            id="puerta"
+                            label="Puerta"
+                            value={formData.puerta}
+                            onChange={(value) => updateField('puerta', value)}
+                            placeholder="A, B, 1, etc."
+                          />
+                        </>
+                      )}
+                      
+                      <div>
+                        <Label>Población <span className="text-orange-500">*</span></Label>
+                        <Popover open={poblacionOpen} onOpenChange={setPoblacionOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              aria-expanded={poblacionOpen}
+                              className="w-full justify-between mt-1"
+                            >
+                              {formData.poblacion || "Selecciona población..."}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0" align="start">
+                            <Command>
+                              <CommandInput placeholder="Buscar población..." />
+                              <CommandList>
+                                <CommandEmpty>No se encontró la población.</CommandEmpty>
+                                <CommandGroup>
+                                  {poblacionesMadrid.map((poblacion) => (
+                                    <CommandItem
+                                      key={poblacion}
+                                      value={poblacion}
+                                      onSelect={(value) => {
+                                        updateField('poblacion', value);
+                                        setPoblacionOpen(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          formData.poblacion === poblacion ? "opacity-100" : "opacity-0"
+                                        )}
+                                      />
+                                      {poblacion}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                      </div>
+                      
+                      <InputConValidacion
+                        id="codigoPostal"
+                        label="Código Postal"
+                        value={formData.codigoPostal}
+                        onChange={(value) => updateField('codigoPostal', value)}
+                        placeholder="28001"
+                        required
+                      />
+                      
+                      <InputConValidacion
+                        id="telefono"
+                        label="Teléfono"
+                        value={formData.telefono}
+                        onChange={(value) => updateField('telefono', value)}
+                        placeholder="612 345 678"
+                        type="tel"
+                        required
+                      />
+                      
+                      <InputConValidacion
+                        id="email"
+                        label="Email"
+                        value={formData.email}
+                        onChange={(value) => updateField('email', value)}
+                        placeholder="tu@email.com"
+                        type="email"
+                        required
+                      />
+                    </div>
                   </div>
-                )}
+                  
+                  {/* Firma Digital */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FileText className="w-5 h-5 text-orange-500" />
+                      Firma Digital
+                    </h2>
+                    
+                    <SignaturePad
+                      onSave={(firma) => updateField('firma', firma)}
+                      onClear={() => updateField('firma', null)}
+                    />
+                  </div>
+                  
+                  {/* Términos y Condiciones */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Shield className="w-5 h-5 text-orange-500" />
+                      Términos y Condiciones
+                    </h2>
+                    
+                    <div className="space-y-4">
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.aceptaTerminos}
+                          onChange={(e) => updateField('aceptaTerminos', e.target.checked)}
+                          className="w-5 h-5 mt-0.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <span className="text-sm text-gray-600">
+                          He leído y acepto los{' '}
+                          <Link href="/terminos-mantenimiento" target="_blank" className="text-orange-500 hover:underline">
+                            términos y condiciones del servicio de mantenimiento
+                          </Link>
+                          , incluyendo la cláusula de cancelación con preaviso de 1 mes.
+                        </span>
+                      </label>
+                      
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.aceptaPrivacidad}
+                          onChange={(e) => updateField('aceptaPrivacidad', e.target.checked)}
+                          className="w-5 h-5 mt-0.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                        />
+                        <span className="text-sm text-gray-600">
+                          He leído y acepto la{' '}
+                          <Link href="/privacidad" target="_blank" className="text-orange-500 hover:underline">
+                            política de privacidad
+                          </Link>
+                          .
+                        </span>
+                      </label>
+                    </div>
+                    
+                    {/* Botón Generar Contrato */}
+                    <div className="mt-6">
+                      <button
+                        type="button"
+                        onClick={generarContrato}
+                        disabled={!formularioCompleto}
+                        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <FileText className="w-5 h-5" />
+                        Generar Contrato
+                        <ArrowRight className="w-5 h-5" />
+                      </button>
+                      
+                      {!formularioCompleto && (
+                        <p className="text-xs text-center text-gray-500 mt-2">
+                          Completa todos los campos obligatorios y firma para continuar
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </form>
               </div>
               
-              {/* Información de Contacto */}
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-sm p-6 text-white">
-                <h3 className="font-semibold mb-4">¿Necesitas ayuda?</h3>
-                <div className="space-y-3">
-                  <a href={`tel:${EMPRESA.telefono}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
-                    <Phone className="w-5 h-5" />
-                    <span>{EMPRESA.telefono}</span>
-                  </a>
-                  <a href={`mailto:${EMPRESA.email}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
-                    <Mail className="w-5 h-5" />
-                    <span>{EMPRESA.email}</span>
-                  </a>
+              {/* Calculadora y Resumen */}
+              <div className="lg:col-span-1">
+                <div className="sticky top-4 space-y-6">
+                  {/* Calculadora de Precios */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Calculator className="w-5 h-5 text-orange-500" />
+                      Calculadora de Precios
+                    </h2>
+                    
+                    {tipoSeleccionado ? (
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                          <span className="text-sm text-gray-600">Plan {planSeleccionado}</span>
+                          <span className="font-bold text-orange-600">€{precioUnitario}/equipo</span>
+                        </div>
+                        
+                        {formData.cantidad > 1 && (
+                          <div className="space-y-2">
+                            <p className="text-xs font-semibold text-gray-500 uppercase">Desglose por equipo:</p>
+                            {desglosePrecios.map((item) => (
+                              <div key={item.maquina} className="flex items-center justify-between text-sm">
+                                <span className="text-gray-600">
+                                  Equipo {item.maquina}
+                                  {item.descuento > 0 && (
+                                    <span className="text-green-600 text-xs ml-1">(-{item.descuento}%)</span>
+                                  )}
+                                </span>
+                                <span className="font-medium">€{item.precio}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        
+                        {ahorroTotal > 0 && (
+                          <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
+                            <span className="text-sm text-green-700">¡Ahorro por volumen!</span>
+                            <span className="font-bold text-green-600">-€{ahorroTotal}</span>
+                          </div>
+                        )}
+                        
+                        <div className="pt-4 border-t border-gray-200">
+                          <div className="flex items-center justify-between">
+                            <span className="text-lg font-semibold text-gray-900">Total Anual</span>
+                            <span className="text-2xl font-black text-orange-600">€{precioTotal}</span>
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">IVA incluido</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">
+                        <Calculator className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                        <p>Selecciona un tipo de aparato para ver el precio</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Información de Contacto */}
+                  <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-sm p-6 text-white">
+                    <h3 className="font-semibold mb-4">¿Necesitas ayuda?</h3>
+                    <div className="space-y-3">
+                      <a href={`tel:${EMPRESA.telefono}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
+                        <Phone className="w-5 h-5" />
+                        <span>{EMPRESA.telefono}</span>
+                      </a>
+                      <a href={`mailto:${EMPRESA.email}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
+                        <Mail className="w-5 h-5" />
+                        <span>{EMPRESA.email}</span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
+          
+          {/* Paso 2: Visualización del Contrato */}
+          {paso === 'contrato' && (
+            <div className="space-y-6">
+              {/* Barra de acciones */}
+              <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Contrato de Mantenimiento</h2>
+                  <p className="text-sm text-gray-500">Nº {numeroContrato}</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setContratoAmpliado(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    <ZoomIn className="w-4 h-4" />
+                    Ampliar
+                  </button>
+                  <button
+                    onClick={descargarPDF}
+                    disabled={isLoading}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+                  >
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                    Descargar PDF
+                  </button>
+                  <button
+                    onClick={imprimirContrato}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    <Printer className="w-4 h-4" />
+                    Imprimir
+                  </button>
+                </div>
+              </div>
+              
+              {/* Contrato */}
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div ref={contratoRef} className="print:shadow-none">
+                  {esCaldera ? (
+                    <ContratoCaldera
+                      datosCliente={datosCliente}
+                      datosContrato={datosContrato}
+                      firmaCliente={formData.firma || undefined}
+                      mostrarFirmaEmpresa={true}
+                    />
+                  ) : (
+                    <ContratoAireAcondicionado
+                      datosCliente={datosCliente}
+                      datosContrato={datosContrato}
+                      firmaCliente={formData.firma || undefined}
+                      mostrarFirmaEmpresa={true}
+                    />
+                  )}
+                </div>
+              </div>
+              
+              {/* Botones de acción */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => setPaso('formulario')}
+                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Volver a Editar
+                </button>
+                <button
+                  onClick={procederAlPago}
+                  className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                >
+                  <CreditCard className="w-5 h-5" />
+                  Proceder al Pago (€{precioTotal})
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Modal de contrato ampliado */}
+              {contratoAmpliado && (
+                <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                  <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto relative">
+                    <button
+                      onClick={() => setContratoAmpliado(false)}
+                      className="absolute top-4 right-4 z-10 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                    <div className="p-2">
+                      {esCaldera ? (
+                        <ContratoCaldera
+                          datosCliente={datosCliente}
+                          datosContrato={datosContrato}
+                          firmaCliente={formData.firma || undefined}
+                          mostrarFirmaEmpresa={true}
+                        />
+                      ) : (
+                        <ContratoAireAcondicionado
+                          datosCliente={datosCliente}
+                          datosContrato={datosContrato}
+                          firmaCliente={formData.firma || undefined}
+                          mostrarFirmaEmpresa={true}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Paso 3: Pago con Stripe */}
+          {paso === 'pago' && (
+            <div className="max-w-2xl mx-auto space-y-6">
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">Finalizar Pago</h2>
+                <p className="text-gray-600 mb-6">Contrato Nº {numeroContrato}</p>
+                
+                {/* Resumen del pedido */}
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <h3 className="font-semibold text-gray-900 mb-3">Resumen del Contrato</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Plan {planSeleccionado} - {tipoSeleccionado?.label}</span>
+                      <span className="font-medium">x{formData.cantidad}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Subtotal (sin IVA)</span>
+                      <span className="font-medium">€{precioSinIVA}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">IVA (21%)</span>
+                      <span className="font-medium">€{precioTotal - precioSinIVA}</span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t border-gray-200">
+                      <span className="font-bold text-gray-900">Total Anual</span>
+                      <span className="font-bold text-orange-600 text-lg">€{precioTotal}</span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-3">
+                    * La suscripción se renovará automáticamente cada año. Puedes cancelar con 1 mes de antelación.
+                  </p>
+                </div>
+                
+                {/* Formulario de pago Stripe */}
+                <StripePaymentForm
+                  amount={precioTotal * 100} // Stripe usa céntimos
+                  onSuccess={handlePaymentSuccess}
+                  onError={(error) => {
+                    console.error('Error en el pago:', error);
+                    alert('Error en el pago. Por favor, intenta de nuevo.');
+                  }}
+                  metadata={{
+                    numeroContrato,
+                    tipo: tipoSeleccionado?.tipo || '',
+                    plan: planSeleccionado,
+                    cliente: formData.razonSocial,
+                    email: formData.email,
+                  }}
+                />
+                
+                <button
+                  onClick={() => setPaso('contrato')}
+                  className="w-full mt-4 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                >
+                  Volver al Contrato
+                </button>
+              </div>
+            </div>
+          )}
+          
+          {/* Paso 4: Completado */}
+          {paso === 'completado' && (
+            <div className="max-w-2xl mx-auto">
+              <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle2 className="w-10 h-10 text-green-600" />
+                </div>
+                
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Contrato Completado!</h2>
+                <p className="text-gray-600 mb-6">
+                  Tu contrato de mantenimiento ha sido procesado correctamente.
+                </p>
+                
+                <div className="bg-gray-50 rounded-lg p-4 mb-6">
+                  <p className="text-sm text-gray-600 mb-1">Número de Contrato</p>
+                  <p className="text-xl font-mono font-bold text-orange-600">{numeroContrato}</p>
+                </div>
+                
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
+                  <h3 className="font-semibold text-blue-900 mb-2">📧 Email Enviado</h3>
+                  <p className="text-sm text-blue-700">
+                    Hemos enviado una copia del contrato a <strong>{formData.email}</strong>.
+                    Si no lo recibes en unos minutos, revisa tu carpeta de spam.
+                  </p>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={descargarPDF}
+                    disabled={isLoading}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                  >
+                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                    Descargar Contrato PDF
+                  </button>
+                  <Link
+                    href="/"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors"
+                  >
+                    Volver al Inicio
+                  </Link>
+                </div>
+              </div>
+            </div>
+          )}
+          
         </div>
       </main>
       
       <Footer />
+      
+      {/* Estilos para impresión */}
+      <style jsx global>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #contrato-print, #contrato-print * {
+            visibility: visible;
+          }
+          #contrato-print {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
+        }
+      `}</style>
     </div>
   );
 }
