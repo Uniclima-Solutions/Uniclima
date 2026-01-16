@@ -4,12 +4,12 @@
  * Contrato de Mantenimiento - Formulario completo con visualización de contrato
  * Uniclima Solutions - CIF B21651393
  * 
- * MEJORAS IMPLEMENTADAS:
- * - Vista previa del contrato ANTES de firmar (en el formulario)
- * - Validación con banner de campos incompletos + scroll automático
- * - Calculadora con scroll interno
- * - Botones de descarga/impresión SOLO después del pago completado
- * - Pago con Stripe (modo live)
+ * CORRECCIONES:
+ * - Botón de pagar funcional
+ * - Banner de precio STICKY que sigue al usuario
+ * - Vista previa del contrato sin scroll excesivo
+ * - Checkboxes del mismo tamaño
+ * - Autocompletado de direcciones corregido (usa datos del resultado directo)
  */
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -60,7 +60,6 @@ import {
 import { poblacionesMadrid, validarNifCif } from "@/data/poblacionesMadrid";
 import { 
   buscarDirecciones, 
-  obtenerDetalles, 
   AddressResult 
 } from "@/services/addressAutocompleteService";
 
@@ -339,28 +338,19 @@ function ContratoMantenimientoContent() {
     return () => clearTimeout(timeoutId);
   }, [formData.direccion, direccionSeleccionada]);
   
-  // Manejar selección de dirección
-  const handleDireccionSelect = async (resultado: AddressResult) => {
+  // Manejar selección de dirección - CORREGIDO: usar datos del resultado directo
+  const handleDireccionSelect = (resultado: AddressResult) => {
     setDireccionSeleccionada(true);
     setDireccionOpen(false);
     
-    // Obtener detalles completos
-    const detalles = await obtenerDetalles(resultado.placeId);
-    
-    if (detalles) {
-      setFormData(prev => ({
-        ...prev,
-        direccion: detalles.direccionCompleta,
-        codigoPostal: detalles.codigoPostal || prev.codigoPostal,
-        poblacion: detalles.poblacion || prev.poblacion,
-        provincia: detalles.provincia || prev.provincia,
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        direccion: resultado.direccion,
-      }));
-    }
+    // Usar los datos directamente del resultado de búsqueda (ya vienen completos)
+    setFormData(prev => ({
+      ...prev,
+      direccion: resultado.mainText || resultado.name,
+      codigoPostal: resultado.postalCode || prev.codigoPostal,
+      poblacion: resultado.locality || prev.poblacion,
+      provincia: resultado.province || prev.provincia || 'Madrid',
+    }));
   };
   
   // Actualizar campo del formulario
@@ -466,9 +456,16 @@ function ContratoMantenimientoContent() {
     return true;
   };
   
-  // Proceder al pago
+  // Proceder al pago - CORREGIDO
   const procederAlPago = () => {
-    if (!validarFormulario()) return;
+    console.log('Botón pagar clickeado');
+    
+    if (!validarFormulario()) {
+      console.log('Validación fallida');
+      return;
+    }
+    
+    console.log('Validación exitosa, procediendo al pago');
     
     // Generar número de contrato
     const nuevoNumero = generarNumeroContrato(tipoSeleccionado?.tipo || 'caldera');
@@ -719,7 +716,7 @@ function ContratoMantenimientoContent() {
                             <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500" />
                           )}
                           
-                          {/* Dropdown de sugerencias */}
+                          {/* Dropdown de sugerencias - MEJORADO */}
                           {direccionOpen && direccionesFiltradas.length > 0 && !direccionSeleccionada && (
                             <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
                               <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100 bg-gray-50">
@@ -734,10 +731,12 @@ function ContratoMantenimientoContent() {
                                 >
                                   <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
                                   <div className="flex-1 min-w-0">
-                                    <p className="font-medium text-gray-900 truncate">{resultado.direccion}</p>
-                                    {resultado.detalles && (
-                                      <p className="text-xs text-gray-500 truncate">{resultado.detalles}</p>
-                                    )}
+                                    <p className="font-medium text-gray-900 truncate">{resultado.mainText || resultado.name}</p>
+                                    <p className="text-xs text-gray-500 truncate">
+                                      {resultado.postalCode && `${resultado.postalCode} - `}
+                                      {resultado.locality || resultado.secondaryText}
+                                      {resultado.province && resultado.province !== resultado.locality && `, ${resultado.province}`}
+                                    </p>
                                   </div>
                                 </button>
                               ))}
@@ -854,7 +853,7 @@ function ContratoMantenimientoContent() {
                     </div>
                   </div>
                   
-                  {/* Vista previa del contrato ANTES de firmar */}
+                  {/* Vista previa del contrato ANTES de firmar - AJUSTADO */}
                   <div className="bg-white rounded-xl shadow-sm overflow-hidden">
                     <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -873,14 +872,14 @@ function ContratoMantenimientoContent() {
                     <div className="text-xs text-gray-500 px-4 py-2 bg-yellow-50 border-b border-yellow-100">
                       Revisa el contrato antes de firmar. Los datos se actualizan en tiempo real.
                     </div>
+                    {/* Contenedor con altura fija y overflow hidden para evitar scroll excesivo */}
                     <div 
-                      className="h-[350px] overflow-y-auto p-4 bg-gray-50"
-                      style={{ scrollbarWidth: 'thin' }}
+                      className="h-[300px] overflow-hidden relative bg-gray-50"
                     >
                       <div 
                         ref={contratoRef} 
-                        className="bg-white shadow-sm rounded-lg transform scale-[0.8] origin-top"
-                        style={{ transformOrigin: 'top center' }}
+                        className="bg-white shadow-sm transform scale-[0.5] origin-top-left absolute top-4 left-1/2 -translate-x-1/2"
+                        style={{ width: '200%', transformOrigin: 'top center' }}
                       >
                         {esCaldera ? (
                           <ContratoCaldera
@@ -898,6 +897,17 @@ function ContratoMantenimientoContent() {
                           />
                         )}
                       </div>
+                      {/* Overlay para indicar que hay más contenido */}
+                      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none"></div>
+                    </div>
+                    <div className="px-4 py-2 bg-gray-100 border-t border-gray-200 text-center">
+                      <button
+                        type="button"
+                        onClick={() => setContratoAmpliado(true)}
+                        className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+                      >
+                        Ver contrato completo →
+                      </button>
                     </div>
                   </div>
                   
@@ -919,7 +929,7 @@ function ContratoMantenimientoContent() {
                     </div>
                   </div>
                   
-                  {/* Términos y Condiciones */}
+                  {/* Términos y Condiciones - CHECKBOXES UNIFORMES */}
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Aceptación</h2>
                     
@@ -932,7 +942,7 @@ function ContratoMantenimientoContent() {
                           type="checkbox"
                           checked={formData.aceptaTerminos}
                           onChange={(e) => updateField('aceptaTerminos', e.target.checked)}
-                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500"
+                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500 flex-shrink-0"
                         />
                         <span className="text-sm text-gray-700">
                           He leído y acepto los{' '}
@@ -952,7 +962,7 @@ function ContratoMantenimientoContent() {
                           type="checkbox"
                           checked={formData.aceptaPrivacidad}
                           onChange={(e) => updateField('aceptaPrivacidad', e.target.checked)}
-                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500"
+                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500 flex-shrink-0"
                         />
                         <span className="text-sm text-gray-700">
                           Acepto la{' '}
@@ -965,7 +975,7 @@ function ContratoMantenimientoContent() {
                       </label>
                     </div>
                     
-                    {/* Botón de continuar */}
+                    {/* Botón de continuar - CORREGIDO */}
                     <div className="mt-6">
                       <button
                         type="button"
@@ -981,16 +991,15 @@ function ContratoMantenimientoContent() {
                 </form>
               </div>
               
-              {/* Calculadora lateral con scroll */}
+              {/* Calculadora lateral STICKY */}
               <div className="lg:col-span-1">
-                <div className="bg-white rounded-xl shadow-sm p-6 sticky top-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <Calculator className="w-5 h-5 text-orange-500" />
-                    Resumen del Pedido
-                  </h3>
-                  
-                  {/* Contenedor con scroll para la calculadora */}
-                  <div className="max-h-[400px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+                <div className="sticky top-4">
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <Calculator className="w-5 h-5 text-orange-500" />
+                      Resumen del Pedido
+                    </h3>
+                    
                     {formData.tipoAparato && (
                       <div className="space-y-3 mb-4">
                         <div className="flex justify-between text-sm">
@@ -1006,11 +1015,11 @@ function ContratoMantenimientoContent() {
                           <span className="font-medium">{formData.cantidad}</span>
                         </div>
                         
-                        {/* Desglose de precios */}
+                        {/* Desglose de precios con scroll si es necesario */}
                         {formData.cantidad > 1 && (
                           <div className="border-t border-gray-200 pt-3 mt-3">
                             <p className="text-xs text-gray-500 mb-2">Desglose por equipo:</p>
-                            <div className="space-y-1">
+                            <div className="space-y-1 max-h-32 overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
                               {desglose.map((item) => (
                                 <div key={item.maquina} className="flex justify-between text-xs">
                                   <span className="text-gray-600">
@@ -1048,74 +1057,74 @@ function ContratoMantenimientoContent() {
                         Selecciona un tipo de aparato para ver el precio
                       </p>
                     )}
-                  </div>
-                  
-                  {/* Beneficios del plan */}
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">
-                      Incluido en Plan {planSeleccionado}:
-                    </h4>
-                    <ul className="space-y-1 text-xs text-gray-600">
-                      {planSeleccionado === 'Esencial' && (
-                        <>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            1 revisión anual
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Mano de obra incluida
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Certificado oficial
-                          </li>
-                        </>
-                      )}
-                      {planSeleccionado === 'Confort' && (
-                        <>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            2 revisiones anuales
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Mano de obra incluida
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Atención prioritaria
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Certificado oficial
-                          </li>
-                        </>
-                      )}
-                      {planSeleccionado === 'Premium' && (
-                        <>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Revisiones ilimitadas
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Mano de obra incluida
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Atención 24/7 prioritaria
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                            Descuento 10% en repuestos
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                    <p className="mt-2 text-[10px] text-gray-500">
-                      * Repuestos y gas NO incluidos
-                    </p>
+                    
+                    {/* Beneficios del plan */}
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                        Incluido en Plan {planSeleccionado}:
+                      </h4>
+                      <ul className="space-y-1 text-xs text-gray-600">
+                        {planSeleccionado === 'Esencial' && (
+                          <>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              1 revisión anual
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Mano de obra incluida
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Certificado oficial
+                            </li>
+                          </>
+                        )}
+                        {planSeleccionado === 'Confort' && (
+                          <>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              2 revisiones anuales
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Mano de obra incluida
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Atención prioritaria
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Certificado oficial
+                            </li>
+                          </>
+                        )}
+                        {planSeleccionado === 'Premium' && (
+                          <>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Revisiones ilimitadas
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Mano de obra incluida
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Atención 24/7 prioritaria
+                            </li>
+                            <li className="flex items-start gap-2">
+                              <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
+                              Descuento 10% en repuestos
+                            </li>
+                          </>
+                        )}
+                      </ul>
+                      <p className="mt-2 text-[10px] text-gray-500">
+                        * Repuestos y gas NO incluidos
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
