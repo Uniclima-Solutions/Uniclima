@@ -54,7 +54,10 @@ import {
   Phone,
   Mail,
   Building,
-  CreditCard
+  CreditCard,
+  ShoppingCart,
+  Eye,
+  Download
 } from "lucide-react";
 import { poblacionesMadrid, validarNifCif } from "@/data/poblacionesMadrid";
 import { 
@@ -64,6 +67,7 @@ import {
 } from "@/services/addressAutocompleteService";
 import { cn } from "@/lib/utils";
 import SignaturePad from "@/components/SignaturePad";
+import ContratoMantenimiento from "@/components/ContratoMantenimiento";
 import dynamic from 'next/dynamic';
 
 // Cargar Stripe dinámicamente para evitar SSR
@@ -245,6 +249,9 @@ function ContratoMantenimientoContent() {
   const [showPayment, setShowPayment] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
+  const [showContrato, setShowContrato] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [numeroContrato, setNumeroContrato] = useState<string>('');
   const [planSeleccionado, setPlanSeleccionado] = useState<string>("Premium");
   const [formData, setFormData] = useState<FormData>({
     razonSocial: "",
@@ -843,68 +850,162 @@ function ContratoMantenimientoContent() {
                 />
               </div>
               
-              {/* Sección de Pago */}
-              {!showPayment ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (formData.aceptaTerminos && formData.aceptaPrivacidad && formData.firma) {
-                      setShowPayment(true);
-                    }
-                  }}
-                  disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado}
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  Continuar al Pago
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              ) : (
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <CreditCard className="w-5 h-5 text-orange-500" />
-                    Pago Seguro
-                  </h2>
+              {/* Botones de Acción */}
+              {!addedToCart ? (
+                <div className="space-y-3">
+                  {/* Botón Ver Contrato */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!numeroContrato) {
+                        // Generar número de contrato único
+                        const fecha = new Date();
+                        const num = `UC-${fecha.getFullYear()}${String(fecha.getMonth() + 1).padStart(2, '0')}${String(fecha.getDate()).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                        setNumeroContrato(num);
+                      }
+                      setShowContrato(true);
+                    }}
+                    disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado || !formData.razonSocial || !formData.nif || !formData.direccion}
+                    className="w-full bg-white border-2 border-orange-500 text-orange-500 py-3 rounded-xl text-base font-semibold hover:bg-orange-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    <Eye className="w-5 h-5" />
+                    Ver Contrato Generado
+                  </button>
                   
-                  {paymentSuccess ? (
-                    <div className="text-center py-8">
-                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <CheckCircle2 className="w-8 h-8 text-green-600" />
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">¡Contrato Completado!</h3>
-                      <p className="text-gray-600 mb-4">Tu contrato de mantenimiento ha sido procesado correctamente.</p>
-                      <p className="text-sm text-gray-500">ID de pago: {paymentIntentId}</p>
-                    </div>
-                  ) : (
-                    <StripePaymentForm
-                      amount={precioTotal}
-                      clientName={formData.razonSocial}
-                      clientEmail={formData.email}
-                      metadata={{
+                  {/* Botón Añadir al Carrito */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!numeroContrato) {
+                        const fecha = new Date();
+                        const num = `UC-${fecha.getFullYear()}${String(fecha.getMonth() + 1).padStart(2, '0')}${String(fecha.getDate()).padStart(2, '0')}-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                        setNumeroContrato(num);
+                      }
+                      // Añadir al carrito (localStorage)
+                      const cartItem = {
+                        id: numeroContrato || `UC-${Date.now()}`,
                         tipo: 'contrato_mantenimiento',
+                        nombre: `Contrato Mantenimiento ${planSeleccionado} - ${tipoSeleccionado?.label || formData.tipoAparato}`,
                         plan: planSeleccionado,
                         tipoAparato: formData.tipoAparato,
-                        cantidad: formData.cantidad.toString(),
-                        nif: formData.nif,
-                      }}
-                      onPaymentSuccess={(id) => {
-                        setPaymentSuccess(true);
-                        setPaymentIntentId(id);
-                      }}
-                      onPaymentError={(error) => {
-                        console.error('Error de pago:', error);
-                      }}
-                    />
-                  )}
+                        cantidad: formData.cantidad,
+                        precio: precioTotal,
+                        precioSinIVA: calcularPrecio(formData.cantidad, tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0).total,
+                        cliente: {
+                          razonSocial: formData.razonSocial,
+                          nif: formData.nif,
+                          direccion: formData.direccion,
+                          esChalet: formData.esChalet,
+                          portal: formData.portal,
+                          escalera: formData.escalera,
+                          piso: formData.piso,
+                          puerta: formData.puerta,
+                          poblacion: formData.poblacion,
+                          codigoPostal: formData.codigoPostal,
+                          telefono: formData.telefono,
+                          email: formData.email,
+                        },
+                        firma: formData.firma,
+                        fechaCreacion: new Date().toISOString(),
+                        renovacionAnual: true,
+                      };
+                      
+                      // Guardar en localStorage
+                      const cart = JSON.parse(localStorage.getItem('uniclima_cart') || '[]');
+                      cart.push(cartItem);
+                      localStorage.setItem('uniclima_cart', JSON.stringify(cart));
+                      
+                      // Disparar evento para actualizar el contador del carrito
+                      window.dispatchEvent(new Event('cartUpdated'));
+                      
+                      setAddedToCart(true);
+                    }}
+                    disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado || !formData.razonSocial || !formData.nif || !formData.direccion || !formData.poblacion || !formData.telefono || !formData.email}
+                    className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Añadir al Carrito
+                  </button>
                   
-                  {!paymentSuccess && (
-                    <button
-                      type="button"
-                      onClick={() => setShowPayment(false)}
-                      className="w-full mt-4 text-gray-600 hover:text-gray-800 text-sm underline"
-                    >
-                      ← Volver a editar datos
-                    </button>
-                  )}
+                  <p className="text-xs text-gray-500 text-center">
+                    El pago se realizará mediante Stripe. La suscripción se renovará automáticamente cada año.
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle2 className="w-8 h-8 text-green-600" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">¡Añadido al Carrito!</h3>
+                    <p className="text-gray-600 mb-2">Tu contrato de mantenimiento ha sido añadido correctamente.</p>
+                    <p className="text-sm text-gray-500 mb-4">Nº Contrato: <span className="font-mono font-semibold">{numeroContrato}</span></p>
+                    
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <Link
+                        href="/checkout"
+                        className="inline-flex items-center justify-center gap-2 bg-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-600 transition-colors"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        Ir al Checkout
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setShowContrato(true)}
+                        className="inline-flex items-center justify-center gap-2 bg-white border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                      >
+                        <Eye className="w-4 h-4" />
+                        Ver Contrato
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Modal del Contrato */}
+              {showContrato && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+                  <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                      <h2 className="text-lg font-bold text-gray-900">Contrato de Mantenimiento</h2>
+                      <button
+                        onClick={() => setShowContrato(false)}
+                        className="text-gray-500 hover:text-gray-700 p-2"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="p-4">
+                      <ContratoMantenimiento
+                        datosCliente={{
+                          razonSocial: formData.razonSocial,
+                          nif: formData.nif,
+                          direccion: formData.direccion,
+                          poblacion: formData.poblacion,
+                          codigoPostal: formData.codigoPostal,
+                          provincia: formData.provincia,
+                          escalera: formData.escalera,
+                          piso: formData.piso,
+                          letra: formData.puerta,
+                          bloque: formData.portal,
+                          esChalet: formData.esChalet,
+                          telefono: formData.telefono,
+                          email: formData.email,
+                        }}
+                        datosContrato={{
+                          plan: planSeleccionado,
+                          tipoAparato: tipoSeleccionado?.label || formData.tipoAparato,
+                          cantidad: formData.cantidad,
+                          precioAnual: calcularPrecio(formData.cantidad, tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0).total,
+                          precioConIVA: precioTotal,
+                          fechaInicio: new Date().toISOString(),
+                          fechaFin: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+                          numeroContrato: numeroContrato,
+                        }}
+                        firmaCliente={formData.firma || undefined}
+                      />
+                    </div>
+                  </div>
                 </div>
               )}
             </form>
