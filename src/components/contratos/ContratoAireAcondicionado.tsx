@@ -1,5 +1,16 @@
 'use client';
 
+/**
+ * CONTRATO DE MANTENIMIENTO PARA AIRE ACONDICIONADO
+ * Uniclima Solutions S.L. - CIF B21651393
+ * 
+ * DISEÑO MEJORADO:
+ * - Texto pequeño (text-xs / 10pt) pero legible
+ * - Títulos capitalizados (uppercase)
+ * - Diseño compacto y profesional
+ * - Bien mimetizado para visualización en scroll
+ */
+
 import React, { forwardRef } from 'react';
 
 interface DatosCliente {
@@ -81,256 +92,223 @@ const ContratoAireAcondicionado = forwardRef<HTMLDivElement, ContratoAireAcondic
     };
 
     return (
-      <div ref={ref} className="bg-white p-8 max-w-4xl mx-auto font-serif text-gray-800 leading-relaxed" style={{ fontSize: '11pt' }}>
+      <div ref={ref} className="bg-white p-6 max-w-4xl mx-auto text-gray-800" style={{ fontSize: '10pt', lineHeight: '1.4' }}>
         {/* Cabecera */}
-        <div className="text-center mb-8 border-b-2 border-gray-300 pb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">CONTRATO DE MANTENIMIENTO</h1>
-          <h2 className="text-xl font-semibold text-blue-600 mb-4">PARA AIRE ACONDICIONADO</h2>
-          <div className="flex justify-between text-sm text-gray-600">
+        <div className="text-center mb-5 border-b-2 border-gray-300 pb-4">
+          <h1 className="text-base font-bold text-gray-900 uppercase tracking-wide mb-1">
+            Contrato de Mantenimiento
+          </h1>
+          <h2 className="text-sm font-semibold text-blue-600 uppercase tracking-wide mb-3">
+            Para Aire Acondicionado
+          </h2>
+          <div className="flex justify-between text-[9pt] text-gray-600">
             <span><strong>Nº Contrato:</strong> {datosContrato.numeroContrato}</span>
             <span><strong>Fecha:</strong> {formatDate(datosContrato.fechaInicio)}</span>
           </div>
         </div>
 
         {/* Partes */}
-        <div className="mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-3 border-b border-gray-200 pb-1">PARTES CONTRATANTES</h3>
+        <div className="mb-4">
+          <h3 className="text-[10pt] font-bold text-gray-900 uppercase tracking-wide mb-2 border-b border-gray-200 pb-1">
+            Partes Contratantes
+          </h3>
           
-          <div className="mb-4">
-            <p className="mb-2"><strong>De una parte, EL PROVEEDOR:</strong></p>
-            <p className="ml-4">
-              <strong>Uniclima Solutions S.L.</strong>, con CIF B21651393, domiciliada en Calle Grafito 12, Nave 14 A, 
-              28850 Torrejón de Ardoz, Madrid, España, representada a los efectos del presente contrato, 
-              en adelante denominada "EL PROVEEDOR".
+          <div className="mb-2">
+            <p className="mb-1"><strong className="uppercase text-[9pt]">El Proveedor:</strong></p>
+            <p className="ml-3 text-[9pt]">
+              <strong>Uniclima Solutions S.L.</strong>, CIF B21651393, Calle Grafito 12, Nave 14 A, 
+              28850 Torrejón de Ardoz, Madrid, en adelante "EL PROVEEDOR".
             </p>
           </div>
 
           <div>
-            <p className="mb-2"><strong>De otra parte, EL CLIENTE:</strong></p>
-            <p className="ml-4">
-              <strong>{datosCliente.razonSocial}</strong>, con NIF/CIF {datosCliente.nif}, con domicilio en {direccionCompleta()}, 
-              teléfono de contacto {datosCliente.telefono}, correo electrónico {datosCliente.email}, 
-              en adelante denominado "EL CLIENTE".
+            <p className="mb-1"><strong className="uppercase text-[9pt]">El Cliente:</strong></p>
+            <p className="ml-3 text-[9pt]">
+              <strong>{datosCliente.razonSocial}</strong>, NIF/CIF {datosCliente.nif}, domicilio en {direccionCompleta()}, 
+              teléfono {datosCliente.telefono}, email {datosCliente.email}, en adelante "EL CLIENTE".
             </p>
           </div>
         </div>
 
         {/* Cláusulas */}
-        <div className="mb-6">
-          <h3 className="text-lg font-bold text-gray-900 mb-3 border-b border-gray-200 pb-1">CLÁUSULAS</h3>
+        <div className="mb-4">
+          <h3 className="text-[10pt] font-bold text-gray-900 uppercase tracking-wide mb-2 border-b border-gray-200 pb-1">
+            Cláusulas del Contrato
+          </h3>
 
           {/* Cláusula I */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA I. OBJETO DEL CONTRATO</h4>
-            <p className="text-justify mb-2">
-              El Proveedor prestará al Cliente servicios de mantenimiento y conservación para {datosContrato.cantidad} equipo(s) 
-              de aire acondicionado instalado(s) en el domicilio indicado. Este contrato garantiza la revisión, 
-              mantenimiento y conservación del(los) equipo(s) del Cliente, asegurando su óptimo funcionamiento 
-              y eficiencia energética.
-            </p>
-            <p className="text-justify">
-              Durante la vigencia del contrato, que será de <strong>un (1) año</strong> a partir de la fecha de inicio, 
-              <strong> no se cobrarán gastos por mano de obra ni desplazamientos</strong> en caso de averías cubiertas. 
-              Sin embargo, los costos de piezas de repuesto o gas refrigerante necesarios para reparar averías o 
-              desgaste deberán ser abonados por el Cliente según tarifa vigente.
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">I. Objeto del Contrato</h4>
+            <p className="text-justify text-[9pt] mb-1">
+              El Proveedor prestará servicios de mantenimiento para {datosContrato.cantidad} equipo(s) de aire acondicionado 
+              en el domicilio indicado. Vigencia: <strong>un (1) año</strong> desde la fecha de inicio.
+              <strong> No se cobrarán gastos por mano de obra ni desplazamientos</strong> en averías cubiertas. 
+              Los repuestos y gas refrigerante serán abonados por el Cliente según tarifa vigente.
             </p>
           </div>
 
           {/* Cláusula II */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA II. PRECIO Y FORMA DE PAGO</h4>
-            <p className="text-justify mb-2">
-              El Cliente abonará al Proveedor la cantidad de <strong>{formatCurrency(datosContrato.precioAnual)}</strong> (sin IVA), 
-              equivalente a <strong>{formatCurrency(datosContrato.precioConIVA)}</strong> (IVA incluido), por el período anual 
-              del contrato correspondiente al plan <strong>{datosContrato.plan}</strong>.
-            </p>
-            <p className="text-justify mb-2">
-              El pago se realizará mediante domiciliación bancaria o tarjeta de crédito/débito a través de la 
-              plataforma de pago seguro del Proveedor. El cobro se efectuará de forma automática en la fecha 
-              de renovación del contrato.
-            </p>
-            <p className="text-justify">
-              Este precio incluye {getPlanDescription()}, preferentemente durante los meses de abril y mayo 
-              (temporada de preparación para verano).
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">II. Precio y Forma de Pago</h4>
+            <p className="text-justify text-[9pt] mb-1">
+              Importe anual: <strong>{formatCurrency(datosContrato.precioAnual)}</strong> (sin IVA) / 
+              <strong> {formatCurrency(datosContrato.precioConIVA)}</strong> (IVA incluido) - Plan <strong>{datosContrato.plan}</strong>.
+              Pago mediante domiciliación bancaria o tarjeta. Cobro automático en fecha de renovación.
+              Incluye {getPlanDescription()}.
             </p>
           </div>
 
           {/* Cláusula III */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA III. SERVICIOS INCLUIDOS EN LA REVISIÓN</h4>
-            <p className="text-justify mb-2">Los servicios incluidos en cada revisión anual del aire acondicionado son:</p>
-            <ul className="list-disc ml-8 mb-2 space-y-1">
-              <li>Comprobación del nivel de gas refrigerante y detección de posibles fugas.</li>
-              <li>Limpieza y desinfección de los filtros de la unidad interior.</li>
-              <li>Limpieza del intercambiador de la unidad interior (evaporador).</li>
-              <li>Verificación del correcto funcionamiento del sistema de condensación y evaporación.</li>
-              <li>Comprobación del estado y limpieza de la unidad exterior (condensador).</li>
-              <li>Verificación del correcto funcionamiento del compresor.</li>
-              <li>Comprobación de las conexiones eléctricas y consumos.</li>
-              <li>Verificación del correcto funcionamiento del termostato y mando a distancia.</li>
-              <li>Comprobación del sistema de drenaje de condensados.</li>
-              <li>Tratamiento antibacteriano y antihongos del equipo.</li>
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">III. Servicios Incluidos</h4>
+            <ul className="list-disc ml-4 text-[9pt] space-y-0.5">
+              <li>Comprobación del nivel de gas refrigerante y detección de fugas</li>
+              <li>Limpieza y desinfección de filtros de unidad interior</li>
+              <li>Limpieza del intercambiador (evaporador)</li>
+              <li>Verificación del sistema de condensación y evaporación</li>
+              <li>Comprobación y limpieza de unidad exterior (condensador)</li>
+              <li>Verificación del funcionamiento del compresor</li>
+              <li>Comprobación de conexiones eléctricas y consumos</li>
+              <li>Verificación del termostato y mando a distancia</li>
+              <li>Comprobación del sistema de drenaje de condensados</li>
+              <li>Tratamiento antibacteriano y antihongos</li>
             </ul>
           </div>
 
           {/* Cláusula IV */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA IV. BENEFICIOS DEL MANTENIMIENTO</h4>
-            <ul className="list-disc ml-8 space-y-1">
-              <li><strong>Seguridad:</strong> Las revisiones periódicas previenen fallos eléctricos y fugas de gas refrigerante, garantizando un uso seguro del equipo.</li>
-              <li><strong>Calidad del aire:</strong> La limpieza y desinfección regular mejora la calidad del aire interior, previniendo alergias y problemas respiratorios.</li>
-              <li><strong>Eficiencia energética:</strong> Un mantenimiento adecuado permite un funcionamiento eficiente, reduciendo el consumo de energía y las facturas eléctricas.</li>
-              <li><strong>Prevención de averías:</strong> La detección temprana de problemas menores evita reparaciones más costosas en el futuro.</li>
-              <li><strong>Durabilidad:</strong> El mantenimiento prolonga la vida útil del equipo de aire acondicionado.</li>
-            </ul>
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">IV. Beneficios del Mantenimiento</h4>
+            <p className="text-[9pt]">
+              <strong>Seguridad:</strong> Prevención de fallos eléctricos y fugas de gas. <strong>Calidad del aire:</strong> Mejora del aire interior, prevención de alergias. 
+              <strong> Eficiencia:</strong> Reducción del consumo eléctrico. <strong>Prevención:</strong> Detección temprana de problemas. 
+              <strong> Durabilidad:</strong> Prolonga la vida útil del equipo.
+            </p>
           </div>
 
           {/* Cláusula V */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA V. EXCLUSIONES DEL CONTRATO</h4>
-            <p className="text-justify mb-2">Quedan expresamente excluidos del presente contrato:</p>
-            <ul className="list-disc ml-8 space-y-1">
-              <li>El coste de repuestos, piezas, componentes o materiales necesarios para la reparación.</li>
-              <li>El coste del gas refrigerante (R410A, R32 u otros) necesario para recargas.</li>
-              <li>Averías causadas por mal uso, negligencia o manipulación indebida del equipo.</li>
-              <li>Daños causados por fenómenos atmosféricos, subidas de tensión o causas de fuerza mayor.</li>
-              <li>Reparaciones derivadas de instalaciones defectuosas no realizadas por el Proveedor.</li>
-              <li>Servicios de emergencia o intervenciones fuera del horario laboral (Lunes a Viernes de 9:00 a 18:00).</li>
-              <li>Equipos con más de 12 años de antigüedad o que utilicen gases refrigerantes obsoletos (R22).</li>
-              <li>Equipos que hayan sido modificados o reparados por terceros no autorizados.</li>
-              <li>Trabajos de albañilería, electricidad o fontanería ajenos al equipo de climatización.</li>
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">V. Exclusiones</h4>
+            <ul className="list-disc ml-4 text-[9pt] space-y-0.5">
+              <li>Coste de repuestos, piezas, componentes o materiales</li>
+              <li>Coste del gas refrigerante (R410A, R32 u otros)</li>
+              <li>Averías por mal uso, negligencia o manipulación indebida</li>
+              <li>Daños por fenómenos atmosféricos o fuerza mayor</li>
+              <li>Reparaciones de instalaciones defectuosas no realizadas por el Proveedor</li>
+              <li>Servicios fuera del horario laboral (L-V 9:00-18:00)</li>
+              <li>Equipos con más de 12 años o con gases obsoletos (R22)</li>
+              <li>Equipos modificados o reparados por terceros no autorizados</li>
+              <li>Trabajos de albañilería, electricidad o fontanería ajenos al equipo</li>
             </ul>
           </div>
 
           {/* Cláusula VI */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA VI. OBLIGACIONES DEL CLIENTE</h4>
-            <p className="text-justify mb-2">El Cliente se compromete a:</p>
-            <ul className="list-disc ml-8 space-y-1">
-              <li>Facilitar el acceso al domicilio para la realización de las revisiones en las fechas acordadas.</li>
-              <li>Comunicar cualquier anomalía o avería detectada en el funcionamiento del equipo.</li>
-              <li>No manipular ni permitir que terceros no autorizados manipulen el equipo.</li>
-              <li>Mantener despejado el acceso a las unidades interior y exterior para facilitar el mantenimiento.</li>
-              <li>Mantener actualizados sus datos de contacto para la coordinación de las visitas.</li>
-              <li>Abonar puntualmente el importe del contrato y de los repuestos que pudieran ser necesarios.</li>
-            </ul>
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VI. Obligaciones del Cliente</h4>
+            <p className="text-[9pt]">
+              Facilitar acceso al domicilio para revisiones. Comunicar anomalías detectadas. 
+              No manipular ni permitir que terceros manipulen el equipo. Mantener despejado el acceso a unidades interior y exterior.
+              Mantener datos de contacto actualizados. Abonar puntualmente el contrato y repuestos necesarios.
+            </p>
           </div>
 
-          {/* Cláusula VII */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA VII. DURACIÓN, RENOVACIÓN Y CANCELACIÓN</h4>
-            <p className="text-justify mb-2">
-              El presente contrato tendrá una duración de <strong>un (1) año</strong> desde la fecha de inicio indicada, 
-              renovándose automáticamente por períodos sucesivos de igual duración salvo notificación en contrario.
+          {/* Cláusula VII - IMPORTANTE */}
+          <div className="mb-3 bg-yellow-50 p-2 rounded border-l-3 border-yellow-500">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VII. Duración, Renovación y Cancelación</h4>
+            <p className="text-[9pt] mb-1">
+              Duración: <strong>un (1) año</strong>, renovación automática por períodos sucesivos.
             </p>
-            <p className="text-justify mb-2 bg-yellow-50 p-3 border-l-4 border-yellow-500">
-              <strong>IMPORTANTE:</strong> Para la cancelación del contrato, el Cliente deberá comunicarlo con una 
-              antelación mínima de <strong>un (1) mes</strong> antes de la fecha de renovación, mediante comunicación 
-              escrita al correo electrónico info@uniclima.es o llamada telefónica al 912 345 678. 
-              En caso de no recibir dicha comunicación en el plazo indicado, el contrato se renovará automáticamente 
-              y se procederá al cobro del nuevo período.
-            </p>
-            <p className="text-justify">
-              El Proveedor se reserva el derecho de no renovar el contrato comunicándolo al Cliente con al menos 
-              15 días de antelación a la fecha de vencimiento.
+            <p className="text-[9pt] font-semibold text-yellow-800">
+              IMPORTANTE: Para cancelar, comunicar con <strong>un (1) mes de antelación</strong> antes de la renovación 
+              a info@uniclima.es o al 912 345 678. Sin comunicación en plazo, se renovará y cobrará automáticamente.
             </p>
           </div>
 
           {/* Cláusula VIII */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA VIII. GARANTÍA DEL SERVICIO</h4>
-            <p className="text-justify">
-              El Proveedor garantiza la correcta ejecución de los trabajos de mantenimiento realizados durante un 
-              período de <strong>seis (6) meses</strong> desde la fecha de cada intervención. Esta garantía cubre 
-              exclusivamente la mano de obra empleada en los trabajos realizados, quedando excluidos los repuestos, 
-              gas refrigerante y materiales, que tendrán la garantía ofrecida por el fabricante.
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VIII. Garantía del Servicio</h4>
+            <p className="text-[9pt]">
+              Garantía de <strong>seis (6) meses</strong> desde cada intervención. Cubre exclusivamente mano de obra. 
+              Repuestos y materiales tienen la garantía del fabricante.
             </p>
           </div>
 
           {/* Cláusula IX */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA IX. RESPONSABILIDADES Y LIMITACIONES</h4>
-            <p className="text-justify mb-2">
-              El Proveedor no se hará responsable de:
-            </p>
-            <ul className="list-disc ml-8 space-y-1">
-              <li>Daños o perjuicios derivados del mal estado previo de la instalación no comunicado al Proveedor.</li>
-              <li>Averías producidas por causas ajenas a su intervención directa.</li>
-              <li>Interrupciones del servicio por causas de fuerza mayor o situaciones excepcionales.</li>
-              <li>Daños consecuenciales o lucro cesante derivados de averías en el equipo.</li>
-              <li>Problemas derivados de la calidad del suministro eléctrico o instalación eléctrica del inmueble.</li>
-            </ul>
-            <p className="text-justify mt-2">
-              La responsabilidad máxima del Proveedor en cualquier caso quedará limitada al importe anual del contrato.
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">IX. Responsabilidades y Limitaciones</h4>
+            <p className="text-[9pt]">
+              El Proveedor no responde de: daños por mal estado previo no comunicado, averías ajenas a su intervención, 
+              interrupciones por fuerza mayor, daños consecuenciales o lucro cesante. 
+              Responsabilidad máxima limitada al importe anual del contrato.
             </p>
           </div>
 
           {/* Cláusula X */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA X. PROTECCIÓN DE DATOS</h4>
-            <p className="text-justify">
-              En cumplimiento del Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018, 
-              de Protección de Datos Personales, el Cliente consiente el tratamiento de sus datos personales 
-              por parte del Proveedor con la finalidad de gestionar la relación contractual. Los datos serán 
-              conservados durante la vigencia del contrato y los plazos legales aplicables. El Cliente podrá 
-              ejercer sus derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición 
-              dirigiéndose a info@uniclima.es.
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">X. Normativa sobre Gases Fluorados</h4>
+            <p className="text-[9pt]">
+              Conforme al Reglamento (UE) 517/2014 sobre gases fluorados, el Proveedor está habilitado para manipular gases refrigerantes 
+              y dispone de la certificación correspondiente. El Cliente autoriza la manipulación de gases refrigerantes en su equipo.
             </p>
           </div>
 
           {/* Cláusula XI */}
-          <div className="mb-5">
-            <h4 className="font-bold text-gray-900 mb-2">CLÁUSULA XI. LEGISLACIÓN APLICABLE Y JURISDICCIÓN</h4>
-            <p className="text-justify">
-              El presente contrato se regirá e interpretará conforme a la legislación española. Para cualquier 
-              controversia que pudiera derivarse del presente contrato, las partes se someten expresamente a 
-              los Juzgados y Tribunales de Madrid, con renuncia expresa a cualquier otro fuero que pudiera corresponderles.
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">XI. Protección de Datos</h4>
+            <p className="text-[9pt]">
+              Conforme al RGPD y LOPDGDD, el Cliente consiente el tratamiento de sus datos para gestionar la relación contractual. 
+              Derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición en info@uniclima.es.
+            </p>
+          </div>
+
+          {/* Cláusula XII */}
+          <div className="mb-3">
+            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">XII. Legislación y Jurisdicción</h4>
+            <p className="text-[9pt]">
+              Contrato regido por legislación española. Las partes se someten a los Juzgados y Tribunales de Madrid.
             </p>
           </div>
         </div>
 
         {/* Firmas */}
-        <div className="mt-10 pt-6 border-t-2 border-gray-300">
-          <p className="text-center mb-6 text-sm text-gray-600">
-            Y en prueba de conformidad con todo lo expuesto, ambas partes firman el presente contrato por duplicado 
-            y a un solo efecto, en la fecha indicada en el encabezamiento.
+        <div className="mt-6 pt-4 border-t-2 border-gray-300">
+          <p className="text-center mb-4 text-[8pt] text-gray-600">
+            En prueba de conformidad, ambas partes firman el presente contrato en la fecha indicada.
           </p>
           
-          <div className="grid grid-cols-2 gap-8">
+          <div className="grid grid-cols-2 gap-6">
             <div className="text-center">
-              <p className="font-bold mb-2">EL PROVEEDOR</p>
-              <p className="text-sm text-gray-600 mb-4">Uniclima Solutions S.L.</p>
-              {mostrarFirmaEmpresa && (
-                <div className="h-20 border-b border-gray-400 mb-2 flex items-end justify-center">
-                  <span className="text-sm text-gray-500 italic">Firma digital autorizada</span>
+              <p className="font-bold text-[9pt] uppercase mb-1">El Proveedor</p>
+              <p className="text-[8pt] text-gray-600 mb-2">Uniclima Solutions S.L.</p>
+              {mostrarFirmaEmpresa ? (
+                <div className="h-14 border-b border-gray-400 mb-1 flex items-end justify-center">
+                  <span className="text-[8pt] text-gray-500 italic">Firma digital autorizada</span>
                 </div>
+              ) : (
+                <div className="h-14 border-b border-gray-400 mb-1"></div>
               )}
-              {!mostrarFirmaEmpresa && (
-                <div className="h-20 border-b border-gray-400 mb-2"></div>
-              )}
-              <p className="text-xs text-gray-500">Firma y sello</p>
+              <p className="text-[7pt] text-gray-500">Firma y sello</p>
             </div>
             
             <div className="text-center">
-              <p className="font-bold mb-2">EL CLIENTE</p>
-              <p className="text-sm text-gray-600 mb-4">{datosCliente.razonSocial}</p>
+              <p className="font-bold text-[9pt] uppercase mb-1">El Cliente</p>
+              <p className="text-[8pt] text-gray-600 mb-2">{datosCliente.razonSocial}</p>
               {firmaCliente ? (
-                <div className="h-20 border-b border-gray-400 mb-2 flex items-end justify-center">
-                  <img src={firmaCliente} alt="Firma del cliente" className="max-h-16 max-w-full" />
+                <div className="h-14 border-b border-gray-400 mb-1 flex items-end justify-center">
+                  <img src={firmaCliente} alt="Firma del cliente" className="max-h-12 max-w-full" />
                 </div>
               ) : (
-                <div className="h-20 border-b border-gray-400 mb-2"></div>
+                <div className="h-14 border-b border-gray-400 mb-1"></div>
               )}
-              <p className="text-xs text-gray-500">Firma del cliente</p>
+              <p className="text-[7pt] text-gray-500">Firma del cliente</p>
             </div>
           </div>
         </div>
 
         {/* Pie de página */}
-        <div className="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-500 text-center">
+        <div className="mt-4 pt-2 border-t border-gray-200 text-[7pt] text-gray-500 text-center">
           <p>Uniclima Solutions S.L. · CIF: B21651393 · Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid</p>
           <p>Tel: 912 345 678 · Email: info@uniclima.es · Web: www.uniclima.es</p>
-          <p className="mt-2">Contrato nº {datosContrato.numeroContrato} · Vigencia: {formatDate(datosContrato.fechaInicio)} - {formatDate(datosContrato.fechaFin)}</p>
+          <p className="mt-1">Contrato nº {datosContrato.numeroContrato} · Vigencia: {formatDate(datosContrato.fechaInicio)} - {formatDate(datosContrato.fechaFin)}</p>
         </div>
       </div>
     );

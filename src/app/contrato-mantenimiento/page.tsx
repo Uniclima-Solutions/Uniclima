@@ -4,6 +4,13 @@
  * Contrato de Mantenimiento - Formulario completo con visualización de contrato
  * Uniclima Solutions - CIF B21651393
  * Con calculadora de precios, firma digital, visualización PDF y pago Stripe
+ * 
+ * MEJORAS IMPLEMENTADAS:
+ * - Autocompletado de direcciones mejorado (calle + número -> CP, población, provincia)
+ * - Firma digital compacta (400x120)
+ * - Visualización del contrato en bloque con scroll interno
+ * - Botón de pantalla completa para revisar cláusulas
+ * - Texto del contrato pequeño, capitalizado, bien legible
  */
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -21,23 +28,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import SignaturePad from "@/components/SignaturePad";
+import ContratoCaldera from "@/components/contratos/ContratoCaldera";
+import ContratoAireAcondicionado from "@/components/contratos/ContratoAireAcondicionado";
+import dynamic from 'next/dynamic';
 import { 
   Check, 
   Loader2,
-  ChevronsUpDown,
   AlertCircle,
   CheckCircle2,
   MapPin,
@@ -51,14 +49,11 @@ import {
   Flame,
   Wind,
   ArrowRight,
-  Phone,
-  Mail,
-  Building,
   CreditCard,
-  ShoppingCart,
   Eye,
   Download,
-  ZoomIn,
+  Maximize2,
+  Minimize2,
   Printer,
   X
 } from "lucide-react";
@@ -68,11 +63,6 @@ import {
   obtenerDetalles, 
   AddressResult 
 } from "@/services/addressAutocompleteService";
-import { cn } from "@/lib/utils";
-import SignaturePad from "@/components/SignaturePad";
-import ContratoCaldera from "@/components/contratos/ContratoCaldera";
-import ContratoAireAcondicionado from "@/components/contratos/ContratoAireAcondicionado";
-import dynamic from 'next/dynamic';
 
 // Cargar Stripe dinámicamente para evitar SSR
 const StripePaymentForm = dynamic(() => import('@/components/StripePaymentForm'), {
@@ -258,7 +248,6 @@ function ContratoMantenimientoContent() {
   const searchParams = useSearchParams();
   const contratoRef = useRef<HTMLDivElement>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [poblacionOpen, setPoblacionOpen] = useState(false);
   const [direccionOpen, setDireccionOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [paso, setPaso] = useState<'formulario' | 'contrato' | 'pago' | 'completado'>('formulario');
@@ -365,26 +354,33 @@ function ContratoMantenimientoContent() {
     }
   };
   
-  // Manejar selección de dirección
+  // Manejar selección de dirección - MEJORADO
   const handleDireccionSelect = async (resultado: AddressResult) => {
     setDireccionSeleccionada(true);
     setDireccionOpen(false);
     
-    try {
-      const detalles = await obtenerDetalles(resultado.placeId);
-      
-      setFormData(prev => ({
-        ...prev,
-        direccion: detalles.direccion || resultado.mainText,
-        codigoPostal: detalles.codigoPostal || '',
-        poblacion: detalles.poblacion || '',
-        provincia: detalles.provincia || 'Madrid',
-      }));
-    } catch (error) {
-      setFormData(prev => ({
-        ...prev,
-        direccion: resultado.mainText,
-      }));
+    // Actualizar inmediatamente con los datos del resultado
+    setFormData(prev => ({
+      ...prev,
+      direccion: resultado.mainText || resultado.name,
+      codigoPostal: resultado.postalCode || '',
+      poblacion: resultado.locality || '',
+      provincia: resultado.province || 'Madrid',
+    }));
+    
+    // Intentar obtener más detalles si es necesario
+    if (!resultado.postalCode || !resultado.locality) {
+      try {
+        const detalles = await obtenerDetalles(resultado.placeId);
+        setFormData(prev => ({
+          ...prev,
+          codigoPostal: detalles.codigoPostal || prev.codigoPostal,
+          poblacion: detalles.poblacion || prev.poblacion,
+          provincia: detalles.provincia || prev.provincia,
+        }));
+      } catch (error) {
+        console.error('Error obteniendo detalles:', error);
+      }
     }
   };
   
@@ -397,11 +393,6 @@ function ContratoMantenimientoContent() {
   const { total: precioSinIVA, desglose: desglosePrecios } = calcularPrecioConDescuentos(precioUnitario, formData.cantidad);
   const precioTotal = Math.round(precioSinIVA * 1.21);
   const ahorroTotal = (precioUnitario * formData.cantidad) - precioSinIVA;
-  
-  // Calcular precio para una sola máquina (sin descuento)
-  const calcularPrecio = (cantidad: number, precioBase: number) => {
-    return calcularPrecioConDescuentos(precioBase, cantidad);
-  };
   
   // Verificar si el formulario está completo
   const formularioCompleto = formData.razonSocial && 
@@ -430,7 +421,6 @@ function ContratoMantenimientoContent() {
     
     setIsLoading(true);
     try {
-      // Usar html2canvas y jsPDF para generar el PDF
       const html2canvas = (await import('html2canvas')).default;
       const { jsPDF } = await import('jspdf');
       
@@ -480,12 +470,9 @@ function ContratoMantenimientoContent() {
   
   // Manejar pago exitoso
   const handlePaymentSuccess = async (paymentIntentId: string) => {
-    // Aquí enviaríamos el email con el contrato
-    // Por ahora, simulamos el envío
     console.log('Pago exitoso:', paymentIntentId);
     console.log('Enviando contrato por email a:', formData.email);
     
-    // Guardar en localStorage para historial
     const contrato = {
       numeroContrato,
       tipo: tipoSeleccionado?.tipo,
@@ -598,17 +585,17 @@ function ContratoMantenimientoContent() {
                               </div>
                             </SelectItem>
                             {tiposAparato.filter(t => t.tipo === 'caldera').map(tipo => (
-                              <SelectItem key={tipo.value} value={tipo.value}>
+                              <SelectItem key={tipo.value} value={tipo.value} className="pl-6">
                                 {tipo.label}
                               </SelectItem>
                             ))}
-                            <SelectItem value="header-aire" disabled className="font-semibold text-blue-600">
+                            <SelectItem value="header-aires" disabled className="font-semibold text-blue-600">
                               <div className="flex items-center gap-2">
-                                <Wind className="w-4 h-4" /> Aire Acondicionado
+                                <Wind className="w-4 h-4" /> Aires Acondicionados
                               </div>
                             </SelectItem>
                             {tiposAparato.filter(t => t.tipo === 'aire').map(tipo => (
-                              <SelectItem key={tipo.value} value={tipo.value}>
+                              <SelectItem key={tipo.value} value={tipo.value} className="pl-6">
                                 {tipo.label}
                               </SelectItem>
                             ))}
@@ -622,15 +609,15 @@ function ContratoMantenimientoContent() {
                           <button
                             type="button"
                             onClick={() => updateField('cantidad', Math.max(1, formData.cantidad - 1))}
-                            className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                            className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
-                          <span className="text-xl font-bold w-12 text-center">{formData.cantidad}</span>
+                          <span className="w-12 text-center text-lg font-semibold">{formData.cantidad}</span>
                           <button
                             type="button"
                             onClick={() => updateField('cantidad', formData.cantidad + 1)}
-                            className="w-10 h-10 rounded-lg border border-gray-300 flex items-center justify-center hover:bg-gray-100"
+                            className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -642,7 +629,7 @@ function ContratoMantenimientoContent() {
                   {/* Datos del Cliente */}
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Building className="w-5 h-5 text-orange-500" />
+                      <FileText className="w-5 h-5 text-orange-500" />
                       Datos del Cliente
                     </h2>
                     
@@ -667,8 +654,9 @@ function ContratoMantenimientoContent() {
                         required
                       />
                       
+                      {/* Campo de Dirección con Autocompletado MEJORADO */}
                       <div className="sm:col-span-2">
-                        <Label>Dirección <span className="text-orange-500">*</span></Label>
+                        <Label>Dirección (Calle y Número) <span className="text-orange-500">*</span></Label>
                         <div className="relative mt-1">
                           <input
                             type="text"
@@ -682,7 +670,7 @@ function ContratoMantenimientoContent() {
                                 setDireccionOpen(true);
                               }
                             }}
-                            placeholder="Escribe tu calle (ej: Calle Gran Vía 25)..."
+                            placeholder="Ej: Calle Grafito 12, Calle Gran Vía 25..."
                             className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                             autoComplete="off"
                           />
@@ -697,7 +685,7 @@ function ContratoMantenimientoContent() {
                           {direccionOpen && direccionesFiltradas.length > 0 && !direccionSeleccionada && (
                             <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-50 max-h-64 overflow-y-auto">
                               <div className="px-3 py-2 text-xs text-gray-500 border-b border-gray-100 bg-gray-50">
-                                Selecciona una dirección:
+                                Selecciona una dirección (se autocompletará CP, población y provincia):
                               </div>
                               {direccionesFiltradas.map((resultado) => (
                                 <button
@@ -717,7 +705,7 @@ function ContratoMantenimientoContent() {
                           )}
                         </div>
                         <p className="text-xs text-gray-500 mt-1">
-                          Escribe al menos 3 caracteres y selecciona de las sugerencias
+                          Escribe calle y número (ej: "Calle Grafito 12") y selecciona de las sugerencias
                         </p>
                       </div>
                       
@@ -774,51 +762,7 @@ function ContratoMantenimientoContent() {
                         </>
                       )}
                       
-                      <div>
-                        <Label>Población <span className="text-orange-500">*</span></Label>
-                        <Popover open={poblacionOpen} onOpenChange={setPoblacionOpen}>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              aria-expanded={poblacionOpen}
-                              className="w-full justify-between mt-1"
-                            >
-                              {formData.poblacion || "Selecciona población..."}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-full p-0" align="start">
-                            <Command>
-                              <CommandInput placeholder="Buscar población..." />
-                              <CommandList>
-                                <CommandEmpty>No se encontró la población.</CommandEmpty>
-                                <CommandGroup>
-                                  {poblacionesMadrid.map((poblacion) => (
-                                    <CommandItem
-                                      key={poblacion}
-                                      value={poblacion}
-                                      onSelect={(value) => {
-                                        updateField('poblacion', value);
-                                        setPoblacionOpen(false);
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          formData.poblacion === poblacion ? "opacity-100" : "opacity-0"
-                                        )}
-                                      />
-                                      {poblacion}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                      
+                      {/* Código Postal - Autocompletado pero editable */}
                       <InputConValidacion
                         id="codigoPostal"
                         label="Código Postal"
@@ -826,6 +770,27 @@ function ContratoMantenimientoContent() {
                         onChange={(value) => updateField('codigoPostal', value)}
                         placeholder="28001"
                         required
+                        sublabel="Se autocompleta al seleccionar dirección"
+                      />
+                      
+                      {/* Población - Autocompletado pero editable */}
+                      <InputConValidacion
+                        id="poblacion"
+                        label="Población"
+                        value={formData.poblacion}
+                        onChange={(value) => updateField('poblacion', value)}
+                        placeholder="Madrid, Torrejón de Ardoz..."
+                        required
+                        sublabel="Se autocompleta al seleccionar dirección"
+                      />
+                      
+                      {/* Provincia - Autocompletado pero editable */}
+                      <InputConValidacion
+                        id="provincia"
+                        label="Provincia"
+                        value={formData.provincia}
+                        onChange={(value) => updateField('provincia', value)}
+                        placeholder="Madrid"
                       />
                       
                       <InputConValidacion
@@ -850,7 +815,7 @@ function ContratoMantenimientoContent() {
                     </div>
                   </div>
                   
-                  {/* Firma Digital */}
+                  {/* Firma Digital - COMPACTA */}
                   <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                       <FileText className="w-5 h-5 text-orange-500" />
@@ -952,7 +917,7 @@ function ContratoMantenimientoContent() {
                                 <span className="text-gray-600">
                                   Equipo {item.maquina}
                                   {item.descuento > 0 && (
-                                    <span className="text-green-600 text-xs ml-1">(-{item.descuento}%)</span>
+                                    <span className="ml-1 text-green-600 text-xs">(-{item.descuento}%)</span>
                                   )}
                                 </span>
                                 <span className="font-medium">€{item.precio}</span>
@@ -962,48 +927,110 @@ function ContratoMantenimientoContent() {
                         )}
                         
                         {ahorroTotal > 0 && (
-                          <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-                            <span className="text-sm text-green-700">¡Ahorro por volumen!</span>
-                            <span className="font-bold text-green-600">-€{ahorroTotal}</span>
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                            <p className="text-sm text-green-700 font-medium">
+                              ¡Ahorras €{ahorroTotal} con descuento por volumen!
+                            </p>
                           </div>
                         )}
                         
-                        <div className="pt-4 border-t border-gray-200">
-                          <div className="flex items-center justify-between">
-                            <span className="text-lg font-semibold text-gray-900">Total Anual</span>
-                            <span className="text-2xl font-black text-orange-600">€{precioTotal}</span>
+                        <div className="border-t border-gray-200 pt-4 space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">Subtotal (sin IVA)</span>
+                            <span className="font-medium">€{precioSinIVA}</span>
                           </div>
-                          <p className="text-xs text-gray-500 mt-1">IVA incluido</p>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-600">IVA (21%)</span>
+                            <span className="font-medium">€{precioTotal - precioSinIVA}</span>
+                          </div>
+                          <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
+                            <span>Total Anual</span>
+                            <span className="text-orange-600">€{precioTotal}</span>
+                          </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <Calculator className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                        <p>Selecciona un tipo de aparato para ver el precio</p>
-                      </div>
+                      <p className="text-sm text-gray-500 text-center py-4">
+                        Selecciona un tipo de aparato para ver el precio
+                      </p>
                     )}
                   </div>
                   
-                  {/* Información de Contacto */}
-                  <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-sm p-6 text-white">
-                    <h3 className="font-semibold mb-4">¿Necesitas ayuda?</h3>
-                    <div className="space-y-3">
-                      <a href={`tel:${EMPRESA.telefono}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
-                        <Phone className="w-5 h-5" />
-                        <span>{EMPRESA.telefono}</span>
-                      </a>
-                      <a href={`mailto:${EMPRESA.email}`} className="flex items-center gap-3 hover:text-orange-400 transition-colors">
-                        <Mail className="w-5 h-5" />
-                        <span>{EMPRESA.email}</span>
-                      </a>
-                    </div>
+                  {/* Beneficios del Plan */}
+                  <div className="bg-white rounded-xl shadow-sm p-6">
+                    <h3 className="font-semibold text-gray-900 mb-3">Plan {planSeleccionado}</h3>
+                    <ul className="space-y-2 text-sm text-gray-600">
+                      {planSeleccionado === 'Esencial' && (
+                        <>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            1 revisión anual
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Mano de obra incluida
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Certificado oficial
+                          </li>
+                        </>
+                      )}
+                      {planSeleccionado === 'Confort' && (
+                        <>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            2 revisiones anuales
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Mano de obra incluida
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Atención prioritaria
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Certificado oficial
+                          </li>
+                        </>
+                      )}
+                      {planSeleccionado === 'Premium' && (
+                        <>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Revisiones ilimitadas
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Mano de obra incluida
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Atención 24/7 prioritaria
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Descuento 10% en repuestos
+                          </li>
+                          <li className="flex items-start gap-2">
+                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            Certificado oficial
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                    <p className="mt-3 text-xs text-gray-500">
+                      * Repuestos y gas NO incluidos en ningún plan
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           )}
           
-          {/* Paso 2: Visualización del Contrato */}
+          {/* Paso 2: Visualización del Contrato - REDISEÑADO */}
           {paso === 'contrato' && (
             <div className="space-y-6">
               {/* Barra de acciones */}
@@ -1015,10 +1042,10 @@ function ContratoMantenimientoContent() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => setContratoAmpliado(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors font-medium"
                   >
-                    <ZoomIn className="w-4 h-4" />
-                    Ampliar
+                    <Maximize2 className="w-4 h-4" />
+                    Ver Pantalla Completa
                   </button>
                   <button
                     onClick={descargarPDF}
@@ -1026,7 +1053,7 @@ function ContratoMantenimientoContent() {
                     className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
                   >
                     {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    Descargar PDF
+                    PDF
                   </button>
                   <button
                     onClick={imprimirContrato}
@@ -1038,56 +1065,102 @@ function ContratoMantenimientoContent() {
                 </div>
               </div>
               
-              {/* Contrato */}
+              {/* Vista previa del contrato en bloque con scroll - NUEVO DISEÑO */}
               <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div ref={contratoRef} className="print:shadow-none">
-                  {esCaldera ? (
-                    <ContratoCaldera
-                      datosCliente={datosCliente}
-                      datosContrato={datosContrato}
-                      firmaCliente={formData.firma || undefined}
-                      mostrarFirmaEmpresa={true}
-                    />
-                  ) : (
-                    <ContratoAireAcondicionado
-                      datosCliente={datosCliente}
-                      datosContrato={datosContrato}
-                      firmaCliente={formData.firma || undefined}
-                      mostrarFirmaEmpresa={true}
-                    />
-                  )}
+                <div className="bg-gray-100 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-700">Vista previa del contrato</span>
+                  <span className="text-xs text-gray-500">Desplázate para revisar todas las cláusulas</span>
+                </div>
+                <div 
+                  className="h-[400px] overflow-y-auto p-4 bg-gray-50"
+                  style={{ scrollbarWidth: 'thin' }}
+                >
+                  <div 
+                    ref={contratoRef} 
+                    className="bg-white shadow-sm rounded-lg transform scale-[0.85] origin-top"
+                    style={{ transformOrigin: 'top center' }}
+                  >
+                    {esCaldera ? (
+                      <ContratoCaldera
+                        datosCliente={datosCliente}
+                        datosContrato={datosContrato}
+                        firmaCliente={formData.firma || undefined}
+                        mostrarFirmaEmpresa={true}
+                      />
+                    ) : (
+                      <ContratoAireAcondicionado
+                        datosCliente={datosCliente}
+                        datosContrato={datosContrato}
+                        firmaCliente={formData.firma || undefined}
+                        mostrarFirmaEmpresa={true}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
               
-              {/* Botones de acción */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button
-                  onClick={() => setPaso('formulario')}
-                  className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
-                >
-                  Volver a Editar
-                </button>
-                <button
-                  onClick={procederAlPago}
-                  className="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                >
-                  <CreditCard className="w-5 h-5" />
-                  Proceder al Pago (€{precioTotal})
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+              {/* Resumen y botones de acción */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-3">Resumen del Contrato</h3>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Cliente:</span>
+                        <span className="font-medium">{formData.razonSocial}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Plan:</span>
+                        <span className="font-medium">{planSeleccionado}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Equipos:</span>
+                        <span className="font-medium">{formData.cantidad} {tipoSeleccionado?.label}</span>
+                      </div>
+                      <div className="flex justify-between pt-2 border-t border-gray-200">
+                        <span className="font-bold">Total Anual:</span>
+                        <span className="font-bold text-orange-600">€{precioTotal}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col justify-center gap-3">
+                    <button
+                      onClick={procederAlPago}
+                      className="w-full px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
+                    >
+                      <CreditCard className="w-5 h-5" />
+                      Proceder al Pago (€{precioTotal})
+                      <ArrowRight className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => setPaso('formulario')}
+                      className="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                    >
+                      Volver a Editar
+                    </button>
+                  </div>
+                </div>
               </div>
               
-              {/* Modal de contrato ampliado */}
+              {/* Modal de contrato en pantalla completa */}
               {contratoAmpliado && (
                 <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
                   <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto relative">
-                    <button
-                      onClick={() => setContratoAmpliado(false)}
-                      className="absolute top-4 right-4 z-10 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
-                    >
-                      <X className="w-6 h-6" />
-                    </button>
-                    <div className="p-2">
+                    <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+                      <div>
+                        <h3 className="font-bold text-gray-900">Contrato de Mantenimiento</h3>
+                        <p className="text-sm text-gray-500">Nº {numeroContrato}</p>
+                      </div>
+                      <button
+                        onClick={() => setContratoAmpliado(false)}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <Minimize2 className="w-4 h-4" />
+                        Cerrar
+                      </button>
+                    </div>
+                    <div className="p-6">
                       {esCaldera ? (
                         <ContratoCaldera
                           datosCliente={datosCliente}
@@ -1145,7 +1218,7 @@ function ContratoMantenimientoContent() {
                 
                 {/* Formulario de pago Stripe */}
                 <StripePaymentForm
-                  amount={precioTotal * 100} // Stripe usa céntimos
+                  amount={precioTotal * 100}
                   onSuccess={handlePaymentSuccess}
                   onError={(error) => {
                     console.error('Error en el pago:', error);

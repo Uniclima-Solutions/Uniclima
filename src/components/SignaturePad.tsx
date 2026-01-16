@@ -1,18 +1,21 @@
 'use client';
 
 /*
- * SIGNATURE PAD - Componente de firma digital
+ * SIGNATURE PAD - Componente de firma digital COMPACTO
  * - Canvas HTML5 para dibujar firma
  * - Soporte táctil y ratón
  * - Exportación como imagen base64
- * - Diseño responsive
+ * - Diseño responsive y compacto
+ * - Tamaño reducido: 400x120 (era 500x200)
  */
 
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Eraser, Check, PenTool, RotateCcw } from 'lucide-react';
 
 interface SignaturePadProps {
-  onSignatureChange: (signature: string | null) => void;
+  onSave?: (signature: string) => void;
+  onClear?: () => void;
+  onSignatureChange?: (signature: string | null) => void;
   width?: number;
   height?: number;
   className?: string;
@@ -22,9 +25,11 @@ interface SignaturePadProps {
 }
 
 export default function SignaturePad({
+  onSave,
+  onClear,
   onSignatureChange,
-  width = 500,
-  height = 200,
+  width = 400,  // Reducido de 500
+  height = 120, // Reducido de 200
   className = '',
   label = 'Firma del cliente',
   required = true,
@@ -64,7 +69,7 @@ export default function SignaturePad({
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
     ctx.strokeStyle = '#1a1a1a';
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5; // Línea más fina para el tamaño reducido
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
   }, [canvasSize]);
@@ -120,24 +125,19 @@ export default function SignaturePad({
     setHasSignature(true);
   }, [isDrawing, getPosition]);
 
-  // Terminar dibujo
+  // Terminar dibujo y guardar automáticamente
   const stopDrawing = useCallback(() => {
     if (isDrawing) {
       setIsDrawing(false);
-      saveSignature();
+      // Guardar automáticamente al terminar de dibujar
+      const canvas = canvasRef.current;
+      if (canvas && hasSignature) {
+        const dataUrl = canvas.toDataURL('image/png');
+        onSignatureChange?.(dataUrl);
+        onSave?.(dataUrl);
+      }
     }
-  }, [isDrawing]);
-
-  // Guardar firma como base64
-  const saveSignature = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    if (hasSignature) {
-      const dataUrl = canvas.toDataURL('image/png');
-      onSignatureChange(dataUrl);
-    }
-  }, [hasSignature, onSignatureChange]);
+  }, [isDrawing, hasSignature, onSignatureChange, onSave]);
 
   // Limpiar canvas
   const clearCanvas = useCallback(() => {
@@ -148,41 +148,45 @@ export default function SignaturePad({
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
-    onSignatureChange(null);
-  }, [onSignatureChange]);
+    onSignatureChange?.(null);
+    onClear?.();
+  }, [onSignatureChange, onClear]);
 
-  // Confirmar firma
+  // Confirmar firma manualmente
   const confirmSignature = useCallback(() => {
-    if (hasSignature) {
-      saveSignature();
+    const canvas = canvasRef.current;
+    if (canvas && hasSignature) {
+      const dataUrl = canvas.toDataURL('image/png');
+      onSignatureChange?.(dataUrl);
+      onSave?.(dataUrl);
     }
-  }, [hasSignature, saveSignature]);
+  }, [hasSignature, onSignatureChange, onSave]);
 
   return (
     <div className={`w-full ${className}`} ref={containerRef}>
       {/* Label */}
-      <label className="block text-sm font-medium text-gray-700 mb-2">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
+        {required && <span className="text-orange-500 ml-1">*</span>}
       </label>
 
-      {/* Instrucciones */}
-      <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-        <PenTool className="w-3.5 h-3.5" />
-        <span>Dibuja tu firma en el recuadro con el ratón o el dedo</span>
+      {/* Instrucciones compactas */}
+      <div className="flex items-center gap-1.5 text-[11px] text-gray-500 mb-1.5">
+        <PenTool className="w-3 h-3" />
+        <span>Dibuja tu firma con el ratón o el dedo</span>
       </div>
 
-      {/* Canvas container */}
-      <div className={`relative border-2 rounded-xl overflow-hidden transition-colors ${
-        error ? 'border-red-300 bg-red-50' : hasSignature ? 'border-green-300 bg-green-50/30' : 'border-gray-300 bg-white'
+      {/* Canvas container - más compacto */}
+      <div className={`relative border-2 rounded-lg overflow-hidden transition-colors ${
+        error ? 'border-red-300 bg-red-50' : hasSignature ? 'border-green-400 bg-green-50/30' : 'border-gray-300 bg-white'
       }`}>
-        {/* Línea de firma */}
+        {/* Línea de firma - ajustada para tamaño compacto */}
         <div 
-          className="absolute bottom-8 left-4 right-4 border-b border-dashed border-gray-300 pointer-events-none"
+          className="absolute bottom-5 left-3 right-3 border-b border-dashed border-gray-300 pointer-events-none"
           style={{ zIndex: 1 }}
         />
         <span 
-          className="absolute bottom-2 left-4 text-xs text-gray-400 pointer-events-none"
+          className="absolute bottom-1 left-3 text-[10px] text-gray-400 pointer-events-none"
           style={{ zIndex: 1 }}
         >
           Firma aquí
@@ -194,7 +198,7 @@ export default function SignaturePad({
           width={canvasSize.width}
           height={canvasSize.height}
           className="touch-none cursor-crosshair"
-          style={{ width: '100%', height: 'auto' }}
+          style={{ width: '100%', height: 'auto', maxHeight: '120px' }}
           onMouseDown={startDrawing}
           onMouseMove={draw}
           onMouseUp={stopDrawing}
@@ -204,56 +208,53 @@ export default function SignaturePad({
           onTouchEnd={stopDrawing}
         />
 
-        {/* Indicador de firma válida */}
+        {/* Indicador de firma válida - más pequeño */}
         {hasSignature && (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-            <Check className="w-3 h-3" />
-            <span>Firmado</span>
+          <div className="absolute top-1.5 right-1.5 flex items-center gap-0.5 bg-green-500 text-white text-[10px] px-1.5 py-0.5 rounded-full">
+            <Check className="w-2.5 h-2.5" />
+            <span>OK</span>
           </div>
         )}
       </div>
 
       {/* Error message */}
       {error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+        <p className="mt-1 text-xs text-red-600">{error}</p>
       )}
 
-      {/* Botones de acción */}
-      <div className="flex items-center gap-2 mt-3">
+      {/* Botones de acción - más compactos */}
+      <div className="flex items-center gap-2 mt-2">
         <button
           type="button"
           onClick={clearCanvas}
-          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
         >
-          <Eraser className="w-4 h-4" />
+          <Eraser className="w-3.5 h-3.5" />
           Limpiar
         </button>
         <button
           type="button"
-          onClick={() => {
-            clearCanvas();
-          }}
-          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+          onClick={clearCanvas}
+          className="flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-3.5 h-3.5" />
           Reiniciar
         </button>
         {hasSignature && (
           <button
             type="button"
             onClick={confirmSignature}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-green-500 hover:bg-green-600 rounded-lg transition-colors ml-auto"
+            className="flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-white bg-green-500 hover:bg-green-600 rounded-md transition-colors ml-auto"
           >
-            <Check className="w-4 h-4" />
-            Confirmar firma
+            <Check className="w-3.5 h-3.5" />
+            Confirmar
           </button>
         )}
       </div>
 
-      {/* Nota legal */}
-      <p className="mt-3 text-xs text-gray-500">
-        Al firmar, confirmas que has leído y aceptas los términos y condiciones del contrato de mantenimiento.
-        Esta firma tiene validez legal según el Reglamento (UE) Nº 910/2014 (eIDAS).
+      {/* Nota legal - más compacta */}
+      <p className="mt-2 text-[10px] text-gray-500 leading-tight">
+        Al firmar, confirmas que aceptas los términos del contrato. Firma válida según Reglamento (UE) Nº 910/2014 (eIDAS).
       </p>
     </div>
   );
