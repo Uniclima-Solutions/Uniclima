@@ -407,7 +407,7 @@ function CategoryCarousel({
   };
 
   return (
-      <section className="py-0 bg-white">
+      <section className="py-6 bg-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-1">
@@ -823,7 +823,7 @@ function MaintenanceSection() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <section className="py-2 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-2">
@@ -905,7 +905,7 @@ export default function Home() {
       <Header />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
-      <section className="w-full flex justify-center py-6">
+      <section className="w-full flex justify-center py-8">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full">
             <picture>
@@ -941,7 +941,7 @@ export default function Home() {
       />
 
       {/* Banner Pieza Gratis - ADAPTATIVO */}
-      <section className="w-full flex justify-center py-6">
+      <section className="w-full flex justify-center py-8">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/pieza-gratis" className="block w-full">
             <picture>
@@ -958,7 +958,7 @@ export default function Home() {
       </section>
 
       {/* Categorías destacadas - Estilo PCComponentes */}
-      <section className="py-2 bg-gray-50">
+      <section className="py-8 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
@@ -987,7 +987,7 @@ export default function Home() {
       </section>
 
       {/* Banner CTA Profesionales - Diseño Premium */}
-      <section className="py-2 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
+      <section className="py-10 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -1081,7 +1081,7 @@ export default function Home() {
       <GoogleReviews />
 
       {/* Banner Reparación de Placas - ADAPTATIVO */}
-      <section className="w-full flex justify-center py-6">
+      <section className="w-full flex justify-center py-8">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/diagnostico-placas" className="block w-full">
             <picture>
