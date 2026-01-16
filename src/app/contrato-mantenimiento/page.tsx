@@ -1007,10 +1007,10 @@ function ContratoMantenimientoContent() {
                 )}
               </div>
               
-              {/* Sidebar STICKY - Sigue al usuario */}
+              {/* Sidebar STICKY - Sigue al usuario en todo momento */}
               <div className="lg:col-span-1">
-                <div className="sticky top-4" style={{ position: 'sticky', top: '1rem' }}>
-                  <div className="bg-white rounded-xl shadow-lg border border-orange-100 p-6 max-h-[calc(100vh-2rem)] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+                <div className="lg:sticky lg:top-4" style={{ position: '-webkit-sticky' }}>
+                  <div className="bg-gradient-to-br from-white to-orange-50 rounded-xl shadow-xl border-2 border-orange-200 p-6 max-h-[calc(100vh-2rem)] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                       <Calculator className="w-5 h-5 text-orange-500" />
                       Resumen del Pedido
@@ -1100,6 +1100,31 @@ function ContratoMantenimientoContent() {
                       </ul>
                       <p className="mt-2 text-[10px] text-gray-500">* Repuestos y gas NO incluidos</p>
                     </div>
+                    
+                    {/* Botón de Pago en Sidebar */}
+                    {formData.tipoAparato && !mostrarPago && !pagoCompletado && (
+                      <div className="mt-4 pt-4 border-t border-orange-200">
+                        <button
+                          onClick={mostrarFormularioPago}
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2"
+                        >
+                          <CreditCard className="w-5 h-5" />
+                          Proceder al Pago
+                        </button>
+                        <p className="text-[10px] text-gray-500 text-center mt-2">Pago seguro con Stripe</p>
+                      </div>
+                    )}
+                    
+                    {/* Indicador de pago en proceso */}
+                    {mostrarPago && !pagoCompletado && (
+                      <div className="mt-4 pt-4 border-t border-orange-200">
+                        <div className="bg-orange-100 rounded-lg p-3 text-center">
+                          <CreditCard className="w-6 h-6 text-orange-600 mx-auto mb-1" />
+                          <p className="text-sm font-medium text-orange-800">Completa el pago abajo</p>
+                          <p className="text-xs text-orange-600">Desplázate para ver el formulario</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -296,6 +296,8 @@ export default function StripePaymentForm({
 
   const options: StripeElementsOptions = {
     clientSecret,
+    // Habilitar Link como método de pago
+    loader: 'auto',
     appearance: {
       theme: 'stripe',
       variables: {
