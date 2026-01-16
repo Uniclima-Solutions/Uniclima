@@ -67,7 +67,7 @@ import {
 } from "@/services/addressAutocompleteService";
 import { cn } from "@/lib/utils";
 import SignaturePad from "@/components/SignaturePad";
-import ContratoMantenimiento from "@/components/ContratoMantenimiento";
+import ContratoDocumento from "@/components/ContratoMantenimiento";
 import dynamic from 'next/dynamic';
 
 // Cargar Stripe dinámicamente para evitar SSR
@@ -976,7 +976,7 @@ function ContratoMantenimientoContent() {
                       </button>
                     </div>
                     <div className="p-4">
-                      <ContratoMantenimiento
+                      <ContratoDocumento
                         datosCliente={{
                           razonSocial: formData.razonSocial,
                           nif: formData.nif,
