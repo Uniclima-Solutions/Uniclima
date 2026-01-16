@@ -480,13 +480,82 @@ function ContratoMantenimientoContent() {
     fechaFin: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
   };
   
-  // Descargar PDF
+  // Descargar PDF usando html2canvas y jspdf
   const descargarPDF = async () => {
     if (paso !== 'completado') return;
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      alert('PDF generado correctamente.');
+      // Importar dinámicamente las librerías
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      
+      // Obtener el elemento del contrato
+      const contratoElement = contratoRef.current;
+      
+      if (!contratoElement) {
+        alert('Error: No se pudo encontrar el contrato.');
+        return;
+      }
+      
+      // Hacer visible temporalmente el contrato
+      contratoElement.classList.remove('hidden');
+      contratoElement.style.position = 'absolute';
+      contratoElement.style.left = '-9999px';
+      contratoElement.style.top = '0';
+      contratoElement.style.width = '800px';
+      contratoElement.style.backgroundColor = 'white';
+      
+      // Esperar a que se renderice
+      await new Promise(resolve => setTimeout(resolve, 300));
+      
+      // Generar el canvas
+      const canvas = await html2canvas(contratoElement, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+        windowWidth: 800
+      });
+      
+      // Ocultar de nuevo el contrato
+      contratoElement.classList.add('hidden');
+      contratoElement.style.position = '';
+      contratoElement.style.left = '';
+      contratoElement.style.top = '';
+      contratoElement.style.width = '';
+      
+      // Crear el PDF
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+      
+      const imgWidth = 190; // A4 width con márgenes
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      const pageHeight = 277; // A4 height con márgenes
+      
+      let heightLeft = imgHeight;
+      let position = 10; // Margen superior
+      
+      // Añadir la primera página
+      pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      // Añadir páginas adicionales si es necesario
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight + 10;
+        pdf.addPage();
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      // Descargar el PDF
+      pdf.save(`Contrato_Uniclima_${numeroContrato}.pdf`);
+      
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+      alert('Error al generar el PDF. Por favor, inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
@@ -561,6 +630,25 @@ function ContratoMantenimientoContent() {
                 <Link href="/" className="inline-block mt-6 text-orange-600 font-semibold hover:underline">
                   Volver al Inicio
                 </Link>
+              </div>
+              
+              {/* Contrato oculto para generar PDF */}
+              <div ref={contratoRef} className="hidden print:block mt-8 bg-white p-8">
+                {esCaldera ? (
+                  <ContratoCaldera
+                    datosCliente={datosCliente}
+                    datosContrato={datosContrato}
+                    firmaCliente={formData.firma || undefined}
+                    mostrarFirmaEmpresa={true}
+                  />
+                ) : (
+                  <ContratoAireAcondicionado
+                    datosCliente={datosCliente}
+                    datosContrato={datosContrato}
+                    firmaCliente={formData.firma || undefined}
+                    mostrarFirmaEmpresa={true}
+                  />
+                )}
               </div>
             </div>
           )}
