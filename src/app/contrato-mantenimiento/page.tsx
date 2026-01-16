@@ -278,8 +278,17 @@ function ContratoMantenimientoContent() {
     }
   }, [searchParams]);
   
+  // Estado para controlar si se acaba de seleccionar una dirección
+  const [direccionSeleccionada, setDireccionSeleccionada] = useState(false);
+  
   // Buscar direcciones con debounce
   useEffect(() => {
+    // Si se acaba de seleccionar una dirección, no buscar
+    if (direccionSeleccionada) {
+      setDireccionSeleccionada(false);
+      return;
+    }
+    
     if (formData.direccion.length < 3) {
       setDireccionesSugeridas([]);
       setDireccionOpen(false);
@@ -302,11 +311,18 @@ function ContratoMantenimientoContent() {
     }, 400);
     
     return () => clearTimeout(timeoutId);
-  }, [formData.direccion]);
+  }, [formData.direccion, direccionSeleccionada]);
   
   // Seleccionar dirección
   const handleDireccionSelect = async (dir: DireccionSugerida) => {
-    // Actualizar inmediatamente con los datos básicos
+    // Marcar que se ha seleccionado para evitar que el useEffect vuelva a buscar
+    setDireccionSeleccionada(true);
+    
+    // Cerrar dropdown inmediatamente
+    setDireccionOpen(false);
+    setDireccionesSugeridas([]);
+    
+    // Actualizar con los datos básicos
     setFormData(prev => ({
       ...prev,
       direccion: dir.calle + (dir.numero ? ' ' + dir.numero : ''),
@@ -314,8 +330,6 @@ function ContratoMantenimientoContent() {
       poblacion: dir.poblacion || prev.poblacion,
       provincia: dir.provincia || prev.provincia || 'Madrid',
     }));
-    setDireccionOpen(false);
-    setDireccionesSugeridas([]);
     
     // Si hay placeId, obtener detalles completos de Google Places (incluye CP)
     if (dir.placeId) {
