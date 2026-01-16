@@ -161,6 +161,19 @@ export default function ContratoCaldera({
         </div>
       </div>
 
+      {/* Periodo de revisiones */}
+      <div className="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <h3 className="text-base font-bold text-orange-800 mb-2">PERIODO DE REVISIONES</h3>
+        <p className="text-sm text-orange-900">
+          Las revisiones de calderas se realizarán <strong>exclusivamente durante los meses de OCTUBRE y NOVIEMBRE</strong>. 
+          Las fechas concretas serán agendadas por nuestro departamento de atención al cliente, quien contactará 
+          con el titular del contrato para coordinar la visita del técnico.
+        </p>
+        <p className="text-xs text-orange-700 mt-2">
+          * No se realizarán revisiones fuera de este periodo salvo averías o urgencias.
+        </p>
+      </div>
+
       {/* Obligaciones */}
       <div className="mb-6">
         <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">III. OBLIGACIONES DE LAS PARTES</h3>
@@ -168,7 +181,7 @@ export default function ContratoCaldera({
           <div>
             <p className="font-semibold">Del prestador:</p>
             <ul className="list-disc list-inside ml-4 text-xs space-y-1">
-              <li>Realizar las revisiones programadas según el plan contratado</li>
+              <li>Realizar las revisiones programadas en el periodo establecido (Octubre-Noviembre)</li>
               <li>Emitir certificado oficial tras cada revisión</li>
               <li>Atender averías en los plazos establecidos</li>
               <li>Utilizar repuestos originales o equivalentes homologados</li>

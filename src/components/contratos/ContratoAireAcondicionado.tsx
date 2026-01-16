@@ -161,6 +161,19 @@ export default function ContratoAireAcondicionado({
         </div>
       </div>
 
+      {/* Periodo de revisiones */}
+      <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <h3 className="text-base font-bold text-blue-800 mb-2">PERIODO DE REVISIONES</h3>
+        <p className="text-sm text-blue-900">
+          Las revisiones de aire acondicionado se realizarán <strong>exclusivamente durante los meses de ABRIL y MAYO</strong>. 
+          Las fechas concretas serán agendadas por nuestro departamento de atención al cliente, quien contactará 
+          con el titular del contrato para coordinar la visita del técnico.
+        </p>
+        <p className="text-xs text-blue-700 mt-2">
+          * No se realizarán revisiones fuera de este periodo salvo averías o urgencias.
+        </p>
+      </div>
+
       {/* Obligaciones */}
       <div className="mb-6">
         <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">III. OBLIGACIONES DE LAS PARTES</h3>
@@ -168,7 +181,7 @@ export default function ContratoAireAcondicionado({
           <div>
             <p className="font-semibold">Del prestador:</p>
             <ul className="list-disc list-inside ml-4 text-xs space-y-1">
-              <li>Realizar las revisiones programadas segun el plan contratado</li>
+              <li>Realizar las revisiones programadas en el periodo establecido (Abril-Mayo)</li>
               <li>Limpieza de filtros y unidades interior/exterior</li>
               <li>Comprobacion de niveles de gas refrigerante</li>
               <li>Verificacion del correcto funcionamiento del equipo</li>
