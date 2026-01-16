@@ -29,18 +29,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Crear el PaymentIntent
+    // Crear el PaymentIntent sin statement_descriptor para evitar errores
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convertir a céntimos
       currency,
       metadata: metadata || {},
+      // Habilitar métodos de pago automáticos (incluye tarjeta, Link, Google Pay, Apple Pay)
       automatic_payment_methods: {
         enabled: true,
       },
-      // Descripción para el extracto bancario
+      // Descripción para referencia interna (no aparece en extracto)
       description: `Contrato Mantenimiento Uniclima - ${metadata?.numeroContrato || 'N/A'}`,
-      // Statement descriptor (máximo 22 caracteres)
-      statement_descriptor: 'UNICLIMA MANT',
     });
 
     console.log('PaymentIntent creado:', paymentIntent.id);

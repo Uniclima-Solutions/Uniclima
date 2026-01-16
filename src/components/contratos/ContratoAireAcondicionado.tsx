@@ -267,15 +267,15 @@ export default function ContratoAireAcondicionado({
         </div>
       </div>
 
-      {/* Pie de pagina */}
-      <div className="mt-8 pt-4 border-t border-gray-200 text-center">
-        <p className="text-xs text-gray-500">
+      {/* Pie de pagina - compacto */}
+      <div className="mt-4 pt-2 border-t border-gray-200 text-center">
+        <p className="text-[10px] text-gray-500">
           {EMPRESA.nombre} - CIF: {EMPRESA.cif} - {EMPRESA.direccion}
         </p>
-        <p className="text-xs text-gray-500">
+        <p className="text-[10px] text-gray-500">
           Tel: {EMPRESA.telefono} - Email: {EMPRESA.email} - Web: {EMPRESA.web}
         </p>
-        <p className="text-xs text-gray-400 mt-1">
+        <p className="text-[10px] text-gray-400">
           Contrato n {datosContrato.numeroContrato} - Vigencia: {formatDate(datosContrato.fechaInicio)} - {formatDate(datosContrato.fechaFin)}
         </p>
       </div>

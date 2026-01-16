@@ -246,28 +246,18 @@ function ContratoMantenimientoContent() {
     firma: null,
   });
   
-  // Cargar datos de localStorage al montar
+  // NO cargar datos de localStorage - el formulario siempre empieza vacío
   useEffect(() => {
+    // Limpiar cualquier dato guardado anteriormente
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setFormData(prev => ({ ...prev, ...parsed, firma: null })); // No restaurar firma
-      }
+      localStorage.removeItem(STORAGE_KEY);
     } catch (e) {
-      console.error('Error cargando datos guardados:', e);
+      console.error('Error limpiando datos:', e);
     }
   }, []);
   
-  // Guardar en localStorage cuando cambie formData
-  useEffect(() => {
-    try {
-      const toSave = { ...formData, firma: null }; // No guardar firma
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-    } catch (e) {
-      console.error('Error guardando datos:', e);
-    }
-  }, [formData]);
+  // NO guardar datos en localStorage - cada sesión es independiente
+  // Los datos solo se mantienen durante la sesión actual
   
   // Pre-seleccionar desde URL
   useEffect(() => {
@@ -851,9 +841,9 @@ function ContratoMantenimientoContent() {
                   <div className="text-xs text-gray-600 px-4 py-2 bg-yellow-50 border-b border-yellow-100">
                     ⚠️ Revisa el contrato antes de firmar. Los datos se actualizan en tiempo real.
                   </div>
-                  {/* Contrato con scroll interno y letra más grande */}
-                  <div className="h-[400px] overflow-y-auto p-4 bg-gray-50" style={{ scrollbarWidth: 'thin' }}>
-                    <div ref={contratoRef} className="bg-white shadow-sm rounded-lg p-6 transform scale-[0.85] origin-top">
+                  {/* Contrato con scroll interno - sin espacio extra */}
+                  <div className="max-h-[350px] overflow-y-auto p-2 bg-gray-50" style={{ scrollbarWidth: 'thin' }}>
+                    <div ref={contratoRef} className="bg-white shadow-sm rounded-lg p-4">
                       {esCaldera ? (
                         <ContratoCaldera
                           datosCliente={datosCliente}
