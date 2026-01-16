@@ -53,7 +53,8 @@ import {
   ArrowRight,
   Phone,
   Mail,
-  Building
+  Building,
+  CreditCard
 } from "lucide-react";
 import { poblacionesMadrid, validarNifCif } from "@/data/poblacionesMadrid";
 import { 
@@ -63,6 +64,13 @@ import {
 } from "@/services/addressAutocompleteService";
 import { cn } from "@/lib/utils";
 import SignaturePad from "@/components/SignaturePad";
+import dynamic from 'next/dynamic';
+
+// Cargar Stripe dinámicamente para evitar SSR
+const StripePaymentForm = dynamic(() => import('@/components/StripePaymentForm'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-48 rounded-lg"></div>
+});
 
 // Datos de la empresa
 const EMPRESA = {
@@ -234,6 +242,9 @@ function ContratoMantenimientoContent() {
   const [poblacionOpen, setPoblacionOpen] = useState(false);
   const [direccionOpen, setDireccionOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [paymentIntentId, setPaymentIntentId] = useState<string | null>(null);
   const [planSeleccionado, setPlanSeleccionado] = useState<string>("Premium");
   const [formData, setFormData] = useState<FormData>({
     razonSocial: "",
@@ -779,24 +790,70 @@ function ContratoMantenimientoContent() {
                 />
               </div>
               
-              {/* Botón Enviar */}
-              <button
-                type="submit"
-                disabled={isLoading || !formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma}
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Procesando...
-                  </>
-                ) : (
-                  <>
-                    Contratar Ahora
-                    <ArrowRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
+              {/* Sección de Pago */}
+              {!showPayment ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (formData.aceptaTerminos && formData.aceptaPrivacidad && formData.firma) {
+                      setShowPayment(true);
+                    }
+                  }}
+                  disabled={!formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma || !tipoSeleccionado}
+                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
+                  Continuar al Pago
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              ) : (
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <CreditCard className="w-5 h-5 text-orange-500" />
+                    Pago Seguro
+                  </h2>
+                  
+                  {paymentSuccess ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <CheckCircle2 className="w-8 h-8 text-green-600" />
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">¡Contrato Completado!</h3>
+                      <p className="text-gray-600 mb-4">Tu contrato de mantenimiento ha sido procesado correctamente.</p>
+                      <p className="text-sm text-gray-500">ID de pago: {paymentIntentId}</p>
+                    </div>
+                  ) : (
+                    <StripePaymentForm
+                      amount={precioTotal}
+                      clientName={formData.razonSocial}
+                      clientEmail={formData.email}
+                      metadata={{
+                        tipo: 'contrato_mantenimiento',
+                        plan: planSeleccionado,
+                        tipoAparato: formData.tipoAparato,
+                        cantidad: formData.cantidad.toString(),
+                        nif: formData.nif,
+                      }}
+                      onPaymentSuccess={(id) => {
+                        setPaymentSuccess(true);
+                        setPaymentIntentId(id);
+                      }}
+                      onPaymentError={(error) => {
+                        console.error('Error de pago:', error);
+                      }}
+                    />
+                  )}
+                  
+                  {!paymentSuccess && (
+                    <button
+                      type="button"
+                      onClick={() => setShowPayment(false)}
+                      className="w-full mt-4 text-gray-600 hover:text-gray-800 text-sm underline"
+                    >
+                      ← Volver a editar datos
+                    </button>
+                  )}
+                </div>
+              )}
             </form>
           </div>
           
