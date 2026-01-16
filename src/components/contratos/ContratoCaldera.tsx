@@ -1,17 +1,11 @@
-'use client';
-
 /**
- * CONTRATO DE MANTENIMIENTO PARA CALDERA DE GAS
- * Uniclima Solutions S.L. - CIF B21651393
+ * Componente de Contrato de Mantenimiento de Caldera
+ * Uniclima Solutions - CIF B21651393
  * 
- * DISEÑO MEJORADO:
- * - Texto pequeño (text-xs / 10pt) pero legible
- * - Títulos capitalizados (uppercase)
- * - Diseño compacto y profesional
- * - Bien mimetizado para visualización en scroll
+ * LETRA MÁS GRANDE Y LEGIBLE
  */
 
-import React, { forwardRef } from 'react';
+import React from 'react';
 
 interface DatosCliente {
   razonSocial: string;
@@ -46,263 +40,230 @@ interface ContratoCalderaProps {
   mostrarFirmaEmpresa?: boolean;
 }
 
-const ContratoCaldera = forwardRef<HTMLDivElement, ContratoCalderaProps>(
-  ({ datosCliente, datosContrato, firmaCliente, mostrarFirmaEmpresa = false }, ref) => {
-    
-    const formatDate = (dateString: string) => {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
-      });
-    };
+const EMPRESA = {
+  nombre: "Uniclima Solutions S.L.",
+  cif: "B21651393",
+  direccion: "Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid",
+  telefono: "912 345 678",
+  email: "info@uniclima.es",
+  web: "www.uniclima.es",
+};
 
-    const formatCurrency = (amount: number) => {
-      return new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'EUR'
-      }).format(amount);
-    };
+export default function ContratoCaldera({
+  datosCliente,
+  datosContrato,
+  firmaCliente,
+  mostrarFirmaEmpresa = true,
+}: ContratoCalderaProps) {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
+  };
 
-    const direccionCompleta = () => {
-      let dir = datosCliente.direccion;
-      if (!datosCliente.esChalet) {
-        if (datosCliente.portal) dir += `, Portal ${datosCliente.portal}`;
-        if (datosCliente.escalera) dir += `, Esc. ${datosCliente.escalera}`;
-        if (datosCliente.piso) dir += `, ${datosCliente.piso}º`;
-        if (datosCliente.puerta) dir += ` ${datosCliente.puerta}`;
-      }
-      dir += `, ${datosCliente.codigoPostal} ${datosCliente.poblacion}`;
-      if (datosCliente.provincia) dir += ` (${datosCliente.provincia})`;
-      return dir;
-    };
+  const direccionCompleta = datosCliente.esChalet
+    ? datosCliente.direccion
+    : `${datosCliente.direccion}${datosCliente.portal ? `, Portal ${datosCliente.portal}` : ''}${datosCliente.escalera ? `, Esc. ${datosCliente.escalera}` : ''}${datosCliente.piso ? `, ${datosCliente.piso}º` : ''}${datosCliente.puerta ? ` ${datosCliente.puerta}` : ''}`;
 
-    const getPlanDescription = () => {
-      switch (datosContrato.plan) {
-        case 'Esencial':
-          return 'una (1) revisión anual de la caldera';
-        case 'Confort':
-          return 'dos (2) revisiones anuales de la caldera (una en temporada de calefacción y otra de preparación)';
-        case 'Premium':
-          return 'revisiones ilimitadas de la caldera durante todo el año, con prioridad en la atención';
-        default:
-          return 'una (1) revisión anual de la caldera';
-      }
-    };
+  return (
+    <div className="bg-white p-8 max-w-4xl mx-auto" style={{ fontFamily: 'Georgia, serif', fontSize: '13px', lineHeight: '1.6' }}>
+      {/* Cabecera */}
+      <div className="text-center border-b-2 border-orange-500 pb-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 tracking-wide">CONTRATO DE MANTENIMIENTO</h1>
+        <h2 className="text-lg font-semibold text-orange-600 mt-1">CALDERA DE GAS</h2>
+        <p className="text-sm text-gray-600 mt-2">Contrato Nº: <span className="font-mono font-bold">{datosContrato.numeroContrato}</span></p>
+      </div>
 
-    return (
-      <div ref={ref} className="bg-white p-6 max-w-4xl mx-auto text-gray-800" style={{ fontSize: '10pt', lineHeight: '1.4' }}>
-        {/* Cabecera */}
-        <div className="text-center mb-5 border-b-2 border-gray-300 pb-4">
-          <h1 className="text-base font-bold text-gray-900 uppercase tracking-wide mb-1">
-            Contrato de Mantenimiento
-          </h1>
-          <h2 className="text-sm font-semibold text-orange-600 uppercase tracking-wide mb-3">
-            Para Caldera de Gas
-          </h2>
-          <div className="flex justify-between text-[9pt] text-gray-600">
-            <span><strong>Nº Contrato:</strong> {datosContrato.numeroContrato}</span>
-            <span><strong>Fecha:</strong> {formatDate(datosContrato.fechaInicio)}</span>
+      {/* Partes */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">PARTES CONTRATANTES</h3>
+        
+        <div className="grid grid-cols-2 gap-6 text-sm">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="font-bold text-orange-600 mb-2">PRESTADOR DEL SERVICIO:</p>
+            <p className="font-semibold">{EMPRESA.nombre}</p>
+            <p>CIF: {EMPRESA.cif}</p>
+            <p>{EMPRESA.direccion}</p>
+            <p>Tel: {EMPRESA.telefono}</p>
+            <p>Email: {EMPRESA.email}</p>
           </div>
-        </div>
-
-        {/* Partes */}
-        <div className="mb-4">
-          <h3 className="text-[10pt] font-bold text-gray-900 uppercase tracking-wide mb-2 border-b border-gray-200 pb-1">
-            Partes Contratantes
-          </h3>
           
-          <div className="mb-2">
-            <p className="mb-1"><strong className="uppercase text-[9pt]">El Proveedor:</strong></p>
-            <p className="ml-3 text-[9pt]">
-              <strong>Uniclima Solutions S.L.</strong>, CIF B21651393, Calle Grafito 12, Nave 14 A, 
-              28850 Torrejón de Ardoz, Madrid, en adelante "EL PROVEEDOR".
-            </p>
+          <div className="bg-orange-50 p-4 rounded-lg">
+            <p className="font-bold text-orange-600 mb-2">CLIENTE:</p>
+            <p className="font-semibold">{datosCliente.razonSocial}</p>
+            <p>NIF/CIF: {datosCliente.nif}</p>
+            <p>{direccionCompleta}</p>
+            <p>{datosCliente.codigoPostal} {datosCliente.poblacion}</p>
+            <p>Tel: {datosCliente.telefono}</p>
+            <p>Email: {datosCliente.email}</p>
           </div>
-
-          <div>
-            <p className="mb-1"><strong className="uppercase text-[9pt]">El Cliente:</strong></p>
-            <p className="ml-3 text-[9pt]">
-              <strong>{datosCliente.razonSocial}</strong>, NIF/CIF {datosCliente.nif}, domicilio en {direccionCompleta()}, 
-              teléfono {datosCliente.telefono}, email {datosCliente.email}, en adelante "EL CLIENTE".
-            </p>
-          </div>
-        </div>
-
-        {/* Cláusulas */}
-        <div className="mb-4">
-          <h3 className="text-[10pt] font-bold text-gray-900 uppercase tracking-wide mb-2 border-b border-gray-200 pb-1">
-            Cláusulas del Contrato
-          </h3>
-
-          {/* Cláusula I */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">I. Objeto del Contrato</h4>
-            <p className="text-justify text-[9pt] mb-1">
-              El Proveedor prestará servicios de mantenimiento para {datosContrato.cantidad} caldera(s) de gas 
-              en el domicilio indicado. Vigencia: <strong>un (1) año</strong> desde la fecha de inicio.
-              <strong> No se cobrarán gastos por mano de obra ni desplazamientos</strong> en averías cubiertas. 
-              Los repuestos, componentes o gas serán abonados por el Cliente según tarifa vigente.
-            </p>
-          </div>
-
-          {/* Cláusula II */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">II. Precio y Forma de Pago</h4>
-            <p className="text-justify text-[9pt] mb-1">
-              Importe anual: <strong>{formatCurrency(datosContrato.precioAnual)}</strong> (sin IVA) / 
-              <strong> {formatCurrency(datosContrato.precioConIVA)}</strong> (IVA incluido) - Plan <strong>{datosContrato.plan}</strong>.
-              Pago mediante domiciliación bancaria o tarjeta. Cobro automático en fecha de renovación.
-              Incluye {getPlanDescription()}.
-            </p>
-          </div>
-
-          {/* Cláusula III */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">III. Servicios Incluidos</h4>
-            <ul className="list-disc ml-4 text-[9pt] space-y-0.5">
-              <li>Comprobación del quemador y sistema de encendido</li>
-              <li>Verificación de estanqueidad del circuito de gas</li>
-              <li>Análisis de combustión y ajuste de parámetros</li>
-              <li>Limpieza del intercambiador y cámara de combustión</li>
-              <li>Verificación del sistema de evacuación de gases</li>
-              <li>Comprobación de presión y purgado de radiadores</li>
-              <li>Revisión del vaso de expansión y válvula de seguridad</li>
-              <li>Emisión del certificado de mantenimiento (RITE)</li>
-            </ul>
-          </div>
-
-          {/* Cláusula IV */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">IV. Beneficios del Mantenimiento</h4>
-            <p className="text-[9pt]">
-              <strong>Seguridad:</strong> Prevención de fugas y fallos. <strong>Cumplimiento legal:</strong> Obligatorio según RITE. 
-              <strong> Eficiencia:</strong> Reducción del consumo. <strong>Prevención:</strong> Detección temprana de problemas. 
-              <strong> Durabilidad:</strong> Prolonga la vida útil del equipo.
-            </p>
-          </div>
-
-          {/* Cláusula V */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">V. Exclusiones</h4>
-            <ul className="list-disc ml-4 text-[9pt] space-y-0.5">
-              <li>Coste de repuestos, piezas, componentes o materiales</li>
-              <li>Coste del gas refrigerante o cualquier otro fluido</li>
-              <li>Averías por mal uso, negligencia o manipulación indebida</li>
-              <li>Daños por fenómenos atmosféricos o fuerza mayor</li>
-              <li>Reparaciones de instalaciones defectuosas no realizadas por el Proveedor</li>
-              <li>Servicios fuera del horario laboral (L-V 9:00-18:00)</li>
-              <li>Calderas con más de 15 años o que no cumplan normativa</li>
-              <li>Equipos modificados o reparados por terceros no autorizados</li>
-            </ul>
-          </div>
-
-          {/* Cláusula VI */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VI. Obligaciones del Cliente</h4>
-            <p className="text-[9pt]">
-              Facilitar acceso al domicilio para revisiones. Comunicar anomalías detectadas. 
-              No manipular ni permitir que terceros manipulen el equipo. Mantener datos de contacto actualizados. 
-              Abonar puntualmente el contrato y repuestos necesarios.
-            </p>
-          </div>
-
-          {/* Cláusula VII - IMPORTANTE */}
-          <div className="mb-3 bg-yellow-50 p-2 rounded border-l-3 border-yellow-500">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VII. Duración, Renovación y Cancelación</h4>
-            <p className="text-[9pt] mb-1">
-              Duración: <strong>un (1) año</strong>, renovación automática por períodos sucesivos.
-            </p>
-            <p className="text-[9pt] font-semibold text-yellow-800">
-              IMPORTANTE: Para cancelar, comunicar con <strong>un (1) mes de antelación</strong> antes de la renovación 
-              a info@uniclima.es o al 912 345 678. Sin comunicación en plazo, se renovará y cobrará automáticamente.
-            </p>
-          </div>
-
-          {/* Cláusula VIII */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">VIII. Garantía del Servicio</h4>
-            <p className="text-[9pt]">
-              Garantía de <strong>seis (6) meses</strong> desde cada intervención. Cubre exclusivamente mano de obra. 
-              Repuestos y materiales tienen la garantía del fabricante.
-            </p>
-          </div>
-
-          {/* Cláusula IX */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">IX. Responsabilidades y Limitaciones</h4>
-            <p className="text-[9pt]">
-              El Proveedor no responde de: daños por mal estado previo no comunicado, averías ajenas a su intervención, 
-              interrupciones por fuerza mayor, daños consecuenciales o lucro cesante. 
-              Responsabilidad máxima limitada al importe anual del contrato.
-            </p>
-          </div>
-
-          {/* Cláusula X */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">X. Protección de Datos</h4>
-            <p className="text-[9pt]">
-              Conforme al RGPD y LOPDGDD, el Cliente consiente el tratamiento de sus datos para gestionar la relación contractual. 
-              Derechos de acceso, rectificación, supresión, limitación, portabilidad y oposición en info@uniclima.es.
-            </p>
-          </div>
-
-          {/* Cláusula XI */}
-          <div className="mb-3">
-            <h4 className="font-bold text-gray-900 uppercase text-[9pt] mb-1">XI. Legislación y Jurisdicción</h4>
-            <p className="text-[9pt]">
-              Contrato regido por legislación española. Las partes se someten a los Juzgados y Tribunales de Madrid.
-            </p>
-          </div>
-        </div>
-
-        {/* Firmas */}
-        <div className="mt-6 pt-4 border-t-2 border-gray-300">
-          <p className="text-center mb-4 text-[8pt] text-gray-600">
-            En prueba de conformidad, ambas partes firman el presente contrato en la fecha indicada.
-          </p>
-          
-          <div className="grid grid-cols-2 gap-6">
-            <div className="text-center">
-              <p className="font-bold text-[9pt] uppercase mb-1">El Proveedor</p>
-              <p className="text-[8pt] text-gray-600 mb-2">Uniclima Solutions S.L.</p>
-              {mostrarFirmaEmpresa ? (
-                <div className="h-14 border-b border-gray-400 mb-1 flex items-end justify-center">
-                  <span className="text-[8pt] text-gray-500 italic">Firma digital autorizada</span>
-                </div>
-              ) : (
-                <div className="h-14 border-b border-gray-400 mb-1"></div>
-              )}
-              <p className="text-[7pt] text-gray-500">Firma y sello</p>
-            </div>
-            
-            <div className="text-center">
-              <p className="font-bold text-[9pt] uppercase mb-1">El Cliente</p>
-              <p className="text-[8pt] text-gray-600 mb-2">{datosCliente.razonSocial}</p>
-              {firmaCliente ? (
-                <div className="h-14 border-b border-gray-400 mb-1 flex items-end justify-center">
-                  <img src={firmaCliente} alt="Firma del cliente" className="max-h-12 max-w-full" />
-                </div>
-              ) : (
-                <div className="h-14 border-b border-gray-400 mb-1"></div>
-              )}
-              <p className="text-[7pt] text-gray-500">Firma del cliente</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Pie de página */}
-        <div className="mt-4 pt-2 border-t border-gray-200 text-[7pt] text-gray-500 text-center">
-          <p>Uniclima Solutions S.L. · CIF: B21651393 · Calle Grafito 12, Nave 14 A, 28850 Torrejón de Ardoz, Madrid</p>
-          <p>Tel: 912 345 678 · Email: info@uniclima.es · Web: www.uniclima.es</p>
-          <p className="mt-1">Contrato nº {datosContrato.numeroContrato} · Vigencia: {formatDate(datosContrato.fechaInicio)} - {formatDate(datosContrato.fechaFin)}</p>
         </div>
       </div>
-    );
-  }
-);
 
-ContratoCaldera.displayName = 'ContratoCaldera';
+      {/* Objeto del contrato */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">I. OBJETO DEL CONTRATO</h3>
+        <p className="text-sm text-gray-700 mb-3">
+          El presente contrato tiene por objeto la prestación del servicio de mantenimiento preventivo y correctivo 
+          de <strong>{datosContrato.cantidad} caldera(s) de gas</strong> instalada(s) en el domicilio del cliente, 
+          conforme al <strong>Plan {datosContrato.plan}</strong>.
+        </p>
+        
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+          <p className="font-bold text-blue-800 mb-2">SERVICIOS INCLUIDOS EN PLAN {datosContrato.plan.toUpperCase()}:</p>
+          <ul className="list-disc list-inside space-y-1 text-blue-900">
+            {datosContrato.plan === 'Esencial' && (
+              <>
+                <li>1 revisión anual completa</li>
+                <li>Mano de obra incluida en reparaciones</li>
+                <li>Certificado oficial de mantenimiento</li>
+                <li>Atención telefónica en horario comercial</li>
+              </>
+            )}
+            {datosContrato.plan === 'Confort' && (
+              <>
+                <li>2 revisiones anuales completas</li>
+                <li>Mano de obra incluida en reparaciones</li>
+                <li>Certificado oficial de mantenimiento</li>
+                <li>Atención prioritaria 48h</li>
+                <li>Descuento 5% en repuestos</li>
+              </>
+            )}
+            {datosContrato.plan === 'Premium' && (
+              <>
+                <li>Revisiones ilimitadas</li>
+                <li>Mano de obra incluida en reparaciones</li>
+                <li>Certificado oficial de mantenimiento</li>
+                <li>Atención 24/7 prioritaria</li>
+                <li>Descuento 10% en repuestos</li>
+                <li>Sustitución de piezas menores incluida</li>
+              </>
+            )}
+          </ul>
+        </div>
+      </div>
 
-export default ContratoCaldera;
+      {/* Duración y precio */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">II. DURACIÓN Y PRECIO</h3>
+        <div className="grid grid-cols-2 gap-4 text-sm">
+          <div className="bg-gray-50 p-4 rounded-lg">
+            <p className="font-bold text-gray-700">Vigencia del contrato:</p>
+            <p>Desde: <strong>{formatDate(datosContrato.fechaInicio)}</strong></p>
+            <p>Hasta: <strong>{formatDate(datosContrato.fechaFin)}</strong></p>
+            <p className="text-xs text-gray-500 mt-2">Renovación automática anual</p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            <p className="font-bold text-gray-700">Importe anual:</p>
+            <p className="text-2xl font-bold text-green-700">{datosContrato.precioConIVA}€</p>
+            <p className="text-xs text-gray-600">(Base: {datosContrato.precioAnual}€ + IVA 21%)</p>
+            <p className="text-xs text-gray-500 mt-1">Por {datosContrato.cantidad} equipo(s)</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Obligaciones */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">III. OBLIGACIONES DE LAS PARTES</h3>
+        <div className="text-sm text-gray-700 space-y-3">
+          <div>
+            <p className="font-semibold">Del prestador:</p>
+            <ul className="list-disc list-inside ml-4 text-xs space-y-1">
+              <li>Realizar las revisiones programadas según el plan contratado</li>
+              <li>Emitir certificado oficial tras cada revisión</li>
+              <li>Atender averías en los plazos establecidos</li>
+              <li>Utilizar repuestos originales o equivalentes homologados</li>
+            </ul>
+          </div>
+          <div>
+            <p className="font-semibold">Del cliente:</p>
+            <ul className="list-disc list-inside ml-4 text-xs space-y-1">
+              <li>Facilitar el acceso al equipo en las fechas acordadas</li>
+              <li>Abonar el importe del contrato en los plazos establecidos</li>
+              <li>Comunicar cualquier anomalía detectada en el equipo</li>
+              <li>No manipular el equipo ni realizar reparaciones por cuenta propia</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Exclusiones */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">IV. EXCLUSIONES</h3>
+        <p className="text-sm text-gray-700 mb-2">Quedan excluidos del presente contrato:</p>
+        <ul className="list-disc list-inside text-xs text-gray-600 space-y-1 ml-4">
+          <li>Repuestos y materiales (salvo Plan Premium para piezas menores)</li>
+          <li>Averías causadas por mal uso, negligencia o manipulación</li>
+          <li>Daños por causas externas (cortes de suministro, sobretensiones, etc.)</li>
+          <li>Sustitución completa del equipo</li>
+          <li>Modificaciones en la instalación existente</li>
+        </ul>
+      </div>
+
+      {/* Cancelación - DESTACADA */}
+      <div className="mb-6 bg-yellow-50 border-2 border-yellow-400 rounded-lg p-4">
+        <h3 className="text-base font-bold text-yellow-800 mb-2">V. CANCELACIÓN Y RENOVACIÓN</h3>
+        <p className="text-sm text-yellow-900">
+          El contrato se renovará automáticamente por períodos anuales. Para cancelar, el cliente deberá 
+          comunicarlo con un <strong>mínimo de 1 mes de antelación</strong> a la fecha de renovación, 
+          mediante email a {EMPRESA.email} o llamando al {EMPRESA.telefono}.
+        </p>
+      </div>
+
+      {/* Protección de datos */}
+      <div className="mb-6">
+        <h3 className="text-base font-bold text-gray-800 mb-3 border-b border-gray-300 pb-1">VI. PROTECCIÓN DE DATOS</h3>
+        <p className="text-xs text-gray-600">
+          Los datos personales serán tratados conforme al RGPD y la LOPDGDD. El responsable es {EMPRESA.nombre}. 
+          Finalidad: gestión del contrato y comunicaciones comerciales. Puede ejercer sus derechos de acceso, 
+          rectificación, supresión, limitación, portabilidad y oposición en {EMPRESA.email}.
+        </p>
+      </div>
+
+      {/* Firmas */}
+      <div className="mt-8 pt-6 border-t-2 border-gray-300">
+        <p className="text-sm text-gray-600 text-center mb-6">
+          En {datosCliente.poblacion}, a {formatDate(datosContrato.fechaInicio)}
+        </p>
+        
+        <div className="grid grid-cols-2 gap-8">
+          <div className="text-center">
+            <p className="font-semibold text-sm mb-2">Firma y sello</p>
+            <div className="h-20 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
+              {mostrarFirmaEmpresa ? (
+                <span className="text-xs text-gray-400">Firma empresa</span>
+              ) : (
+                <span className="text-xs text-gray-400">Pendiente</span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-2">{EMPRESA.nombre}</p>
+          </div>
+          
+          <div className="text-center">
+            <p className="font-semibold text-sm mb-2">Firma del cliente</p>
+            <div className="h-20 border border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center overflow-hidden">
+              {firmaCliente ? (
+                <img src={firmaCliente} alt="Firma del cliente" className="max-h-full max-w-full object-contain" />
+              ) : (
+                <span className="text-xs text-gray-400">Pendiente de firma</span>
+              )}
+            </div>
+            <p className="text-xs text-gray-500 mt-2">{datosCliente.razonSocial}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Pie de página */}
+      <div className="mt-8 pt-4 border-t border-gray-200 text-center">
+        <p className="text-xs text-gray-500">
+          {EMPRESA.nombre} · CIF: {EMPRESA.cif} · {EMPRESA.direccion}
+        </p>
+        <p className="text-xs text-gray-500">
+          Tel: {EMPRESA.telefono} · Email: {EMPRESA.email} · Web: {EMPRESA.web}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">
+          Contrato nº {datosContrato.numeroContrato} · Vigencia: {formatDate(datosContrato.fechaInicio)} - {formatDate(datosContrato.fechaFin)}
+        </p>
+      </div>
+    </div>
+  );
+}
