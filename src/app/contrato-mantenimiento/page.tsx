@@ -666,6 +666,59 @@ function ContratoMantenimientoContent() {
                     </p>
                   </div>
                   
+                  {/* Checkbox Chalet */}
+                  <div className="sm:col-span-2">
+                    <label className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={formData.esChalet}
+                        onChange={(e) => updateField('esChalet', e.target.checked)}
+                        className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                      />
+                      <div>
+                        <span className="text-sm font-medium text-gray-900">Es un chalet o vivienda unifamiliar</span>
+                        <p className="text-xs text-gray-500">Marca esta opción si no hay portal, escalera ni piso</p>
+                      </div>
+                    </label>
+                  </div>
+                  
+                  {/* Campos de portal/escalera/piso/puerta - Solo si NO es chalet */}
+                  {!formData.esChalet && (
+                    <>
+                      <InputConValidacion
+                        id="portal"
+                        label="Portal/Bloque"
+                        value={formData.portal}
+                        onChange={(value) => updateField('portal', value)}
+                        placeholder="1, A, etc."
+                      />
+                      
+                      <InputConValidacion
+                        id="escalera"
+                        label="Escalera"
+                        value={formData.escalera}
+                        onChange={(value) => updateField('escalera', value)}
+                        placeholder="Izq, Dcha, etc."
+                      />
+                      
+                      <InputConValidacion
+                        id="piso"
+                        label="Piso"
+                        value={formData.piso}
+                        onChange={(value) => updateField('piso', value)}
+                        placeholder="1º, 2º, etc."
+                      />
+                      
+                      <InputConValidacion
+                        id="puerta"
+                        label="Puerta"
+                        value={formData.puerta}
+                        onChange={(value) => updateField('puerta', value)}
+                        placeholder="A, B, 1, etc."
+                      />
+                    </>
+                  )}
+                  
                   <div>
                     <Label>Población <span className="text-orange-500">*</span></Label>
                     <Popover open={poblacionOpen} onOpenChange={setPoblacionOpen}>
