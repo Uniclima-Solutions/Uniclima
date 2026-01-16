@@ -62,7 +62,8 @@ import {
   buscarDireccionesMadrid, 
   DireccionSugerida,
   obtenerCPPorPoblacion,
-  obtenerProvinciaPorPoblacion
+  obtenerProvinciaPorPoblacion,
+  obtenerDetallesLugar
 } from "@/services/addressAutocompleteService";
 
 // Cargar Stripe dinámicamente
@@ -314,7 +315,8 @@ function ContratoMantenimientoContent() {
   }, [formData.direccion]);
   
   // Seleccionar dirección
-  const handleDireccionSelect = (dir: DireccionSugerida) => {
+  const handleDireccionSelect = async (dir: DireccionSugerida) => {
+    // Actualizar inmediatamente con los datos básicos
     setFormData(prev => ({
       ...prev,
       direccion: dir.calle + (dir.numero ? ' ' + dir.numero : ''),
@@ -324,6 +326,27 @@ function ContratoMantenimientoContent() {
     }));
     setDireccionOpen(false);
     setDireccionesSugeridas([]);
+    
+    // Si hay placeId, obtener detalles completos de Google Places (incluye CP)
+    if (dir.placeId) {
+      setBuscandoDirecciones(true);
+      try {
+        const detalles = await obtenerDetallesLugar(dir.placeId);
+        if (detalles) {
+          setFormData(prev => ({
+            ...prev,
+            direccion: detalles.calle + (detalles.numero ? ' ' + detalles.numero : (dir.numero ? ' ' + dir.numero : '')),
+            codigoPostal: detalles.codigoPostal || prev.codigoPostal,
+            poblacion: detalles.poblacion || prev.poblacion,
+            provincia: detalles.provincia || prev.provincia || 'Madrid',
+          }));
+        }
+      } catch (error) {
+        console.error('Error obteniendo detalles de la dirección:', error);
+      } finally {
+        setBuscandoDirecciones(false);
+      }
+    }
   };
   
   // Actualizar campo
