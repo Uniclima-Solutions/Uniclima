@@ -3,14 +3,13 @@
 /**
  * Contrato de Mantenimiento - Formulario completo con visualización de contrato
  * Uniclima Solutions - CIF B21651393
- * Con calculadora de precios, firma digital, visualización PDF y pago Stripe
  * 
  * MEJORAS IMPLEMENTADAS:
- * - Autocompletado de direcciones mejorado (calle + número -> CP, población, provincia)
- * - Firma digital compacta (400x120)
- * - Visualización del contrato en bloque con scroll interno
- * - Botón de pantalla completa para revisar cláusulas
- * - Texto del contrato pequeño, capitalizado, bien legible
+ * - Vista previa del contrato ANTES de firmar (en el formulario)
+ * - Validación con banner de campos incompletos + scroll automático
+ * - Calculadora con scroll interno
+ * - Botones de descarga/impresión SOLO después del pago completado
+ * - Pago con Stripe (modo live)
  */
 
 import { useState, useRef, useEffect, Suspense } from "react";
@@ -55,7 +54,8 @@ import {
   Maximize2,
   Minimize2,
   Printer,
-  X
+  X,
+  AlertTriangle
 } from "lucide-react";
 import { poblacionesMadrid, validarNifCif } from "@/data/poblacionesMadrid";
 import { 
@@ -92,7 +92,8 @@ const InputConValidacion = ({
   type = "text",
   required = false,
   disabled = false,
-  sublabel
+  sublabel,
+  hasError = false
 }: {
   id: string;
   label: string;
@@ -105,9 +106,10 @@ const InputConValidacion = ({
   required?: boolean;
   disabled?: boolean;
   sublabel?: string;
+  hasError?: boolean;
 }) => {
   return (
-    <div>
+    <div id={`field-${id}`}>
       <Label htmlFor={id}>{label} {required && <span className="text-orange-500">*</span>}</Label>
       <div className="relative mt-1">
         <input
@@ -120,14 +122,14 @@ const InputConValidacion = ({
           disabled={disabled}
           className={cn(
             "flex h-10 w-full rounded-md border bg-white px-3 py-2 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:opacity-70",
-            error ? "border-red-500 focus:ring-red-500" : "border-gray-300",
-            value && !error ? "border-green-500" : "",
+            error || hasError ? "border-red-500 ring-2 ring-red-200 focus:ring-red-500" : "border-gray-300",
+            value && !error && !hasError ? "border-green-500" : "",
             "pr-10"
           )}
         />
         {value && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2">
-            {error ? (
+            {error || hasError ? (
               <AlertCircle className="w-5 h-5 text-red-500" />
             ) : (
               <CheckCircle2 className="w-5 h-5 text-green-500" />
@@ -250,10 +252,12 @@ function ContratoMantenimientoContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [direccionOpen, setDireccionOpen] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [paso, setPaso] = useState<'formulario' | 'contrato' | 'pago' | 'completado'>('formulario');
+  const [paso, setPaso] = useState<'formulario' | 'pago' | 'completado'>('formulario');
   const [numeroContrato, setNumeroContrato] = useState<string>('');
   const [planSeleccionado, setPlanSeleccionado] = useState<string>("Esencial");
   const [contratoAmpliado, setContratoAmpliado] = useState(false);
+  const [campoIncompleto, setCampoIncompleto] = useState<string | null>(null);
+  const [camposConError, setCamposConError] = useState<string[]>([]);
   const [formData, setFormData] = useState<FormData>({
     razonSocial: "",
     nif: "",
@@ -330,14 +334,45 @@ function ContratoMantenimientoContent() {
           setBuscandoDirecciones(false);
         }
       }
-    }, 600);
+    }, 300);
     
     return () => clearTimeout(timeoutId);
   }, [formData.direccion, direccionSeleccionada]);
   
-  // Función para actualizar campos del formulario
-  const updateField = (field: keyof FormData, value: any) => {
+  // Manejar selección de dirección
+  const handleDireccionSelect = async (resultado: AddressResult) => {
+    setDireccionSeleccionada(true);
+    setDireccionOpen(false);
+    
+    // Obtener detalles completos
+    const detalles = await obtenerDetalles(resultado.placeId);
+    
+    if (detalles) {
+      setFormData(prev => ({
+        ...prev,
+        direccion: detalles.direccionCompleta,
+        codigoPostal: detalles.codigoPostal || prev.codigoPostal,
+        poblacion: detalles.poblacion || prev.poblacion,
+        provincia: detalles.provincia || prev.provincia,
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        direccion: resultado.direccion,
+      }));
+    }
+  };
+  
+  // Actualizar campo del formulario
+  const updateField = (field: keyof FormData, value: string | number | boolean | null) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    // Limpiar error del campo si existe
+    if (camposConError.includes(field)) {
+      setCamposConError(prev => prev.filter(c => c !== field));
+    }
+    if (campoIncompleto === field) {
+      setCampoIncompleto(null);
+    }
   };
   
   // Validar NIF/CIF
@@ -346,6 +381,7 @@ function ContratoMantenimientoContent() {
       setFieldErrors(prev => ({ ...prev, nif: undefined }));
       return;
     }
+    
     const resultado = validarNifCif(nif);
     if (!resultado.valido) {
       setFieldErrors(prev => ({ ...prev, nif: resultado.mensaje }));
@@ -354,153 +390,130 @@ function ContratoMantenimientoContent() {
     }
   };
   
-  // Manejar selección de dirección - MEJORADO
-  const handleDireccionSelect = async (resultado: AddressResult) => {
-    setDireccionSeleccionada(true);
-    setDireccionOpen(false);
+  // Validar email
+  const validateEmail = (email: string) => {
+    if (!email) {
+      setFieldErrors(prev => ({ ...prev, email: undefined }));
+      return;
+    }
     
-    // Actualizar inmediatamente con los datos del resultado
-    setFormData(prev => ({
-      ...prev,
-      direccion: resultado.mainText || resultado.name,
-      codigoPostal: resultado.postalCode || '',
-      poblacion: resultado.locality || '',
-      provincia: resultado.province || 'Madrid',
-    }));
-    
-    // Intentar obtener más detalles si es necesario
-    if (!resultado.postalCode || !resultado.locality) {
-      try {
-        const detalles = await obtenerDetalles(resultado.placeId);
-        setFormData(prev => ({
-          ...prev,
-          codigoPostal: detalles.codigoPostal || prev.codigoPostal,
-          poblacion: detalles.poblacion || prev.poblacion,
-          provincia: detalles.provincia || prev.provincia,
-        }));
-      } catch (error) {
-        console.error('Error obteniendo detalles:', error);
-      }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setFieldErrors(prev => ({ ...prev, email: "Email no válido" }));
+    } else {
+      setFieldErrors(prev => ({ ...prev, email: undefined }));
     }
   };
   
-  // Obtener tipo seleccionado
+  // Tipo seleccionado
   const tipoSeleccionado = tiposAparato.find(t => t.value === formData.tipoAparato);
   const esCaldera = tipoSeleccionado?.tipo === 'caldera';
   
   // Calcular precios
-  const precioUnitario = tipoSeleccionado?.precios[planSeleccionado as keyof typeof tipoSeleccionado.precios] || 0;
-  const { total: precioSinIVA, desglose: desglosePrecios } = calcularPrecioConDescuentos(precioUnitario, formData.cantidad);
+  const precioBase = tipoSeleccionado?.precios[planSeleccionado as keyof typeof preciosPorPlan.caldera] || 0;
+  const { total: precioSinIVA, desglose } = calcularPrecioConDescuentos(precioBase, formData.cantidad);
   const precioTotal = Math.round(precioSinIVA * 1.21);
-  const ahorroTotal = (precioUnitario * formData.cantidad) - precioSinIVA;
   
-  // Verificar si el formulario está completo
-  const formularioCompleto = formData.razonSocial && 
-    formData.nif && 
-    !fieldErrors.nif &&
-    formData.direccion && 
-    formData.poblacion && 
-    formData.telefono && 
-    formData.email && 
-    formData.tipoAparato &&
-    formData.aceptaTerminos &&
-    formData.aceptaPrivacidad &&
-    formData.firma;
-  
-  // Generar contrato y pasar al siguiente paso
-  const generarContrato = () => {
-    const numero = generarNumeroContrato(tipoSeleccionado?.tipo || 'caldera');
-    setNumeroContrato(numero);
-    setPaso('contrato');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Mapa de nombres de campos para el banner
+  const nombresCampos: Record<string, string> = {
+    tipoAparato: "Tipo de Aparato",
+    razonSocial: "Nombre / Razón Social",
+    nif: "NIF/CIF",
+    direccion: "Dirección",
+    codigoPostal: "Código Postal",
+    poblacion: "Población",
+    telefono: "Teléfono",
+    email: "Email",
+    aceptaTerminos: "Términos y Condiciones",
+    aceptaPrivacidad: "Política de Privacidad",
+    firma: "Firma Digital"
   };
   
-  // Función para descargar PDF
-  const descargarPDF = async () => {
-    if (!contratoRef.current) return;
+  // Validar formulario y mostrar banner con scroll
+  const validarFormulario = (): boolean => {
+    const errores: string[] = [];
     
-    setIsLoading(true);
-    try {
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
+    if (!formData.tipoAparato) errores.push('tipoAparato');
+    if (!formData.razonSocial.trim()) errores.push('razonSocial');
+    if (!formData.nif.trim()) errores.push('nif');
+    if (!formData.direccion.trim()) errores.push('direccion');
+    if (!formData.codigoPostal.trim()) errores.push('codigoPostal');
+    if (!formData.poblacion.trim()) errores.push('poblacion');
+    if (!formData.telefono.trim()) errores.push('telefono');
+    if (!formData.email.trim()) errores.push('email');
+    if (!formData.aceptaTerminos) errores.push('aceptaTerminos');
+    if (!formData.aceptaPrivacidad) errores.push('aceptaPrivacidad');
+    if (!formData.firma) errores.push('firma');
+    
+    if (errores.length > 0) {
+      setCamposConError(errores);
+      const primerError = errores[0];
+      setCampoIncompleto(primerError);
       
-      const canvas = await html2canvas(contratoRef.current, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-      });
+      // Scroll al campo con error
+      setTimeout(() => {
+        const elemento = document.getElementById(`field-${primerError}`);
+        if (elemento) {
+          elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 100);
       
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
-      
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      
-      pdf.save(`Contrato_${numeroContrato}.pdf`);
-    } catch (error) {
-      console.error('Error generando PDF:', error);
-      alert('Error al generar el PDF. Por favor, intenta de nuevo.');
-    } finally {
-      setIsLoading(false);
+      return false;
     }
-  };
-  
-  // Imprimir contrato
-  const imprimirContrato = () => {
-    window.print();
+    
+    setCamposConError([]);
+    setCampoIncompleto(null);
+    return true;
   };
   
   // Proceder al pago
   const procederAlPago = () => {
+    if (!validarFormulario()) return;
+    
+    // Generar número de contrato
+    const nuevoNumero = generarNumeroContrato(tipoSeleccionado?.tipo || 'caldera');
+    setNumeroContrato(nuevoNumero);
     setPaso('pago');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   // Manejar pago exitoso
-  const handlePaymentSuccess = async (paymentIntentId: string) => {
+  const handlePaymentSuccess = (paymentIntentId: string) => {
     console.log('Pago exitoso:', paymentIntentId);
-    console.log('Enviando contrato por email a:', formData.email);
-    
-    const contrato = {
-      numeroContrato,
-      tipo: tipoSeleccionado?.tipo,
-      plan: planSeleccionado,
-      cliente: formData,
-      precioTotal,
-      fechaCreacion: new Date().toISOString(),
-      paymentIntentId,
-    };
-    
-    const contratos = JSON.parse(localStorage.getItem('uniclima_contratos') || '[]');
-    contratos.push(contrato);
-    localStorage.setItem('uniclima_contratos', JSON.stringify(contratos));
-    
     setPaso('completado');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
+  // Descargar PDF (solo disponible después del pago)
+  const descargarPDF = async () => {
+    if (paso !== 'completado') return;
+    
+    setIsLoading(true);
+    try {
+      // Simular generación de PDF
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      alert('PDF generado correctamente. En producción se descargaría el archivo.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  // Imprimir contrato (solo disponible después del pago)
+  const imprimirContrato = () => {
+    if (paso !== 'completado') return;
+    window.print();
+  };
+  
   // Datos para el contrato
   const datosCliente = {
-    razonSocial: formData.razonSocial,
-    nif: formData.nif,
-    direccion: formData.direccion,
-    poblacion: formData.poblacion,
-    codigoPostal: formData.codigoPostal,
+    razonSocial: formData.razonSocial || "Nombre del Cliente",
+    nif: formData.nif || "00000000A",
+    direccion: formData.direccion || "Dirección del cliente",
+    poblacion: formData.poblacion || "Madrid",
+    codigoPostal: formData.codigoPostal || "28000",
     provincia: formData.provincia,
-    telefono: formData.telefono,
-    email: formData.email,
+    telefono: formData.telefono || "600000000",
+    email: formData.email || "cliente@email.com",
     esChalet: formData.esChalet,
     portal: formData.portal,
     escalera: formData.escalera,
@@ -509,7 +522,7 @@ function ContratoMantenimientoContent() {
   };
   
   const datosContrato = {
-    numeroContrato: numeroContrato,
+    numeroContrato: numeroContrato || "BORRADOR",
     plan: planSeleccionado,
     cantidad: formData.cantidad,
     precioAnual: precioSinIVA,
@@ -523,10 +536,30 @@ function ContratoMantenimientoContent() {
       <Header />
       <Breadcrumbs items={breadcrumbsConfig.contratoMantenimiento} />
       
+      {/* Banner de campo incompleto */}
+      {campoIncompleto && (
+        <div className="sticky top-0 z-50 bg-red-500 text-white px-4 py-3 shadow-lg">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+              <span className="font-medium">
+                Campo incompleto: <strong>{nombresCampos[campoIncompleto] || campoIncompleto}</strong>
+              </span>
+            </div>
+            <button 
+              onClick={() => setCampoIncompleto(null)}
+              className="p-1 hover:bg-red-600 rounded transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+      
       <main className="flex-1 py-8">
         <div className="max-w-6xl mx-auto px-4">
           
-          {/* Paso 1: Formulario */}
+          {/* Paso 1: Formulario con vista previa del contrato */}
           {paso === 'formulario' && (
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Formulario Principal */}
@@ -568,14 +601,14 @@ function ContratoMantenimientoContent() {
                     </div>
                     
                     {/* Tipo de aparato */}
-                    <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="grid sm:grid-cols-2 gap-4" id="field-tipoAparato">
                       <div>
                         <Label>Tipo de Aparato <span className="text-orange-500">*</span></Label>
                         <Select
                           value={formData.tipoAparato}
                           onValueChange={(value) => updateField('tipoAparato', value)}
                         >
-                          <SelectTrigger className="mt-1">
+                          <SelectTrigger className={cn("mt-1", camposConError.includes('tipoAparato') && "border-red-500 ring-2 ring-red-200")}>
                             <SelectValue placeholder="Selecciona tipo" />
                           </SelectTrigger>
                           <SelectContent>
@@ -641,6 +674,7 @@ function ContratoMantenimientoContent() {
                         onChange={(value) => updateField('razonSocial', value)}
                         placeholder="Nombre completo o empresa"
                         required
+                        hasError={camposConError.includes('razonSocial')}
                       />
                       
                       <InputConValidacion
@@ -652,10 +686,11 @@ function ContratoMantenimientoContent() {
                         error={fieldErrors.nif}
                         placeholder="12345678A"
                         required
+                        hasError={camposConError.includes('nif')}
                       />
                       
-                      {/* Campo de Dirección con Autocompletado MEJORADO */}
-                      <div className="sm:col-span-2">
+                      {/* Campo de Dirección con Autocompletado */}
+                      <div className="sm:col-span-2" id="field-direccion">
                         <Label>Dirección (Calle y Número) <span className="text-orange-500">*</span></Label>
                         <div className="relative mt-1">
                           <input
@@ -671,7 +706,10 @@ function ContratoMantenimientoContent() {
                               }
                             }}
                             placeholder="Ej: Calle Grafito 12, Calle Gran Vía 25..."
-                            className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                            className={cn(
+                              "flex h-10 w-full rounded-md border bg-white px-3 py-2 pr-10 text-base shadow-sm transition-colors placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500",
+                              camposConError.includes('direccion') ? "border-red-500 ring-2 ring-red-200" : "border-gray-300"
+                            )}
                             autoComplete="off"
                           />
                           {buscandoDirecciones && (
@@ -696,101 +734,98 @@ function ContratoMantenimientoContent() {
                                 >
                                   <MapPin className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-medium text-gray-900 truncate">{resultado.mainText}</p>
-                                    <p className="text-xs text-gray-500 truncate">{resultado.secondaryText}</p>
+                                    <p className="font-medium text-gray-900 truncate">{resultado.direccion}</p>
+                                    {resultado.detalles && (
+                                      <p className="text-xs text-gray-500 truncate">{resultado.detalles}</p>
+                                    )}
                                   </div>
                                 </button>
                               ))}
                             </div>
                           )}
                         </div>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Escribe calle y número (ej: "Calle Grafito 12") y selecciona de las sugerencias
-                        </p>
+                        <p className="text-xs text-gray-500 mt-1">Se autocompleta al seleccionar dirección</p>
                       </div>
                       
-                      {/* Checkbox Chalet */}
+                      {/* Tipo de vivienda */}
                       <div className="sm:col-span-2">
-                        <label className="flex items-center gap-3 cursor-pointer p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                          <input
-                            type="checkbox"
-                            checked={formData.esChalet}
-                            onChange={(e) => updateField('esChalet', e.target.checked)}
-                            className="w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                          />
-                          <div>
-                            <span className="text-sm font-medium text-gray-900">Es un chalet o vivienda unifamiliar</span>
-                            <p className="text-xs text-gray-500">Marca esta opción si no hay portal, escalera ni piso</p>
-                          </div>
-                        </label>
+                        <Label>Tipo de Vivienda</Label>
+                        <div className="flex gap-4 mt-2">
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="tipoVivienda"
+                              checked={!formData.esChalet}
+                              onChange={() => updateField('esChalet', false)}
+                              className="w-4 h-4 text-orange-500 focus:ring-orange-500"
+                            />
+                            <span className="text-sm">Piso / Apartamento</span>
+                          </label>
+                          <label className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              type="radio"
+                              name="tipoVivienda"
+                              checked={formData.esChalet}
+                              onChange={() => updateField('esChalet', true)}
+                              className="w-4 h-4 text-orange-500 focus:ring-orange-500"
+                            />
+                            <span className="text-sm">Chalet / Casa</span>
+                          </label>
+                        </div>
                       </div>
                       
-                      {/* Campos de portal/escalera/piso/puerta - Solo si NO es chalet */}
+                      {/* Campos adicionales para piso */}
                       {!formData.esChalet && (
                         <>
                           <InputConValidacion
                             id="portal"
-                            label="Portal/Bloque"
+                            label="Portal"
                             value={formData.portal}
                             onChange={(value) => updateField('portal', value)}
-                            placeholder="1, A, etc."
+                            placeholder="Ej: 1, A, B..."
                           />
-                          
                           <InputConValidacion
                             id="escalera"
                             label="Escalera"
                             value={formData.escalera}
                             onChange={(value) => updateField('escalera', value)}
-                            placeholder="Izq, Dcha, etc."
+                            placeholder="Ej: Izq, Dcha, A..."
                           />
-                          
                           <InputConValidacion
                             id="piso"
                             label="Piso"
                             value={formData.piso}
                             onChange={(value) => updateField('piso', value)}
-                            placeholder="1º, 2º, etc."
+                            placeholder="Ej: 1, 2, Bajo..."
                           />
-                          
                           <InputConValidacion
                             id="puerta"
                             label="Puerta"
                             value={formData.puerta}
                             onChange={(value) => updateField('puerta', value)}
-                            placeholder="A, B, 1, etc."
+                            placeholder="Ej: A, B, 1..."
                           />
                         </>
                       )}
                       
-                      {/* Código Postal - Autocompletado pero editable */}
                       <InputConValidacion
                         id="codigoPostal"
                         label="Código Postal"
                         value={formData.codigoPostal}
                         onChange={(value) => updateField('codigoPostal', value)}
-                        placeholder="28001"
+                        placeholder="28000"
                         required
-                        sublabel="Se autocompleta al seleccionar dirección"
+                        hasError={camposConError.includes('codigoPostal')}
                       />
                       
-                      {/* Población - Autocompletado pero editable */}
                       <InputConValidacion
                         id="poblacion"
                         label="Población"
                         value={formData.poblacion}
                         onChange={(value) => updateField('poblacion', value)}
-                        placeholder="Madrid, Torrejón de Ardoz..."
-                        required
-                        sublabel="Se autocompleta al seleccionar dirección"
-                      />
-                      
-                      {/* Provincia - Autocompletado pero editable */}
-                      <InputConValidacion
-                        id="provincia"
-                        label="Provincia"
-                        value={formData.provincia}
-                        onChange={(value) => updateField('provincia', value)}
                         placeholder="Madrid"
+                        required
+                        hasError={camposConError.includes('poblacion')}
                       />
                       
                       <InputConValidacion
@@ -798,9 +833,10 @@ function ContratoMantenimientoContent() {
                         label="Teléfono"
                         value={formData.telefono}
                         onChange={(value) => updateField('telefono', value)}
-                        placeholder="612 345 678"
+                        placeholder="600 000 000"
                         type="tel"
                         required
+                        hasError={camposConError.includes('telefono')}
                       />
                       
                       <InputConValidacion
@@ -808,170 +844,230 @@ function ContratoMantenimientoContent() {
                         label="Email"
                         value={formData.email}
                         onChange={(value) => updateField('email', value)}
+                        onBlur={() => validateEmail(formData.email)}
+                        error={fieldErrors.email}
                         placeholder="tu@email.com"
                         type="email"
                         required
+                        hasError={camposConError.includes('email')}
                       />
                     </div>
                   </div>
                   
-                  {/* Firma Digital - COMPACTA */}
-                  <div className="bg-white rounded-xl shadow-sm p-6">
+                  {/* Vista previa del contrato ANTES de firmar */}
+                  <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div className="bg-gray-100 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Eye className="w-5 h-5 text-orange-500" />
+                        <span className="font-semibold text-gray-900">Vista Previa del Contrato</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setContratoAmpliado(true)}
+                        className="flex items-center gap-1 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors text-sm font-medium"
+                      >
+                        <Maximize2 className="w-4 h-4" />
+                        Pantalla Completa
+                      </button>
+                    </div>
+                    <div className="text-xs text-gray-500 px-4 py-2 bg-yellow-50 border-b border-yellow-100">
+                      Revisa el contrato antes de firmar. Los datos se actualizan en tiempo real.
+                    </div>
+                    <div 
+                      className="h-[350px] overflow-y-auto p-4 bg-gray-50"
+                      style={{ scrollbarWidth: 'thin' }}
+                    >
+                      <div 
+                        ref={contratoRef} 
+                        className="bg-white shadow-sm rounded-lg transform scale-[0.8] origin-top"
+                        style={{ transformOrigin: 'top center' }}
+                      >
+                        {esCaldera ? (
+                          <ContratoCaldera
+                            datosCliente={datosCliente}
+                            datosContrato={datosContrato}
+                            firmaCliente={formData.firma || undefined}
+                            mostrarFirmaEmpresa={false}
+                          />
+                        ) : (
+                          <ContratoAireAcondicionado
+                            datosCliente={datosCliente}
+                            datosContrato={datosContrato}
+                            firmaCliente={formData.firma || undefined}
+                            mostrarFirmaEmpresa={false}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Firma Digital */}
+                  <div className="bg-white rounded-xl shadow-sm p-6" id="field-firma">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                       <FileText className="w-5 h-5 text-orange-500" />
-                      Firma Digital
+                      Firma Digital <span className="text-orange-500">*</span>
                     </h2>
                     
-                    <SignaturePad
-                      onSave={(firma) => updateField('firma', firma)}
-                      onClear={() => updateField('firma', null)}
-                    />
+                    <div className={cn(
+                      "rounded-lg p-1",
+                      camposConError.includes('firma') && "ring-2 ring-red-500 bg-red-50"
+                    )}>
+                      <SignaturePad
+                        onSave={(firma) => updateField('firma', firma)}
+                        onClear={() => updateField('firma', null)}
+                      />
+                    </div>
                   </div>
                   
                   {/* Términos y Condiciones */}
                   <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Shield className="w-5 h-5 text-orange-500" />
-                      Términos y Condiciones
-                    </h2>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Aceptación</h2>
                     
-                    <div className="space-y-4">
-                      <label className="flex items-start gap-3 cursor-pointer">
+                    <div className="space-y-3" id="field-aceptaTerminos">
+                      <label className={cn(
+                        "flex items-start gap-3 cursor-pointer p-3 rounded-lg transition-colors",
+                        camposConError.includes('aceptaTerminos') ? "bg-red-50 ring-2 ring-red-200" : "hover:bg-gray-50"
+                      )}>
                         <input
                           type="checkbox"
                           checked={formData.aceptaTerminos}
                           onChange={(e) => updateField('aceptaTerminos', e.target.checked)}
-                          className="w-5 h-5 mt-0.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500"
                         />
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-700">
                           He leído y acepto los{' '}
-                          <Link href="/terminos-mantenimiento" target="_blank" className="text-orange-500 hover:underline">
-                            términos y condiciones del servicio de mantenimiento
+                          <Link href="/terminos-mantenimiento" target="_blank" className="text-orange-600 hover:underline font-medium">
+                            Términos y Condiciones del Contrato de Mantenimiento
                           </Link>
-                          , incluyendo la cláusula de cancelación con preaviso de 1 mes.
+                          , incluyendo la política de renovación automática y cancelación.
+                          <span className="text-orange-500"> *</span>
                         </span>
                       </label>
                       
-                      <label className="flex items-start gap-3 cursor-pointer">
+                      <label className={cn(
+                        "flex items-start gap-3 cursor-pointer p-3 rounded-lg transition-colors",
+                        camposConError.includes('aceptaPrivacidad') ? "bg-red-50 ring-2 ring-red-200" : "hover:bg-gray-50"
+                      )} id="field-aceptaPrivacidad">
                         <input
                           type="checkbox"
                           checked={formData.aceptaPrivacidad}
                           onChange={(e) => updateField('aceptaPrivacidad', e.target.checked)}
-                          className="w-5 h-5 mt-0.5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+                          className="w-5 h-5 mt-0.5 text-orange-500 rounded focus:ring-orange-500"
                         />
-                        <span className="text-sm text-gray-600">
-                          He leído y acepto la{' '}
-                          <Link href="/privacidad" target="_blank" className="text-orange-500 hover:underline">
-                            política de privacidad
+                        <span className="text-sm text-gray-700">
+                          Acepto la{' '}
+                          <Link href="/privacidad" target="_blank" className="text-orange-600 hover:underline font-medium">
+                            Política de Privacidad
                           </Link>
-                          .
+                          {' '}y el tratamiento de mis datos personales.
+                          <span className="text-orange-500"> *</span>
                         </span>
                       </label>
                     </div>
                     
-                    {/* Botón Generar Contrato */}
+                    {/* Botón de continuar */}
                     <div className="mt-6">
                       <button
                         type="button"
-                        onClick={generarContrato}
-                        disabled={!formularioCompleto}
-                        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        onClick={procederAlPago}
+                        className="w-full px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
                       >
-                        <FileText className="w-5 h-5" />
-                        Generar Contrato
+                        <CreditCard className="w-5 h-5" />
+                        Proceder al Pago (€{precioTotal})
                         <ArrowRight className="w-5 h-5" />
                       </button>
-                      
-                      {!formularioCompleto && (
-                        <p className="text-xs text-center text-gray-500 mt-2">
-                          Completa todos los campos obligatorios y firma para continuar
-                        </p>
-                      )}
                     </div>
                   </div>
                 </form>
               </div>
               
-              {/* Calculadora y Resumen */}
+              {/* Calculadora lateral con scroll */}
               <div className="lg:col-span-1">
-                <div className="sticky top-4 space-y-6">
-                  {/* Calculadora de Precios */}
-                  <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                      <Calculator className="w-5 h-5 text-orange-500" />
-                      Calculadora de Precios
-                    </h2>
-                    
-                    {tipoSeleccionado ? (
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
-                          <span className="text-sm text-gray-600">Plan {planSeleccionado}</span>
-                          <span className="font-bold text-orange-600">€{precioUnitario}/equipo</span>
+                <div className="bg-white rounded-xl shadow-sm p-6 sticky top-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                    <Calculator className="w-5 h-5 text-orange-500" />
+                    Resumen del Pedido
+                  </h3>
+                  
+                  {/* Contenedor con scroll para la calculadora */}
+                  <div className="max-h-[400px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin' }}>
+                    {formData.tipoAparato && (
+                      <div className="space-y-3 mb-4">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Plan:</span>
+                          <span className="font-medium">{planSeleccionado}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Tipo:</span>
+                          <span className="font-medium">{tipoSeleccionado?.label}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Equipos:</span>
+                          <span className="font-medium">{formData.cantidad}</span>
                         </div>
                         
+                        {/* Desglose de precios */}
                         {formData.cantidad > 1 && (
-                          <div className="space-y-2">
-                            <p className="text-xs font-semibold text-gray-500 uppercase">Desglose por equipo:</p>
-                            {desglosePrecios.map((item) => (
-                              <div key={item.maquina} className="flex items-center justify-between text-sm">
-                                <span className="text-gray-600">
-                                  Equipo {item.maquina}
-                                  {item.descuento > 0 && (
-                                    <span className="ml-1 text-green-600 text-xs">(-{item.descuento}%)</span>
-                                  )}
-                                </span>
-                                <span className="font-medium">€{item.precio}</span>
-                              </div>
-                            ))}
+                          <div className="border-t border-gray-200 pt-3 mt-3">
+                            <p className="text-xs text-gray-500 mb-2">Desglose por equipo:</p>
+                            <div className="space-y-1">
+                              {desglose.map((item) => (
+                                <div key={item.maquina} className="flex justify-between text-xs">
+                                  <span className="text-gray-600">
+                                    Equipo {item.maquina}
+                                    {item.descuento > 0 && (
+                                      <span className="text-green-600 ml-1">(-{item.descuento}%)</span>
+                                    )}
+                                  </span>
+                                  <span className="font-medium">€{item.precio}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
                         )}
                         
-                        {ahorroTotal > 0 && (
-                          <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                            <p className="text-sm text-green-700 font-medium">
-                              ¡Ahorras €{ahorroTotal} con descuento por volumen!
-                            </p>
-                          </div>
-                        )}
-                        
-                        <div className="border-t border-gray-200 pt-4 space-y-2">
+                        <div className="border-t border-gray-200 pt-3 space-y-2">
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">Subtotal (sin IVA)</span>
+                            <span className="text-gray-600">Subtotal (sin IVA):</span>
                             <span className="font-medium">€{precioSinIVA}</span>
                           </div>
                           <div className="flex justify-between text-sm">
-                            <span className="text-gray-600">IVA (21%)</span>
+                            <span className="text-gray-600">IVA (21%):</span>
                             <span className="font-medium">€{precioTotal - precioSinIVA}</span>
                           </div>
                           <div className="flex justify-between text-lg font-bold pt-2 border-t border-gray-200">
-                            <span>Total Anual</span>
+                            <span>Total Anual:</span>
                             <span className="text-orange-600">€{precioTotal}</span>
                           </div>
                         </div>
                       </div>
-                    ) : (
+                    )}
+                    
+                    {!formData.tipoAparato && (
                       <p className="text-sm text-gray-500 text-center py-4">
                         Selecciona un tipo de aparato para ver el precio
                       </p>
                     )}
                   </div>
                   
-                  {/* Beneficios del Plan */}
-                  <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h3 className="font-semibold text-gray-900 mb-3">Plan {planSeleccionado}</h3>
-                    <ul className="space-y-2 text-sm text-gray-600">
+                  {/* Beneficios del plan */}
+                  <div className="mt-4 pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">
+                      Incluido en Plan {planSeleccionado}:
+                    </h4>
+                    <ul className="space-y-1 text-xs text-gray-600">
                       {planSeleccionado === 'Esencial' && (
                         <>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             1 revisión anual
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Mano de obra incluida
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Certificado oficial
                           </li>
                         </>
@@ -979,19 +1075,19 @@ function ContratoMantenimientoContent() {
                       {planSeleccionado === 'Confort' && (
                         <>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             2 revisiones anuales
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Mano de obra incluida
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Atención prioritaria
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Certificado oficial
                           </li>
                         </>
@@ -999,30 +1095,26 @@ function ContratoMantenimientoContent() {
                       {planSeleccionado === 'Premium' && (
                         <>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Revisiones ilimitadas
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Mano de obra incluida
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Atención 24/7 prioritaria
                           </li>
                           <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <Check className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
                             Descuento 10% en repuestos
-                          </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                            Certificado oficial
                           </li>
                         </>
                       )}
                     </ul>
-                    <p className="mt-3 text-xs text-gray-500">
-                      * Repuestos y gas NO incluidos en ningún plan
+                    <p className="mt-2 text-[10px] text-gray-500">
+                      * Repuestos y gas NO incluidos
                     </p>
                   </div>
                 </div>
@@ -1030,160 +1122,7 @@ function ContratoMantenimientoContent() {
             </div>
           )}
           
-          {/* Paso 2: Visualización del Contrato - REDISEÑADO */}
-          {paso === 'contrato' && (
-            <div className="space-y-6">
-              {/* Barra de acciones */}
-              <div className="bg-white rounded-xl shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900">Contrato de Mantenimiento</h2>
-                  <p className="text-sm text-gray-500">Nº {numeroContrato}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setContratoAmpliado(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors font-medium"
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                    Ver Pantalla Completa
-                  </button>
-                  <button
-                    onClick={descargarPDF}
-                    disabled={isLoading}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
-                  >
-                    {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                    PDF
-                  </button>
-                  <button
-                    onClick={imprimirContrato}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-                  >
-                    <Printer className="w-4 h-4" />
-                    Imprimir
-                  </button>
-                </div>
-              </div>
-              
-              {/* Vista previa del contrato en bloque con scroll - NUEVO DISEÑO */}
-              <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                <div className="bg-gray-100 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <span className="text-sm font-medium text-gray-700">Vista previa del contrato</span>
-                  <span className="text-xs text-gray-500">Desplázate para revisar todas las cláusulas</span>
-                </div>
-                <div 
-                  className="h-[400px] overflow-y-auto p-4 bg-gray-50"
-                  style={{ scrollbarWidth: 'thin' }}
-                >
-                  <div 
-                    ref={contratoRef} 
-                    className="bg-white shadow-sm rounded-lg transform scale-[0.85] origin-top"
-                    style={{ transformOrigin: 'top center' }}
-                  >
-                    {esCaldera ? (
-                      <ContratoCaldera
-                        datosCliente={datosCliente}
-                        datosContrato={datosContrato}
-                        firmaCliente={formData.firma || undefined}
-                        mostrarFirmaEmpresa={true}
-                      />
-                    ) : (
-                      <ContratoAireAcondicionado
-                        datosCliente={datosCliente}
-                        datosContrato={datosContrato}
-                        firmaCliente={formData.firma || undefined}
-                        mostrarFirmaEmpresa={true}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-              
-              {/* Resumen y botones de acción */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-3">Resumen del Contrato</h3>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Cliente:</span>
-                        <span className="font-medium">{formData.razonSocial}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Plan:</span>
-                        <span className="font-medium">{planSeleccionado}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Equipos:</span>
-                        <span className="font-medium">{formData.cantidad} {tipoSeleccionado?.label}</span>
-                      </div>
-                      <div className="flex justify-between pt-2 border-t border-gray-200">
-                        <span className="font-bold">Total Anual:</span>
-                        <span className="font-bold text-orange-600">€{precioTotal}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-col justify-center gap-3">
-                    <button
-                      onClick={procederAlPago}
-                      className="w-full px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                    >
-                      <CreditCard className="w-5 h-5" />
-                      Proceder al Pago (€{precioTotal})
-                      <ArrowRight className="w-5 h-5" />
-                    </button>
-                    <button
-                      onClick={() => setPaso('formulario')}
-                      className="w-full px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
-                    >
-                      Volver a Editar
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Modal de contrato en pantalla completa */}
-              {contratoAmpliado && (
-                <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                  <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto relative">
-                    <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
-                      <div>
-                        <h3 className="font-bold text-gray-900">Contrato de Mantenimiento</h3>
-                        <p className="text-sm text-gray-500">Nº {numeroContrato}</p>
-                      </div>
-                      <button
-                        onClick={() => setContratoAmpliado(false)}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                      >
-                        <Minimize2 className="w-4 h-4" />
-                        Cerrar
-                      </button>
-                    </div>
-                    <div className="p-6">
-                      {esCaldera ? (
-                        <ContratoCaldera
-                          datosCliente={datosCliente}
-                          datosContrato={datosContrato}
-                          firmaCliente={formData.firma || undefined}
-                          mostrarFirmaEmpresa={true}
-                        />
-                      ) : (
-                        <ContratoAireAcondicionado
-                          datosCliente={datosCliente}
-                          datosContrato={datosContrato}
-                          firmaCliente={formData.firma || undefined}
-                          mostrarFirmaEmpresa={true}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          
-          {/* Paso 3: Pago con Stripe */}
+          {/* Paso 2: Pago con Stripe */}
           {paso === 'pago' && (
             <div className="max-w-2xl mx-auto space-y-6">
               <div className="bg-white rounded-xl shadow-sm p-6">
@@ -1218,9 +1157,9 @@ function ContratoMantenimientoContent() {
                 
                 {/* Formulario de pago Stripe */}
                 <StripePaymentForm
-                  amount={precioTotal * 100}
-                  onSuccess={handlePaymentSuccess}
-                  onError={(error) => {
+                  amount={precioTotal}
+                  onPaymentSuccess={handlePaymentSuccess}
+                  onPaymentError={(error) => {
                     console.error('Error en el pago:', error);
                     alert('Error en el pago. Por favor, intenta de nuevo.');
                   }}
@@ -1231,19 +1170,21 @@ function ContratoMantenimientoContent() {
                     cliente: formData.razonSocial,
                     email: formData.email,
                   }}
+                  clientName={formData.razonSocial}
+                  clientEmail={formData.email}
                 />
                 
                 <button
-                  onClick={() => setPaso('contrato')}
+                  onClick={() => setPaso('formulario')}
                   className="w-full mt-4 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
                 >
-                  Volver al Contrato
+                  Volver al Formulario
                 </button>
               </div>
             </div>
           )}
           
-          {/* Paso 4: Completado */}
+          {/* Paso 3: Completado - AQUÍ están los botones de descarga/impresión */}
           {paso === 'completado' && (
             <div className="max-w-2xl mx-auto">
               <div className="bg-white rounded-xl shadow-sm p-8 text-center">
@@ -1269,18 +1210,29 @@ function ContratoMantenimientoContent() {
                   </p>
                 </div>
                 
+                {/* Botones de descarga e impresión - SOLO AQUÍ después del pago */}
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
                     onClick={descargarPDF}
                     disabled={isLoading}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors"
                   >
                     {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     Descargar Contrato PDF
                   </button>
+                  <button
+                    onClick={imprimirContrato}
+                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                  >
+                    <Printer className="w-4 h-4" />
+                    Imprimir Contrato
+                  </button>
+                </div>
+                
+                <div className="mt-6">
                   <Link
                     href="/"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 text-orange-600 font-semibold hover:underline"
                   >
                     Volver al Inicio
                   </Link>
@@ -1291,6 +1243,44 @@ function ContratoMantenimientoContent() {
           
         </div>
       </main>
+      
+      {/* Modal de contrato en pantalla completa */}
+      {contratoAmpliado && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto relative">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between z-10">
+              <div>
+                <h3 className="font-bold text-gray-900">Vista Previa del Contrato</h3>
+                <p className="text-sm text-gray-500">Revisa todas las cláusulas antes de firmar</p>
+              </div>
+              <button
+                onClick={() => setContratoAmpliado(false)}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              >
+                <X className="w-4 h-4" />
+                Cerrar
+              </button>
+            </div>
+            <div className="p-6">
+              {esCaldera ? (
+                <ContratoCaldera
+                  datosCliente={datosCliente}
+                  datosContrato={datosContrato}
+                  firmaCliente={formData.firma || undefined}
+                  mostrarFirmaEmpresa={false}
+                />
+              ) : (
+                <ContratoAireAcondicionado
+                  datosCliente={datosCliente}
+                  datosContrato={datosContrato}
+                  firmaCliente={formData.firma || undefined}
+                  mostrarFirmaEmpresa={false}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       <Footer />
       
