@@ -1007,10 +1007,10 @@ function ContratoMantenimientoContent() {
                 )}
               </div>
               
-              {/* Sidebar STICKY */}
+              {/* Sidebar STICKY - Sigue al usuario */}
               <div className="lg:col-span-1">
-                <div className="sticky top-20">
-                  <div className="bg-white rounded-xl shadow-sm p-6 max-h-[calc(100vh-120px)] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
+                <div className="sticky top-4" style={{ position: 'sticky', top: '1rem' }}>
+                  <div className="bg-white rounded-xl shadow-lg border border-orange-100 p-6 max-h-[calc(100vh-2rem)] overflow-y-auto" style={{ scrollbarWidth: 'thin' }}>
                     <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
                       <Calculator className="w-5 h-5 text-orange-500" />
                       Resumen del Pedido

@@ -13,7 +13,7 @@ import {
   Elements,
 } from '@stripe/react-stripe-js';
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js';
-import { Loader2, CreditCard, Shield, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2, CreditCard, Shield, CheckCircle2, AlertCircle, Lock } from 'lucide-react';
 
 // Cargar Stripe con la clave pública
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
@@ -45,38 +45,59 @@ function CheckoutForm({
     e.preventDefault();
 
     if (!stripe || !elements) {
+      setMessage('El sistema de pago no está listo. Por favor, espera unos segundos.');
       return;
     }
 
     setIsProcessing(true);
     setMessage(null);
 
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/contrato-mantenimiento/confirmacion`,
-        payment_method_data: {
-          billing_details: {
-            name: clientName,
-            email: clientEmail,
+    try {
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/contrato-mantenimiento?pago=completado`,
+          payment_method_data: {
+            billing_details: {
+              name: clientName || '',
+              email: clientEmail || '',
+            },
           },
         },
-      },
-      redirect: 'if_required',
-    });
+        redirect: 'if_required',
+      });
 
-    if (error) {
-      if (error.type === 'card_error' || error.type === 'validation_error') {
-        setMessage(error.message || 'Error en el pago');
-      } else {
-        setMessage('Ha ocurrido un error inesperado.');
+      if (error) {
+        // Traducir errores comunes al español
+        let errorMessage = error.message || 'Error en el pago';
+        
+        if (error.code === 'card_declined') {
+          errorMessage = 'La tarjeta ha sido rechazada. Por favor, usa otra tarjeta.';
+        } else if (error.code === 'expired_card') {
+          errorMessage = 'La tarjeta ha expirado.';
+        } else if (error.code === 'incorrect_cvc') {
+          errorMessage = 'El código de seguridad (CVC) es incorrecto.';
+        } else if (error.code === 'insufficient_funds') {
+          errorMessage = 'Fondos insuficientes en la tarjeta.';
+        } else if (error.code === 'processing_error') {
+          errorMessage = 'Error al procesar el pago. Por favor, inténtalo de nuevo.';
+        }
+        
+        setMessage(errorMessage);
+        onPaymentError(errorMessage);
+        setIsProcessing(false);
+      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        setIsSuccess(true);
+        setMessage('¡Pago completado con éxito!');
+        onPaymentSuccess(paymentIntent.id);
+      } else if (paymentIntent && paymentIntent.status === 'processing') {
+        setMessage('El pago está siendo procesado...');
       }
-      onPaymentError(error.message || 'Error en el pago');
+    } catch (err: any) {
+      console.error('Error en confirmPayment:', err);
+      setMessage('Ha ocurrido un error inesperado. Por favor, inténtalo de nuevo.');
+      onPaymentError('Error inesperado');
       setIsProcessing(false);
-    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-      setIsSuccess(true);
-      setMessage('¡Pago completado con éxito!');
-      onPaymentSuccess(paymentIntent.id);
     }
   };
 
@@ -84,9 +105,9 @@ function CheckoutForm({
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Información de seguridad */}
       <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg border border-green-200">
-        <Shield className="w-5 h-5 text-green-600 flex-shrink-0" />
+        <Lock className="w-5 h-5 text-green-600 flex-shrink-0" />
         <p className="text-sm text-green-700">
-          Pago seguro procesado por Stripe. Tus datos están protegidos.
+          <strong>Pago 100% seguro</strong> - Procesado por Stripe. Tus datos están encriptados.
         </p>
       </div>
 
@@ -98,9 +119,12 @@ function CheckoutForm({
             paymentMethodOrder: ['card', 'link'],
             defaultValues: {
               billingDetails: {
-                name: clientName,
-                email: clientEmail,
+                name: clientName || '',
+                email: clientEmail || '',
               }
+            },
+            business: {
+              name: 'Uniclima Solutions S.L.'
             }
           }}
         />
@@ -128,7 +152,7 @@ function CheckoutForm({
       <button
         type="submit"
         disabled={!stripe || isProcessing || isSuccess}
-        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
       >
         {isProcessing ? (
           <>
@@ -138,7 +162,7 @@ function CheckoutForm({
         ) : isSuccess ? (
           <>
             <CheckCircle2 className="w-5 h-5" />
-            Pago completado
+            ¡Pago completado!
           </>
         ) : (
           <>
@@ -149,11 +173,19 @@ function CheckoutForm({
       </button>
 
       {/* Métodos de pago aceptados */}
-      <div className="flex items-center justify-center gap-4 pt-2">
-        <img src="/images/visa.svg" alt="Visa" className="h-6 opacity-60" />
-        <img src="/images/mastercard.svg" alt="Mastercard" className="h-6 opacity-60" />
-        <img src="/images/amex.svg" alt="American Express" className="h-6 opacity-60" />
-        <span className="text-xs text-gray-500">y más...</span>
+      <div className="flex flex-col items-center gap-2 pt-2">
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-gray-500">Aceptamos:</span>
+          <div className="flex items-center gap-2">
+            <div className="bg-blue-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">VISA</div>
+            <div className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">MC</div>
+            <div className="bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">AMEX</div>
+            <div className="bg-green-500 text-white text-[10px] font-bold px-2 py-0.5 rounded">Link</div>
+          </div>
+        </div>
+        <p className="text-[10px] text-gray-400">
+          Pago procesado de forma segura por Stripe
+        </p>
       </div>
     </form>
   );
@@ -176,6 +208,9 @@ export default function StripePaymentForm({
     // Crear el PaymentIntent al montar el componente
     const createPaymentIntent = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
+        
         const response = await fetch('/api/stripe/create-payment-intent', {
           method: 'POST',
           headers: {
@@ -186,22 +221,27 @@ export default function StripePaymentForm({
             currency: 'eur',
             metadata: {
               ...metadata,
-              clientName,
-              clientEmail,
+              clientName: clientName || '',
+              clientEmail: clientEmail || '',
             },
           }),
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          throw new Error('Error al crear el intent de pago');
+          throw new Error(data.error || 'Error al crear el intent de pago');
         }
 
-        const data = await response.json();
+        if (!data.clientSecret) {
+          throw new Error('No se recibió el clientSecret');
+        }
+
         setClientSecret(data.clientSecret);
-      } catch (err) {
-        console.error('Error:', err);
-        setError('No se pudo inicializar el sistema de pago. Por favor, inténtalo de nuevo.');
-        onPaymentError('Error al inicializar el pago');
+      } catch (err: any) {
+        console.error('Error creando PaymentIntent:', err);
+        setError(err.message || 'No se pudo inicializar el sistema de pago. Por favor, inténtalo de nuevo.');
+        onPaymentError(err.message || 'Error al inicializar el pago');
       } finally {
         setIsLoading(false);
       }
@@ -209,29 +249,49 @@ export default function StripePaymentForm({
 
     if (amount > 0) {
       createPaymentIntent();
+    } else {
+      setError('El monto del pago no es válido');
+      setIsLoading(false);
     }
-  }, [amount, metadata, clientName, clientEmail, onPaymentError]);
+  }, [amount]);
 
   if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-12 space-y-4">
         <Loader2 className="w-8 h-8 animate-spin text-orange-500" />
         <p className="text-gray-600">Preparando el sistema de pago...</p>
+        <p className="text-xs text-gray-400">Esto puede tardar unos segundos</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center gap-2 p-4 bg-red-50 rounded-lg border border-red-200">
-        <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-        <p className="text-sm text-red-700">{error}</p>
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 p-4 bg-red-50 rounded-lg border border-red-200">
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-red-700">Error al cargar el sistema de pago</p>
+            <p className="text-xs text-red-600 mt-1">{error}</p>
+          </div>
+        </div>
+        <button
+          onClick={() => window.location.reload()}
+          className="w-full py-3 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+        >
+          Reintentar
+        </button>
       </div>
     );
   }
 
   if (!clientSecret) {
-    return null;
+    return (
+      <div className="flex items-center gap-2 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+        <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0" />
+        <p className="text-sm text-yellow-700">Esperando configuración del pago...</p>
+      </div>
+    );
   }
 
   const options: StripeElementsOptions = {
@@ -243,10 +303,34 @@ export default function StripePaymentForm({
         colorBackground: '#ffffff',
         colorText: '#1f2937',
         colorDanger: '#ef4444',
-        fontFamily: 'system-ui, sans-serif',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
         borderRadius: '8px',
+        spacingUnit: '4px',
+      },
+      rules: {
+        '.Input': {
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+        },
+        '.Input:focus': {
+          border: '2px solid #f97316',
+          boxShadow: '0 0 0 3px rgba(249, 115, 22, 0.1)',
+        },
+        '.Label': {
+          fontWeight: '500',
+          color: '#374151',
+        },
+        '.Tab': {
+          border: '1px solid #e5e7eb',
+          borderRadius: '8px',
+        },
+        '.Tab--selected': {
+          border: '2px solid #f97316',
+          backgroundColor: '#fff7ed',
+        },
       },
     },
+    locale: 'es',
   };
 
   return (

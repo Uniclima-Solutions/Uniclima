@@ -1,46 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-function getStripe() {
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) {
-    throw new Error('STRIPE_SECRET_KEY not configured');
-  }
-  return new Stripe(key, {
-    apiVersion: '2024-12-18.acacia',
-  });
-}
+// Inicializar Stripe con la clave secreta
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  // @ts-ignore - Usar la versión más reciente disponible
+  apiVersion: '2024-12-18.acacia',
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const { amount, currency = 'eur', metadata } = await request.json()
+    const body = await request.json();
+    const { amount, currency = 'eur', metadata } = body;
 
+    // Validar el monto
     if (!amount || amount <= 0) {
       return NextResponse.json(
-        { error: 'Invalid amount' },
+        { error: 'El monto debe ser mayor a 0' },
         { status: 400 }
-      )
+      );
     }
 
-    const stripe = getStripe();
+    // Verificar que la clave de Stripe esté configurada
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('STRIPE_SECRET_KEY no está configurada');
+      return NextResponse.json(
+        { error: 'Error de configuración del servidor' },
+        { status: 500 }
+      );
+    }
+
+    // Crear el PaymentIntent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
+      amount: Math.round(amount * 100), // Convertir a céntimos
       currency,
-      metadata,
+      metadata: metadata || {},
       automatic_payment_methods: {
         enabled: true,
       },
-    })
+      // Descripción para el extracto bancario
+      description: `Contrato Mantenimiento Uniclima - ${metadata?.numeroContrato || 'N/A'}`,
+      // Statement descriptor (máximo 22 caracteres)
+      statement_descriptor: 'UNICLIMA MANT',
+    });
+
+    console.log('PaymentIntent creado:', paymentIntent.id);
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
-    })
-  } catch (error) {
-    console.error('Stripe error:', error)
+    });
+  } catch (error: any) {
+    console.error('Error de Stripe:', error);
+    
+    // Manejar errores específicos de Stripe
+    if (error.type === 'StripeCardError') {
+      return NextResponse.json(
+        { error: error.message },
+        { status: 400 }
+      );
+    }
+    
+    if (error.type === 'StripeInvalidRequestError') {
+      return NextResponse.json(
+        { error: 'Solicitud inválida: ' + error.message },
+        { status: 400 }
+      );
+    }
+    
+    if (error.type === 'StripeAuthenticationError') {
+      return NextResponse.json(
+        { error: 'Error de autenticación con Stripe' },
+        { status: 401 }
+      );
+    }
+
     return NextResponse.json(
-      { error: 'Error creating payment intent' },
+      { error: 'Error al procesar el pago. Por favor, inténtalo de nuevo.' },
       { status: 500 }
-    )
+    );
   }
 }
