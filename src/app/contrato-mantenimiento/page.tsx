@@ -62,6 +62,7 @@ import {
   AddressResult 
 } from "@/services/addressAutocompleteService";
 import { cn } from "@/lib/utils";
+import SignaturePad from "@/components/SignaturePad";
 
 // Datos de la empresa
 const EMPRESA = {
@@ -217,6 +218,7 @@ interface FormData {
   descuentoCupon: number;
   aceptaTerminos: boolean;
   aceptaPrivacidad: boolean;
+  firma: string | null;
 }
 
 interface FieldErrors {
@@ -254,6 +256,7 @@ function ContratoMantenimientoContent() {
     descuentoCupon: 0,
     aceptaTerminos: false,
     aceptaPrivacidad: false,
+    firma: null,
   });
   
   // Sugerencias de direcciones filtradas
@@ -761,10 +764,25 @@ function ContratoMantenimientoContent() {
                 </div>
               </div>
               
+              {/* Firma Digital */}
+              <div className="bg-white rounded-xl shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-orange-500" />
+                  Firma del Contrato
+                </h2>
+                
+                <SignaturePad
+                  onSignatureChange={(signature) => updateField('firma', signature)}
+                  label="Firma del cliente"
+                  required={true}
+                  error={!formData.firma && formData.aceptaTerminos && formData.aceptaPrivacidad ? 'La firma es obligatoria para continuar' : undefined}
+                />
+              </div>
+              
               {/* Botón Enviar */}
               <button
                 type="submit"
-                disabled={isLoading || !formData.aceptaTerminos || !formData.aceptaPrivacidad}
+                disabled={isLoading || !formData.aceptaTerminos || !formData.aceptaPrivacidad || !formData.firma}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {isLoading ? (
