@@ -2,13 +2,16 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs';
 
 import Link from 'next/link';
 import { ArrowLeft, FileText, Shield, Scale, Camera, AlertTriangle, CheckCircle, Info } from 'lucide-react';
 
 export default function TerminosCesionVideoPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
+      <Header />
+      <Breadcrumbs items={breadcrumbsConfig.terminosCesionVideo} />
 
       {/* Contenido */}
       <main className="max-w-4xl mx-auto px-4 py-8 sm:py-12">

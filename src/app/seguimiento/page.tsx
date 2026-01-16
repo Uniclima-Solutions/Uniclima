@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs';
 import {
   Search,
   Package,
@@ -44,6 +45,7 @@ export default function SeguimientoBusquedaPage() {
   return (
     <>
       <Header />
+      <Breadcrumbs items={breadcrumbsConfig.seguimiento} />
       
       <main className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
         {/* Hero */}

@@ -9,6 +9,7 @@ import { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs';
 import { 
   getBrandsByType, 
   getModelsByBrand,
@@ -402,6 +403,7 @@ export default function DiagnosticoPlacasPage() {
     return (
       <>
         <Header />
+        <Breadcrumbs items={breadcrumbsConfig.diagnosticoPlacas} />
         <main className="min-h-screen bg-gray-50 py-8 sm:py-12">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             {/* Header de éxito */}
@@ -572,6 +574,7 @@ export default function DiagnosticoPlacasPage() {
   return (
     <>
       <Header />
+      <Breadcrumbs items={breadcrumbsConfig.diagnosticoPlacas} />
       
       <main className="min-h-screen bg-gray-50">
         {/* HERO */}

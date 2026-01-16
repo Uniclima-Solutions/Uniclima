@@ -3,12 +3,14 @@
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs';
 import { Building, Users, Copyright, Shield, Link2, Ban, Scale, AlertTriangle, FileWarning, MessageSquare, Database } from 'lucide-react';
 
 export default function AvisoLegalPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
+      <Breadcrumbs items={breadcrumbsConfig.avisoLegal} />
 
       {/* Contenido */}
       <main className="flex-1 max-w-4xl mx-auto px-4 py-12 w-full">

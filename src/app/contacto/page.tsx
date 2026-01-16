@@ -15,6 +15,7 @@ import {
 } from "lucide-react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs'
 
 interface FormData {
   nombre: string
@@ -62,6 +63,7 @@ export default function Contacto() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
+      <Breadcrumbs items={breadcrumbsConfig.contacto} />
       
       <main>
         {/* Hero */}

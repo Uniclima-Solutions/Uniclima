@@ -2,12 +2,14 @@
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import Breadcrumbs, { breadcrumbsConfig } from '@/components/Breadcrumbs';
 import { FileText, ShoppingCart, Truck, RefreshCw, Shield, CreditCard, Scale, AlertTriangle, Info, Package, CheckCircle, XCircle, Wrench } from 'lucide-react';
 
 export default function CondicionesVentaPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Header />
+      <Breadcrumbs items={breadcrumbsConfig.condicionesVenta} />
       
       {/* Contenido */}
       <main className="flex-1 max-w-4xl mx-auto px-4 py-12 w-full">
