@@ -178,6 +178,7 @@ export default function Header() {
   };
 
   return (
+    <>
     <div className="sticky top-0 z-50">
       {/* Barra superior - Solo desktop */}
       <div className="hidden lg:block bg-gray-900 text-white">
@@ -397,11 +398,11 @@ export default function Header() {
       </header>
     </div>
 
-      {/* Mobile Menu */}
-      <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
-      
-      {/* Side Cart */}
-      <SideCart />
+    {/* Mobile Menu */}
+    <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+    
+    {/* Side Cart */}
+    <SideCart />
     </>
   );
 }
