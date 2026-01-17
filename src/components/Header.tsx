@@ -344,15 +344,15 @@ export default function Header() {
               </Link>
 
               {/* Botón usuario - Mobile */}
-              <Link href="/login" className="lg:hidden flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0">
-                <User className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
+              <Link href="/login" className="lg:hidden flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0">
+                <User className="w-7 h-7 sm:w-8 sm:h-8" />
               </Link>
 
               {/* Favoritos - Visible en móvil y desktop */}
-              <Link href="/favoritos" className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors relative flex-shrink-0">
-                <Heart className={`w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5 ${favoritesCount > 0 ? 'fill-red-500 text-red-500' : ''}`} />
+              <Link href="/favoritos" className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 lg:w-12 lg:h-12 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors relative flex-shrink-0">
+                <Heart className={`w-7 h-7 sm:w-8 sm:h-8 ${favoritesCount > 0 ? 'fill-red-500 text-red-500' : ''}`} />
                 {favoritesCount > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 lg:w-5 lg:h-5 bg-red-500 text-white text-[9px] sm:text-[10px] lg:text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 lg:w-5 lg:h-5 bg-red-500 text-white text-[10px] sm:text-xs font-bold rounded-full flex items-center justify-center">
                     {favoritesCount > 9 ? "9+" : favoritesCount}
                   </span>
                 )}
@@ -361,15 +361,15 @@ export default function Header() {
               {/* Carrito */}
               <button
                 onClick={openCart}
-                className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-auto lg:h-auto lg:gap-2 lg:px-4 lg:py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors relative flex-shrink-0"
+                className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 lg:w-auto lg:h-auto lg:gap-2 lg:px-5 lg:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors relative flex-shrink-0"
               >
-                <ShoppingCart className="w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5" />
+                <ShoppingCart className="w-7 h-7 sm:w-8 sm:h-8 lg:w-6 lg:h-6" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 lg:w-5 lg:h-5 bg-gray-900 text-white text-[9px] sm:text-[10px] lg:text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 lg:w-5 lg:h-5 bg-gray-900 text-white text-[10px] sm:text-xs font-bold rounded-full flex items-center justify-center">
                     {totalItems > 9 ? "9+" : totalItems}
                   </span>
                 )}
-                <span className="hidden lg:inline text-xs lg:text-sm font-semibold">Cesta</span>
+                <span className="hidden lg:inline text-sm font-semibold">Cesta</span>
               </button>
             </div>
           </div>
