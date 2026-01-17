@@ -271,7 +271,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     })),
   };
   
-  // Schema BreadcrumbList JSON-LD
+  // Schema BreadcrumbList JSON-LD - Estructura SEO/GEO completa
   const breadcrumbSchema = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -285,18 +285,30 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'Repuestos Calderas',
-        item: 'https://uniclima.es/c/calderas',
+        name: 'Repuestos',
+        item: 'https://uniclima.es/repuestos',
       },
       {
         '@type': 'ListItem',
         position: 3,
-        name: product.partType,
-        item: `https://uniclima.es/c/calderas/${product.partTypeSlug}`,
+        name: 'Calderas',
+        item: 'https://uniclima.es/repuestos/calderas',
       },
       {
         '@type': 'ListItem',
         position: 4,
+        name: product.partType,
+        item: `https://uniclima.es/repuestos/calderas/${product.partTypeSlug}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 5,
+        name: product.brand,
+        item: `https://uniclima.es/repuestos/calderas/${product.partTypeSlug}/${product.brandSlug}`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 6,
         name: product.name,
         item: `https://uniclima.es/producto/${id}`,
       },
@@ -322,7 +334,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
       <Header />
       
       <main className="min-h-screen bg-gray-50">
-        {/* Breadcrumbs */}
+        {/* Breadcrumbs - Estructura SEO/GEO completa */}
         <nav className="bg-white border-b" aria-label="Breadcrumb">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <ol className="flex items-center flex-wrap gap-1 text-sm">
@@ -333,19 +345,31 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
               </li>
               <ChevronRight className="w-4 h-4 text-gray-400" />
               <li>
-                <Link href="/c/calderas" className="text-gray-500 hover:text-primary">
-                  Repuestos Calderas
+                <Link href="/repuestos" className="text-gray-500 hover:text-primary">
+                  Repuestos
                 </Link>
               </li>
               <ChevronRight className="w-4 h-4 text-gray-400" />
               <li>
-                <Link href={`/c/calderas/${product.partTypeSlug}`} className="text-gray-500 hover:text-primary">
+                <Link href="/repuestos/calderas" className="text-gray-500 hover:text-primary">
+                  Calderas
+                </Link>
+              </li>
+              <ChevronRight className="w-4 h-4 text-gray-400" />
+              <li>
+                <Link href={`/repuestos/calderas/${product.partTypeSlug}`} className="text-gray-500 hover:text-primary">
                   {product.partType}
                 </Link>
               </li>
               <ChevronRight className="w-4 h-4 text-gray-400" />
+              <li>
+                <Link href={`/repuestos/calderas/${product.partTypeSlug}/${product.brandSlug}`} className="text-gray-500 hover:text-primary">
+                  {product.brand}
+                </Link>
+              </li>
+              <ChevronRight className="w-4 h-4 text-gray-400" />
               <li className="text-gray-900 font-medium truncate max-w-[200px]">
-                {product.brand}
+                {product.reference}
               </li>
             </ol>
           </div>
