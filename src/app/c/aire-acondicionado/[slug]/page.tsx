@@ -11,6 +11,8 @@ import { useParams } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { CollectionSchema } from '@/components/seo';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 import { 
   Filter, 
   X, 
@@ -205,6 +207,7 @@ function ProductCard({ product, onAddToCart }: {
 export default function CategoriaAireAcondicionadoPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const { addItem, openCart } = useCart();
   
   const categoryName = categoryNames[slug] || slug;
   const [showFilters, setShowFilters] = useState(false);
@@ -227,8 +230,19 @@ export default function CategoriaAireAcondicionadoPage() {
   
   // Añadir al carrito
   const handleAddToCart = useCallback((productId: string) => {
-    console.log('Producto añadido al carrito:', productId);
-  }, []);
+    const product = allProducts.find(p => p.id === productId);
+    if (product) {
+      addItem({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        reference: product.reference
+      });
+      openCart();
+      toast.success('Producto añadido al carrito');
+    }
+  }, [allProducts, addItem, openCart]);
   
   // Filtrar productos
   const filteredProducts = useMemo(() => {
