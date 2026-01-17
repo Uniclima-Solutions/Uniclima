@@ -45,28 +45,28 @@ import PricingCardFlip from "@/components/PricingCardFlip";
 const repuestosCalderas = [
   {
     id: 1,
-    name: "Placas electrónicas",
+    name: "Placas",
     slug: "placas-electronicas",
     image: "/images/categorias/PlacasElectronicas.png",
     count: 245
   },
   {
     id: 2,
-    name: "Intercambiadores de placas",
+    name: "Intercambiadores",
     slug: "intercambiadores-placas",
     image: "/images/categorias/IntercambiadorDePlacas.png",
     count: 189
   },
   {
     id: 3,
-    name: "Bombas de circulación",
+    name: "Bombas",
     slug: "bombas-circulacion",
     image: "/images/categorias/Bombas.png",
     count: 156
   },
   {
     id: 4,
-    name: "Válvulas de gas",
+    name: "Válvulas Gas",
     slug: "valvulas-gas",
     image: "/images/categorias/ValvulaGasCondensacion.png",
     count: 312
@@ -80,49 +80,49 @@ const repuestosCalderas = [
   },
   {
     id: 6,
-    name: "Intercambiadores bitérmicos",
+    name: "Bitérmicos",
     slug: "intercambiadores-bitermicos",
     image: "/images/categorias/IntercambiadorBitermico.png",
     count: 98
   },
   {
     id: 7,
-    name: "Cámaras de combustión",
+    name: "Combustión",
     slug: "camaras-combustion",
     image: "/images/categorias/CamarasDeCombustion.png",
     count: 67
   },
   {
     id: 8,
-    name: "Válvulas de 3 vías",
+    name: "Válvulas 3 Vías",
     slug: "valvulas-3-vias",
     image: "/images/categorias/Valvulas3Vias.png",
     count: 234
   },
   {
     id: 9,
-    name: "Cuerpos hidráulicos",
+    name: "Hidráulicos",
     slug: "cuerpos-hidraulicos",
     image: "/images/categorias/Hidraulicos.png",
     count: 145
   },
   {
     id: 10,
-    name: "Extractores modulantes",
+    name: "Modulantes",
     slug: "extractores-modulantes",
     image: "/images/categorias/ExtractoresModulantes.png",
     count: 89
   },
   {
     id: 11,
-    name: "Vasos de expansión",
+    name: "Vasos Expansión",
     slug: "vasos-expansion",
     image: "/images/categorias/VasoExpansion.png",
     count: 167
   },
   {
     id: 12,
-    name: "Válvulas de seguridad",
+    name: "V. Seguridad",
     slug: "valvulas-seguridad",
     image: "/images/categorias/ValvulasSeguridad.png",
     count: 198
@@ -150,7 +150,7 @@ const repuestosCalderas = [
   },
   {
     id: 16,
-    name: "Captadores de presión",
+    name: "Captadores",
     slug: "captadores-presion",
     image: "/images/categorias/CaptadorPresion.png",
     count: 156
@@ -164,7 +164,7 @@ const repuestosCalderas = [
   },
   {
     id: 18,
-    name: "Válvulas de llenado",
+    name: "V. Llenado",
     slug: "valvulas-llenado",
     image: "/images/categorias/ValvulaLLenado.png",
     count: 112
@@ -182,14 +182,14 @@ const repuestosCalderas = [
 const categoriasAireAcondicionado: CategoryPart[] = [
   {
     id: 1,
-    name: "Placas interior",
+    name: "Placas Interior",
     slug: "placas-interior",
     image: "/images/categorias/PlacasInterior.png",
     count: 312
   },
   {
     id: 2,
-    name: "Placas compresor",
+    name: "Placas Exterior",
     slug: "placas-compresor",
     image: "/images/categorias/PlacasCompresor.png",
     count: 234
@@ -203,42 +203,42 @@ const categoriasAireAcondicionado: CategoryPart[] = [
   },
   {
     id: 4,
-    name: "Motor turbinas",
+    name: "Motores",
     slug: "motor-turbinas",
     image: "/images/categorias/MotorTurbinas.png",
     count: 156
   },
   {
     id: 5,
-    name: "Hélice compresor",
+    name: "Hélices",
     slug: "helice-compresor",
     image: "/images/categorias/HeliceCompresor.png",
     count: 198
   },
   {
     id: 6,
-    name: "Motor hélice compresor",
+    name: "Motor Hélice",
     slug: "motor-helice-compresor",
     image: "/images/categorias/MotorHeliceCompresor.png",
     count: 276
   },
   {
     id: 7,
-    name: "Bomba condensado conductos",
+    name: "B. Conductos",
     slug: "bomba-condensado-conductos",
     image: "/images/categorias/BombaCondensadoConductos.png",
     count: 145
   },
   {
     id: 8,
-    name: "Bomba condensados cassette",
+    name: "B. Cassette",
     slug: "bomba-condensados-cassette",
     image: "/images/categorias/BombaCondensadosCassette.png",
     count: 89
   },
   {
     id: 9,
-    name: "Mandos a distancia",
+    name: "Mandos",
     slug: "mandos-distancia",
     image: "/images/categorias/MandosDistanciaSplit.png",
     count: 167
@@ -343,8 +343,8 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         </div>
         
         {/* Texto blanco en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3 sm:pb-5 px-1 sm:px-3">
-          <h3 className="text-white font-extrabold text-[11px] sm:text-sm lg:text-base leading-tight text-center drop-shadow-lg uppercase tracking-wide">
+        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3 sm:pb-4 px-1 sm:px-2">
+          <h3 className="text-white font-bold text-[10px] sm:text-xs lg:text-sm leading-tight text-center drop-shadow-lg uppercase tracking-wide">
             {category.name}
           </h3>
         </div>
