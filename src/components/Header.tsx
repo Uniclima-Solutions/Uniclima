@@ -178,7 +178,7 @@ export default function Header() {
   };
 
   return (
-    <>
+    <div className="sticky top-0 z-50">
       {/* Barra superior - Solo desktop */}
       <div className="hidden lg:block bg-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -219,7 +219,7 @@ export default function Header() {
       </div>
 
       {/* Header Principal */}
-      <header className={`sticky top-0 z-40 bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : "shadow-sm"}`}>
+      <header className={`bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : "shadow-sm"}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-2 sm:gap-3 lg:gap-6 h-14 lg:h-18">
             {/* Botón menú móvil - Hamburguesa con estilo */}
@@ -395,6 +395,7 @@ export default function Header() {
           </div>
         </div>
       </header>
+    </div>
 
       {/* Mobile Menu */}
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
