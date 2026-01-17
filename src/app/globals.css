@@ -351,3 +351,14 @@ main, .min-h-screen {
   display: flex;
   flex-direction: column;
 }
+
+/* Padding top para compensar el header fijo */
+main {
+  padding-top: 95px; /* Altura del header: barra superior (36px) + header principal (56px) + margen */
+}
+
+@media (min-width: 1024px) {
+  main {
+    padding-top: 100px; /* Altura del header en desktop */
+  }
+}

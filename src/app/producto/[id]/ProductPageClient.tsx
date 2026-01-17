@@ -360,24 +360,24 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
               </div>
             </div>
             
-            {/* Selector de cantidad y botón de añadir - Más compacto */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            {/* Selector de cantidad y botón de añadir - EN UNA SOLA LÍNEA */}
+            <div className="flex items-center gap-3">
               {/* Selector cantidad */}
-              <div className="flex items-center border rounded-lg bg-white">
+              <div className="flex items-center border rounded-xl bg-white">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   disabled={!product.inStock}
-                  className="p-2.5 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-l-xl"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-5 h-5" />
                 </button>
-                <span className="w-10 text-center font-medium">{quantity}</span>
+                <span className="w-12 text-center font-semibold text-lg">{quantity}</span>
                 <button
                   onClick={() => setQuantity(Math.min(product.stockQuantity || 99, quantity + 1))}
                   disabled={!product.inStock}
-                  className="p-2.5 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed rounded-r-xl"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-5 h-5" />
                 </button>
               </div>
               
@@ -385,7 +385,7 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock || isAdding}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-semibold transition-all ${
+                className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-semibold transition-all text-base ${
                   product.inStock
                     ? 'bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/25'
                     : 'bg-gray-200 text-gray-500 cursor-not-allowed'
@@ -427,25 +427,6 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
                 <span>Compartir</span>
               </button>
             </div>
-            
-            {/* Compatibilidad rápida - Si hay modelos compatibles */}
-            {product.compatibleModels && product.compatibleModels.length > 0 && (
-              <div className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-                <p className="text-xs font-medium text-blue-800 mb-1.5">Compatible con:</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {product.compatibleModels.slice(0, 4).map((model, index) => (
-                    <span key={index} className="text-xs bg-white text-blue-700 px-2 py-0.5 rounded border border-blue-200">
-                      {model}
-                    </span>
-                  ))}
-                  {product.compatibleModels.length > 4 && (
-                    <span className="text-xs text-blue-600 px-2 py-0.5">
-                      +{product.compatibleModels.length - 4} más
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </div>
         

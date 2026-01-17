@@ -37,6 +37,7 @@ import {
   Plus
 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 import { groupedSearch, type SearchResult, type GroupedSearchResults } from "@/lib/smartSearch";
 import MobileMenu from "./MobileMenu";
 import SideCart from "./SideCart";
@@ -50,6 +51,7 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const { totalItems, openCart } = useCart();
+  const { favoritesCount } = useFavorites();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -347,8 +349,13 @@ export default function Header() {
               </Link>
 
               {/* Favoritos - Visible en móvil y desktop */}
-              <Link href="/favoritos" className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors relative flex-shrink-0">
-                <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5" />
+              <Link href="/favoritos" className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors relative flex-shrink-0">
+                <Heart className={`w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5 ${favoritesCount > 0 ? 'fill-red-500 text-red-500' : ''}`} />
+                {favoritesCount > 0 && (
+                  <span className="absolute -top-1.5 -right-1.5 w-4 h-4 lg:w-5 lg:h-5 bg-red-500 text-white text-[9px] sm:text-[10px] lg:text-xs font-bold rounded-full flex items-center justify-center">
+                    {favoritesCount > 9 ? "9+" : favoritesCount}
+                  </span>
+                )}
               </Link>
 
               {/* Carrito */}
