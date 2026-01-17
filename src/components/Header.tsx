@@ -346,9 +346,9 @@ export default function Header() {
                 <User className="w-5 h-5 sm:w-5.5 sm:h-5.5" />
               </Link>
 
-              {/* Favoritos - Desktop */}
-              <Link href="/favoritos" className="hidden lg:flex items-center justify-center w-10 lg:w-11 h-10 lg:h-11 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-lg lg:rounded-xl transition-colors relative flex-shrink-0">
-                <Heart className="w-4 h-4 lg:w-5 lg:h-5" />
+              {/* Favoritos - Visible en móvil y desktop */}
+              <Link href="/favoritos" className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors relative flex-shrink-0">
+                <Heart className="w-5 h-5 sm:w-5.5 sm:h-5.5 lg:w-5 lg:h-5" />
               </Link>
 
               {/* Carrito */}
