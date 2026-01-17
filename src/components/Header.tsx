@@ -224,27 +224,23 @@ export default function Header() {
       {/* Header Principal */}
       <header className={`bg-white transition-all duration-300 ${isScrolled ? "shadow-lg" : "shadow-sm"}`}>
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-2 sm:gap-3 lg:gap-6 h-14 lg:h-18">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 h-14 lg:h-18">
             {/* Botón menú móvil - Hamburguesa con estilo */}
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="lg:hidden p-2 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0"
+              className="lg:hidden flex items-center justify-center w-10 h-10 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0"
             >
-              <div className="w-6 h-5 flex flex-col justify-between">
-                <span className="w-full h-0.5 bg-current rounded-full"></span>
-                <span className="w-4/5 h-0.5 bg-current rounded-full"></span>
-                <span className="w-full h-0.5 bg-current rounded-full"></span>
-              </div>
+              <Menu className="w-6 h-6" />
             </button>
 
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 flex-shrink-0">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-md lg:shadow-lg shadow-orange-500/30">
-                <span className="text-white font-black text-xs sm:text-sm lg:text-xl">U</span>
+            <Link href="/" className="flex items-center gap-1.5 lg:gap-2 flex-shrink-0">
+              <div className="w-9 h-9 lg:w-12 lg:h-12 rounded-lg lg:rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-md lg:shadow-lg shadow-orange-500/30">
+                <span className="text-white font-black text-sm lg:text-xl">U</span>
               </div>
               <div className="hidden sm:block">
-                <span className="text-base sm:text-lg lg:text-2xl font-black text-gray-900 tracking-tight">Uniclima</span>
-                <p className="text-[9px] sm:text-[10px] lg:text-xs text-gray-500 -mt-0.5 font-medium">Repuestos HVAC</p>
+                <span className="text-lg lg:text-2xl font-black text-gray-900 tracking-tight">Uniclima</span>
+                <p className="text-[10px] lg:text-xs text-gray-500 -mt-0.5 font-medium">Repuestos HVAC</p>
               </div>
             </Link>
 
@@ -257,8 +253,8 @@ export default function Header() {
               <span>Menú</span>
             </button>
 
-            {/* Buscador - Flexible y responsive */}
-            <div ref={searchRef} className="flex-1 min-w-0 relative">
+            {/* Buscador - Flexible y responsive - Máximo ancho en móvil */}
+            <div ref={searchRef} className="flex-1 min-w-0 relative mx-1 sm:mx-0">
               <div className="relative">
                 <input
                   type="text"
@@ -266,18 +262,18 @@ export default function Header() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   placeholder="Buscar..."
-                  className="w-full h-9 sm:h-10 lg:h-12 pl-2.5 sm:pl-3 lg:pl-4 pr-14 sm:pr-16 lg:pr-12 bg-gray-100 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-lg sm:rounded-xl text-base outline-none"
+                  className="w-full h-10 lg:h-12 pl-3 lg:pl-4 pr-12 lg:pr-12 bg-gray-100 border-2 border-transparent focus:border-orange-500 focus:bg-white rounded-xl text-base outline-none"
                 />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-10 sm:right-11 lg:right-11 top-1/2 -translate-y-1/2 w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute right-11 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <X className="w-4 h-4" />
                   </button>
                 )}
-                <button className="absolute right-0.5 sm:right-1 top-1/2 -translate-y-1/2 w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 bg-orange-500 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-colors">
-                  <Search className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-white" />
+                <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 lg:w-9 lg:h-9 bg-orange-500 hover:bg-orange-600 rounded-lg flex items-center justify-center transition-colors">
+                  <Search className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                 </button>
               </div>
 
@@ -335,37 +331,32 @@ export default function Header() {
               )}
             </div>
 
-            {/* Acciones derecha */}
-            <div className="flex items-center gap-0.5 lg:gap-2">
+            {/* Acciones derecha - Iconos alineados del mismo tamaño */}
+            <div className="flex items-center gap-1 lg:gap-2">
               {/* Ofertas - Desktop */}
               <Link href="/ofertas" className="hidden xl:flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-xl transition-colors">
                 <Tag className="w-4 h-4" />
                 <span>Ofertas</span>
               </Link>
 
-              {/* Botón usuario - Mobile */}
-              <Link href="/login" className="lg:hidden flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0">
-                <User className="w-7 h-7 sm:w-8 sm:h-8" />
-              </Link>
-
               {/* Favoritos - Visible en móvil y desktop */}
-              <Link href="/favoritos" className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 lg:w-12 lg:h-12 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors relative flex-shrink-0">
-                <Heart className={`w-7 h-7 sm:w-8 sm:h-8 ${favoritesCount > 0 ? 'fill-red-500 text-red-500' : ''}`} />
+              <Link href="/favoritos" className="flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors relative flex-shrink-0">
+                <Heart className={`w-6 h-6 ${favoritesCount > 0 ? 'fill-red-500 text-red-500' : ''}`} />
                 {favoritesCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 lg:w-5 lg:h-5 bg-red-500 text-white text-[10px] sm:text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 lg:w-5 lg:h-5 bg-red-500 text-white text-[9px] lg:text-[10px] font-bold rounded-full flex items-center justify-center">
                     {favoritesCount > 9 ? "9+" : favoritesCount}
                   </span>
                 )}
               </Link>
 
-              {/* Carrito */}
+              {/* Carrito - Mismo tamaño que favoritos en móvil */}
               <button
                 onClick={openCart}
-                className="flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 lg:w-auto lg:h-auto lg:gap-2 lg:px-5 lg:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors relative flex-shrink-0"
+                className="flex items-center justify-center w-10 h-10 lg:w-auto lg:h-auto lg:gap-2 lg:px-4 lg:py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl transition-colors relative flex-shrink-0"
               >
-                <ShoppingCart className="w-7 h-7 sm:w-8 sm:h-8 lg:w-6 lg:h-6" />
+                <ShoppingCart className="w-6 h-6" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 lg:w-5 lg:h-5 bg-gray-900 text-white text-[10px] sm:text-xs font-bold rounded-full flex items-center justify-center">
+                  <span className="absolute -top-0.5 -right-0.5 w-4 h-4 lg:w-5 lg:h-5 bg-gray-900 text-white text-[9px] lg:text-[10px] font-bold rounded-full flex items-center justify-center">
                     {totalItems > 9 ? "9+" : totalItems}
                   </span>
                 )}
