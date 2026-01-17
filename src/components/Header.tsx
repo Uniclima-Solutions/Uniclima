@@ -230,7 +230,11 @@ export default function Header() {
               onClick={() => setMobileMenuOpen(true)}
               className="lg:hidden flex items-center justify-center w-10 h-10 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0"
             >
-              <Menu className="w-6 h-6" />
+              <div className="w-6 h-5 flex flex-col justify-between">
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
+                <span className="w-4/5 h-0.5 bg-current rounded-full"></span>
+                <span className="w-full h-0.5 bg-current rounded-full"></span>
+              </div>
             </button>
 
             {/* Logo */}
