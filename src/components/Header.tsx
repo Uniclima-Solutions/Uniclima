@@ -368,33 +368,7 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Barra de beneficios - Solo visible en desktop */}
-        <div className="hidden md:block bg-gray-50 border-t border-gray-100">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-8 py-2">
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
-                <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
-                <span className="font-medium">Envío gratis +120€</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
-                <Package className="w-4 h-4 text-orange-500 flex-shrink-0" />
-                <span className="font-medium">Entrega 24-48h</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
-                <RotateCcw className="w-4 h-4 text-blue-600 flex-shrink-0" />
-                <span className="font-medium">Devoluciones 14 días</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
-                <Shield className="w-4 h-4 text-purple-600 flex-shrink-0" />
-                <span className="font-medium">Garantía 1 año</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-xs lg:text-sm text-gray-600">
-                <Headphones className="w-4 h-4 text-cyan-600 flex-shrink-0" />
-                <span className="font-medium">Soporte técnico</span>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </header>
     </div>
 
