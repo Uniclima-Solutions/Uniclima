@@ -903,6 +903,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Header />
+      {/* Espaciador para compensar el header fixed */}
+      <div className="h-14 lg:h-[104px]" />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
       <section className="w-full flex justify-center py-8">
