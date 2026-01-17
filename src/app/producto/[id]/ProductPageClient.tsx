@@ -311,73 +311,76 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
               </span>
             </div>
             
-            {/* Selector de cantidad y botón añadir */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Selector cantidad */}
-              <div className="flex items-center border rounded-lg">
+            {/* Selector de cantidad y botones de acción */}
+            <div className="flex flex-col gap-4">
+              {/* Fila principal: cantidad + añadir al carrito */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                {/* Selector cantidad */}
+                <div className="flex items-center border rounded-lg">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={!product.inStock}
+                    className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="w-12 text-center font-medium">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(Math.min(product.stockQuantity || 99, quantity + 1))}
+                    disabled={!product.inStock}
+                    className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                
+                {/* Botón añadir al carrito */}
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={!product.inStock}
-                  className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={handleAddToCart}
+                  disabled={!product.inStock || isAdding}
+                  className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-semibold transition-all ${
+                    product.inStock
+                      ? 'bg-primary text-white hover:bg-primary/90'
+                      : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                  }`}
                 >
-                  <Minus className="w-4 h-4" />
-                </button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
-                <button
-                  onClick={() => setQuantity(Math.min(product.stockQuantity || 99, quantity + 1))}
-                  disabled={!product.inStock}
-                  className="p-3 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Plus className="w-4 h-4" />
+                  {isAdding ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      Añadiendo...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5" />
+                      Añadir al carrito
+                    </>
+                  )}
                 </button>
               </div>
               
-              {/* Botón añadir al carrito */}
-              <button
-                onClick={handleAddToCart}
-                disabled={!product.inStock || isAdding}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-semibold transition-all ${
-                  product.inStock
-                    ? 'bg-primary text-white hover:bg-primary/90'
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                {isAdding ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Añadiendo...
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="w-5 h-5" />
-                    Añadir al carrito
-                  </>
-                )}
-              </button>
-            </div>
-            
-            {/* Botones secundarios */}
-            <div className="flex gap-3">
-              <button
-                onClick={() => setIsFavorite(!isFavorite)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-all ${
-                  isFavorite 
-                    ? 'border-red-200 bg-red-50 text-red-600' 
-                    : 'border-gray-200 hover:border-gray-300 text-gray-600'
-                }`}
-              >
-                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-                <span className="hidden sm:inline">Favorito</span>
-              </button>
-              
-              {/* Botón compartir */}
-              <button
-                onClick={() => handleShare()}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 hover:border-gray-300 text-gray-600 transition-all"
-              >
-                <Share2 className="w-5 h-5" />
-                <span className="hidden sm:inline">Compartir</span>
-              </button>
+              {/* Fila secundaria: Favorito + Compartir - centrados */}
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={() => setIsFavorite(!isFavorite)}
+                  className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg border transition-all ${
+                    isFavorite 
+                      ? 'border-red-200 bg-red-50 text-red-600' 
+                      : 'border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50'
+                  }`}
+                >
+                  <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+                  <span>Favorito</span>
+                </button>
+                
+                {/* Botón compartir */}
+                <button
+                  onClick={() => handleShare()}
+                  className="flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-gray-200 hover:border-gray-300 text-gray-600 hover:bg-gray-50 transition-all"
+                >
+                  <Share2 className="w-5 h-5" />
+                  <span>Compartir</span>
+                </button>
+              </div>
             </div>
             
             {/* Beneficios */}
@@ -508,15 +511,7 @@ export default function ProductPageClient({ product }: ProductPageClientProps) {
           )}
         </div>
         
-        {/* Mención de marca experta */}
-        <div className="mt-8 bg-gradient-to-r from-primary/5 to-orange-50 rounded-xl p-6 border border-primary/10">
-          <p className="text-gray-700 leading-relaxed">
-            <strong className="text-primary">Uniclima Solutions</strong> es especialista en repuestos 
-            reacondicionados de climatización, probados y verificados antes del envío. Con más de 15 años 
-            de experiencia en el sector HVAC, ofrecemos soporte técnico especializado para ayudarte a 
-            encontrar el repuesto exacto que necesitas para tu caldera o equipo de aire acondicionado.
-          </p>
-        </div>
+
       </div>
       
       {/* Modal de compartir centrado y responsive */}
