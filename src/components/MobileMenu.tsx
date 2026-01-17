@@ -306,12 +306,94 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     }
   }, [isOpen]);
 
-  const filteredProducts = searchQuery.length >= 2 
-    ? productosEjemplo.filter(p => 
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.ref.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.marca.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+  // Filtrar categorías del menú basado en la búsqueda
+  const filteredCategories = searchQuery.length >= 2 
+    ? [
+        // Categorías principales
+        ...categoriasConDesplegable.filter(cat => 
+          cat.name.toLowerCase().includes(searchQuery.toLowerCase())
+        ).map(cat => ({ 
+          type: 'category' as const, 
+          name: cat.name, 
+          icon: cat.icon, 
+          view: cat.view || null,
+          hasDropdown: cat.hasDropdown,
+          subItems: cat.subItems 
+        })),
+        // Subcategorías de repuestos
+        ...categoriasConDesplegable
+          .filter(cat => cat.subItems)
+          .flatMap(cat => cat.subItems || [])
+          .filter(sub => sub.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(sub => ({ 
+            type: 'subcategory' as const, 
+            name: sub.name, 
+            icon: sub.icon, 
+            view: sub.view,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+        // Marcas de calderas
+        ...marcasRepuestosCalderas
+          .filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(m => ({ 
+            type: 'marca-caldera' as const, 
+            name: m.name, 
+            icon: Flame, 
+            view: 'marca-caldera' as MenuView,
+            count: m.count,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+        // Marcas de aire
+        ...marcasRepuestosAire
+          .filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(m => ({ 
+            type: 'marca-aire' as const, 
+            name: m.name, 
+            icon: Snowflake, 
+            view: 'marca-aire' as MenuView,
+            count: m.count,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+        // Categorías de repuestos calderas
+        ...categoriasRepuestosCalderas
+          .filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(c => ({ 
+            type: 'repuesto-caldera' as const, 
+            name: c.name, 
+            icon: c.icon, 
+            view: 'repuestos-calderas' as MenuView,
+            count: c.count,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+        // Categorías de repuestos aire
+        ...categoriasRepuestosAire
+          .filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(c => ({ 
+            type: 'repuesto-aire' as const, 
+            name: c.name, 
+            icon: c.icon, 
+            view: 'repuestos-aire' as MenuView,
+            count: c.count,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+        // Servicios
+        ...serviciosItems
+          .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
+          .map(s => ({ 
+            type: 'servicio' as const, 
+            name: s.name, 
+            icon: Wrench, 
+            view: 'servicios' as MenuView,
+            desc: s.desc,
+            hasDropdown: false,
+            subItems: undefined
+          })),
+      ].slice(0, 8) // Limitar a 8 resultados
     : [];
 
   const handleBack = () => {
@@ -372,18 +454,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       transition={{ duration: 0.25, ease: "easeOut" }}
       className="p-3"
     >
-      {/* Enlace a Inicio */}
-      <a
-        href="/"
-        onClick={handleClose}
-        className="flex items-center gap-2 px-3 py-2.5 mb-2 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-semibold text-sm transition-all"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-        <span>Inicio</span>
-      </a>
-      
       <a
         href="/catalogo"
         className="flex items-center gap-2 px-3 py-2.5 mb-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
@@ -1042,12 +1112,16 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
                   <span>Volver</span>
                 </button>
               ) : (
-                <div className="flex items-center gap-2">
+                <a 
+                  href="/"
+                  onClick={handleClose}
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
                   <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
                     <span className="text-orange-500 font-black text-lg">U</span>
                   </div>
                   <span className="font-bold text-lg">Uniclima</span>
-                </div>
+                </a>
               )}
               
               <button 
@@ -1059,39 +1133,65 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               </button>
             </div>
 
-            {/* Barra de búsqueda */}
+            {/* Barra de búsqueda - Solo busca en el menú */}
             <div className="px-3 py-2 border-b border-slate-200 flex-shrink-0">
               <div className="relative">
                 <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Buscar productos..."
+                  placeholder="Buscar en el menú..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-gray-100 rounded-lg text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#2E86AB]"
+                  className="w-full pl-8 pr-3 py-2 bg-gray-100 rounded-lg text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 />
               </div>
               
-              {filteredProducts.length > 0 && (
-                <div className="mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-                  {filteredProducts.map((product) => (
-                    <a
-                      key={product.id}
-                      href="#"
-                      className="flex items-center gap-2 p-2 hover:bg-orange-50 border-b border-slate-100 last:border-0"
-                    >
-                      <img 
-                        src={product.imagen} 
-                        alt={product.name}
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 text-xs truncate">{product.name}</p>
-                        <p className="text-xs text-gray-500">{product.marca}</p>
-                        <p className="text-xs font-bold text-orange-600">{product.precio.toFixed(2)}€</p>
-                      </div>
-                    </a>
-                  ))}
+              {filteredCategories.length > 0 && (
+                <div className="mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                  {filteredCategories.map((item, index) => {
+                    const Icon = item.icon;
+                    return (
+                      <button
+                        key={`${item.type}-${index}`}
+                        onClick={() => {
+                          if (item.type === 'marca-caldera') {
+                            setSelectedMarca(item.name);
+                            setCurrentView('marca-caldera');
+                          } else if (item.type === 'marca-aire') {
+                            setSelectedMarca(item.name);
+                            setCurrentView('marca-aire');
+                          } else if (item.view) {
+                            setCurrentView(item.view as MenuView);
+                          }
+                          setSearchQuery('');
+                        }}
+                        className="w-full flex items-center gap-2.5 p-2.5 hover:bg-orange-50 border-b border-slate-100 last:border-0 text-left transition-colors"
+                      >
+                        <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <Icon className="w-4 h-4 text-orange-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900 text-sm truncate">{item.name}</p>
+                          <p className="text-xs text-gray-500">
+                            {item.type === 'category' && 'Categoría'}
+                            {item.type === 'subcategory' && 'Subcategoría'}
+                            {item.type === 'marca-caldera' && `Marca de calderas • ${(item as any).count} productos`}
+                            {item.type === 'marca-aire' && `Marca de aire • ${(item as any).count} productos`}
+                            {item.type === 'repuesto-caldera' && `Repuesto caldera • ${(item as any).count} productos`}
+                            {item.type === 'repuesto-aire' && `Repuesto aire • ${(item as any).count} productos`}
+                            {item.type === 'servicio' && (item as any).desc}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              
+              {searchQuery.length >= 2 && filteredCategories.length === 0 && (
+                <div className="mt-2 p-3 bg-gray-50 rounded-lg text-center">
+                  <p className="text-sm text-gray-500">No se encontraron resultados para "{searchQuery}"</p>
                 </div>
               )}
             </div>
