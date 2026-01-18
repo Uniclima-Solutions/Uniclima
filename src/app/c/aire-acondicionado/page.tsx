@@ -264,7 +264,7 @@ export default function RepuestosAireAcondicionado() {
                 </div>
               </div>
               <Link 
-                href="/contrato-mantenimiento?tipo=aire"
+                href="/contrato-mantenimiento"
                 className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap"
               >
                 Contratar mantenimiento
@@ -389,7 +389,7 @@ export default function RepuestosAireAcondicionado() {
               
               <h3>Servicio técnico especializado</h3>
               <p>
-                Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento?tipo=aire" className="text-blue-600 hover:underline">contratos de mantenimiento</Link> para 
+                Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento" className="text-blue-600 hover:underline">contratos de mantenimiento</Link> para 
                 mantener tu aire acondicionado en perfecto estado todo el año.
               </p>
             </div>

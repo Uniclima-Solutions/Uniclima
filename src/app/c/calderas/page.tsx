@@ -291,7 +291,7 @@ export default function RepuestosCalderas() {
                 </div>
               </div>
               <Link 
-                href="/contrato-mantenimiento?tipo=caldera"
+                href="/contrato-mantenimiento"
                 className="flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap"
               >
                 Contratar mantenimiento

@@ -15,7 +15,7 @@ import {
   Flame, Snowflake, Package, Wrench, Search, Zap, Thermometer,
   Fan, Gauge, CircuitBoard, Droplets, Wind, Settings, Cpu,
   Radio, Filter, Disc, BatteryCharging, Waves, RefreshCw,
-  LayoutGrid, MessageCircleQuestion, PhoneCall, ChevronDown
+  LayoutGrid, MessageCircleQuestion, PhoneCall, ChevronDown, Shield
 } from "lucide-react";
 
 interface MobileMenuProps {
@@ -62,6 +62,7 @@ const categoriasConDesplegable = [
   },
   { id: "aires-nuevos", name: "Aires Acondicionados", icon: Fan, view: "aires-nuevos" as MenuView, hasDropdown: false },
   { id: "servicios", name: "Servicios", icon: Wrench, view: "servicios" as MenuView, hasDropdown: false },
+  { id: "mantenimiento", name: "Contratos de Mantenimiento", icon: Shield, href: "/contrato-mantenimiento", hasDropdown: false },
   { id: "faq", name: "Preguntas Frecuentes", icon: MessageCircleQuestion, view: "faq" as MenuView, hasDropdown: false },
   { id: "contacto", name: "Contacto", icon: PhoneCall, view: "contacto" as MenuView, hasDropdown: false },
 ];
@@ -516,7 +517,24 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             );
           }
           
-          // Sin desplegable
+          // Sin desplegable - puede ser href directo o vista
+          if ('href' in cat && cat.href) {
+            return (
+              <a
+                key={cat.id}
+                href={cat.href}
+                onClick={handleClose}
+                className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
+              >
+                <div className="w-7 h-7 bg-orange-100 rounded-md flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                  <Icon className="w-3.5 h-3.5 text-orange-600" />
+                </div>
+                <span className="font-medium text-orange-600 text-[13px]">{cat.name}</span>
+                <ChevronRight className="w-4 h-4 text-orange-400 ml-auto" />
+              </a>
+            );
+          }
+          
           return (
             <button
               key={cat.id}

@@ -324,7 +324,7 @@ export default function CalderasCompletas() {
                 </div>
               </div>
               <Link 
-                href="/contrato-mantenimiento?tipo=caldera"
+                href="/contrato-mantenimiento"
                 className="flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap"
               >
                 Contratar mantenimiento
@@ -464,7 +464,7 @@ export default function CalderasCompletas() {
               <h3>¿Por qué comprar en Uniclima?</h3>
               <p>
                 Todas nuestras calderas incluyen instalación por técnicos certificados, puesta en marcha, 
-                retirada de la caldera antigua y hasta 5 años de garantía con <Link href="/contrato-mantenimiento?tipo=caldera" className="text-orange-600 hover:underline">contrato de mantenimiento</Link>.
+                retirada de la caldera antigua y hasta 5 años de garantía con <Link href="/contrato-mantenimiento" className="text-orange-600 hover:underline">contrato de mantenimiento</Link>.
               </p>
             </div>
           </div>
