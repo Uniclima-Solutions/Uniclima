@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-// Lista completa de marcas con logos HD 600x600
 const marcasLogos = [
   { name: "Vaillant", slug: "vaillant", logo: "/images/marcas/vaillant.png" },
   { name: "Junkers", slug: "junkers", logo: "/images/marcas/junkers.png" },
@@ -101,39 +100,39 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-gray-50">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-6 bg-white">
+      <div className="w-full px-4">
         <div 
-          className="relative group"
+          className="relative"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-md flex items-center justify-center hover:bg-orange-50 transition-all"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+            <ChevronLeft className="w-5 h-5 text-orange-600" />
           </button>
 
-          {/* Contenedor de logos - tamaño grande uniforme */}
+          {/* Contenedor de logos - SIN CUADRANTES, JUNTOS */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth px-2 py-2"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            className="flex items-center gap-2 overflow-x-auto px-12"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-36 h-24 sm:w-44 sm:h-28 lg:w-52 lg:h-32 flex items-center justify-center p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-400 hover:shadow-xl hover:bg-orange-50/30 transition-all duration-300 cursor-pointer group/brand"
+                className="flex-shrink-0 h-16 sm:h-20 lg:h-24 flex items-center justify-center hover:scale-105 transition-transform duration-200"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="w-full h-full object-contain grayscale opacity-50 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-300"
+                  className="h-full w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-200"
                   draggable={false}
                   loading="lazy"
                 />
@@ -144,20 +143,15 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-md flex items-center justify-center hover:bg-orange-50 transition-all"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
+            <ChevronRight className="w-5 h-5 text-orange-600" />
           </button>
-
-          {/* Gradientes de fade */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" />
         </div>
       </div>
 
       <style>{`
-        .scrollbar-hide::-webkit-scrollbar,
         div[style*="scrollbarWidth"]::-webkit-scrollbar {
           display: none;
         }
