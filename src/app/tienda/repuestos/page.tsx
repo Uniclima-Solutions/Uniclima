@@ -112,13 +112,8 @@ export default function RepuestosHubPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:border-orange-200 transition-all duration-300">
               <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-4 lg:p-6 text-white">
                 <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 lg:w-24 lg:h-24 flex-shrink-0 bg-white/10 rounded-xl p-2">
-                    <Image
-                      src="/images/productos/bomba-circulacion.png"
-                      alt="Repuestos Calderas"
-                      fill
-                      className="object-contain"
-                    />
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 flex-shrink-0 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Flame className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
                   </div>
                   <div>
                     <h3 className="text-xl lg:text-2xl font-bold mb-1">Repuestos Calderas</h3>
@@ -160,13 +155,8 @@ export default function RepuestosHubPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:border-blue-200 transition-all duration-300">
               <div className="bg-gradient-to-br from-blue-500 to-blue-600 p-4 lg:p-6 text-white">
                 <div className="flex items-center gap-4">
-                  <div className="relative w-20 h-20 lg:w-24 lg:h-24 flex-shrink-0 bg-white/10 rounded-xl p-2">
-                    <Image
-                      src="/images/productos/placa-electronica.png"
-                      alt="Repuestos Aire Acondicionado"
-                      fill
-                      className="object-contain"
-                    />
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 flex-shrink-0 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Wind className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
                   </div>
                   <div>
                     <h3 className="text-xl lg:text-2xl font-bold mb-1">Repuestos Aire</h3>
