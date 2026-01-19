@@ -2,12 +2,9 @@
 
 import { useState, useRef, useCallback } from "react"
 import Link from "next/link"
-import Image from "next/image"
 import { 
   Phone, 
   Mail, 
-  MapPin, 
-  Clock, 
   Send, 
   CheckCircle,
   Loader2,
@@ -184,79 +181,94 @@ export default function Contacto() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       <Header />
       
       <main>
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl"></div>
-          
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-            <div className="text-center max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                <span className="text-sm text-gray-300">Respondemos en menos de 24h</span>
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
-                ¿En qué podemos
-                <span className="block bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
-                  ayudarte?
-                </span>
+        {/* Hero Simple */}
+        <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 md:py-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+                Contacta con nosotros
               </h1>
-              
-              <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
-                Nuestro equipo de expertos está listo para resolver todas tus dudas sobre climatización y repuestos.
+              <p className="text-lg text-orange-100 max-w-2xl mx-auto">
+                Estamos aquí para ayudarte con cualquier consulta sobre climatización y repuestos.
               </p>
-              
-              {/* Contact Cards */}
-              <div className="grid sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
-                <a href="tel:+34912345678" className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                    <Phone className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Teléfono</p>
-                  <p className="text-white font-semibold">912 345 678</p>
-                </a>
-                
-                <a href="mailto:info@uniclima.es" className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5 hover:bg-white/10 transition-all duration-300">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-500 to-violet-600 rounded-xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
-                    <Mail className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
-                  <p className="text-white font-semibold">info@uniclima.es</p>
-                </a>
-                
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-                  <div className="w-12 h-12 bg-gradient-to-br from-slate-600 to-slate-700 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <Clock className="w-5 h-5 text-white" />
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Horario</p>
-                  <p className="text-white font-semibold">L-V 9:00-18:00</p>
-                </div>
-              </div>
             </div>
           </div>
         </section>
 
         {/* Main Content */}
-        <section className="py-16 md:py-24 bg-gray-50">
+        <section className="py-12 md:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
               
-              {/* Formulario */}
-              <div className="order-1">
-                <div className="bg-white rounded-3xl shadow-xl shadow-gray-200/50 p-8 md:p-10">
-                  {submitted ? (
-                    <div className="text-center py-12">
-                      <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="w-10 h-10 text-green-600" />
+              {/* FAQs */}
+              <div className="order-2 lg:order-1">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                  Preguntas Frecuentes
+                </h2>
+
+                <div className="space-y-4">
+                  {faqs.map((faq, index) => {
+                    const IconComponent = faq.icon
+                    const isOpen = openFaq === faq.id
+                    const isViolet = index % 2 === 0
+                    
+                    return (
+                      <div 
+                        key={faq.id}
+                        className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100"
+                      >
+                        <button
+                          onClick={() => toggleFaq(faq.id)}
+                          className="w-full flex items-center gap-4 p-4 md:p-5 text-left hover:bg-gray-50 transition-colors"
+                        >
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                            isViolet 
+                              ? 'bg-violet-500' 
+                              : 'bg-orange-500'
+                          }`}>
+                            <IconComponent className="w-5 h-5 text-white" />
+                          </div>
+                          
+                          <span className="flex-1 font-medium text-gray-900 text-sm md:text-base leading-tight">
+                            {faq.question}
+                          </span>
+                          
+                          <ChevronDown className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${
+                            isOpen ? 'rotate-180' : ''
+                          }`} />
+                        </button>
+                        
+                        <div className={`grid transition-all duration-300 ease-in-out ${
+                          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                        }`}>
+                          <div className="overflow-hidden">
+                            <div className="px-4 md:px-5 pb-4 md:pb-5 pt-0 ml-14">
+                              <p className="text-gray-600 text-sm leading-relaxed">
+                                {faq.answer}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <h2 className="text-2xl font-bold text-gray-900 mb-3">¡Mensaje enviado!</h2>
-                      <p className="text-gray-600 mb-8">Te responderemos lo antes posible.</p>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Formulario */}
+              <div className="order-1 lg:order-2">
+                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                  {submitted ? (
+                    <div className="text-center py-8">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <CheckCircle className="w-8 h-8 text-green-600" />
+                      </div>
+                      <h2 className="text-xl font-bold text-gray-900 mb-2">¡Mensaje enviado!</h2>
+                      <p className="text-gray-600 mb-6">Te responderemos lo antes posible.</p>
                       <button
                         onClick={() => {
                           setSubmitted(false)
@@ -270,69 +282,68 @@ export default function Contacto() {
                     </div>
                   ) : (
                     <>
-                      <div className="mb-8">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2">Envíanos un mensaje</h2>
-                        <p className="text-gray-500">Completa el formulario y te contactaremos pronto.</p>
-                      </div>
+                      <h2 className="text-xl font-bold text-gray-900 mb-6">Envíanos un mensaje</h2>
 
-                      <form onSubmit={handleSubmit} className="space-y-6">
-                        {/* Nombre y Email */}
-                        <div className="grid sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Nombre completo <span className="text-orange-500">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              name="nombre"
-                              value={formData.nombre}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-3.5 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-gray-900 placeholder-gray-400"
-                              placeholder="Tu nombre"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Email <span className="text-orange-500">*</span>
-                            </label>
-                            <input
-                              type="email"
-                              name="email"
-                              value={formData.email}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-3.5 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-gray-900 placeholder-gray-400"
-                              placeholder="tu@email.com"
-                            />
-                          </div>
+                      <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Nombre */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Nombre completo <span className="text-orange-500">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            name="nombre"
+                            value={formData.nombre}
+                            onChange={handleChange}
+                            required
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="Tu nombre"
+                          />
                         </div>
 
-                        {/* Teléfono y Motivo */}
-                        <div className="grid sm:grid-cols-2 gap-5">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Teléfono
-                            </label>
-                            <input
-                              type="tel"
-                              name="telefono"
-                              value={formData.telefono}
-                              onChange={handleChange}
-                              className="w-full px-4 py-3.5 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-gray-900 placeholder-gray-400"
-                              placeholder="612 345 678"
-                            />
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Motivo <span className="text-orange-500">*</span>
-                            </label>
+                        {/* Email */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Email <span className="text-orange-500">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="tu@email.com"
+                          />
+                        </div>
+
+                        {/* Teléfono */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Teléfono
+                          </label>
+                          <input
+                            type="tel"
+                            name="telefono"
+                            value={formData.telefono}
+                            onChange={handleChange}
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="612 345 678"
+                          />
+                        </div>
+
+                        {/* Motivo - Desplegable mejorado */}
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Motivo de contacto <span className="text-orange-500">*</span>
+                          </label>
+                          <div className="relative">
                             <select
                               name="asunto"
                               value={formData.asunto}
                               onChange={handleChange}
                               required
-                              className="w-full px-4 py-3.5 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-gray-900 appearance-none cursor-pointer"
+                              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 appearance-none cursor-pointer pr-10"
                             >
                               <option value="consulta">Consulta sobre productos</option>
                               <option value="presupuesto">Solicitar presupuesto</option>
@@ -341,12 +352,13 @@ export default function Contacto() {
                               <option value="devolucion">Devolución</option>
                               <option value="otro">Otro motivo</option>
                             </select>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                           </div>
                         </div>
 
                         {/* Mensaje */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
                             Mensaje <span className="text-orange-500">*</span>
                           </label>
                           <textarea
@@ -355,15 +367,15 @@ export default function Contacto() {
                             onChange={handleChange}
                             required
                             rows={4}
-                            className="w-full px-4 py-3.5 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-gray-900 placeholder-gray-400 resize-none"
-                            placeholder="Describe tu consulta con el mayor detalle posible..."
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400 resize-none"
+                            placeholder="Describe tu consulta..."
                           />
                         </div>
 
                         {/* File Upload */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Adjuntar archivos <span className="text-gray-400">(máx. 5 imágenes o vídeos)</span>
+                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                            Adjuntar archivos <span className="text-gray-400 font-normal">(máx. 5)</span>
                           </label>
                           
                           <div
@@ -371,7 +383,7 @@ export default function Contacto() {
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onClick={() => fileInputRef.current?.click()}
-                            className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 ${
+                            className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
                               isDragging 
                                 ? 'border-orange-500 bg-orange-50' 
                                 : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
@@ -386,56 +398,32 @@ export default function Contacto() {
                               className="hidden"
                             />
                             
-                            <div className="flex flex-col items-center">
-                              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-4 transition-colors ${
-                                isDragging ? 'bg-orange-100' : 'bg-gray-100'
-                              }`}>
-                                <Upload className={`w-6 h-6 ${isDragging ? 'text-orange-600' : 'text-gray-400'}`} />
-                              </div>
-                              <p className="text-sm text-gray-600 mb-1">
-                                <span className="font-semibold text-orange-600">Haz clic para seleccionar</span> o arrastra aquí
-                              </p>
-                              <p className="text-xs text-gray-400">PNG, JPG, MP4 hasta 10MB cada uno</p>
-                            </div>
+                            <Upload className={`w-8 h-8 mx-auto mb-2 ${isDragging ? 'text-orange-500' : 'text-gray-400'}`} />
+                            <p className="text-sm text-gray-600">
+                              <span className="font-medium text-orange-600">Seleccionar archivos</span> o arrastrar aquí
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">PNG, JPG, MP4</p>
                           </div>
 
                           {/* Preview de archivos */}
                           {uploadedFiles.length > 0 && (
-                            <div className="mt-4 grid grid-cols-5 gap-3">
+                            <div className="mt-3 flex flex-wrap gap-2">
                               {uploadedFiles.map((file) => (
-                                <div key={file.id} className="relative group aspect-square rounded-xl overflow-hidden bg-gray-100">
+                                <div key={file.id} className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
                                   {file.type === 'image' ? (
                                     <img src={file.preview} alt="" className="w-full h-full object-cover" />
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-slate-800">
-                                      <Film className="w-6 h-6 text-white" />
+                                    <div className="w-full h-full flex items-center justify-center bg-slate-700">
+                                      <Film className="w-5 h-5 text-white" />
                                     </div>
                                   )}
                                   <button
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); removeFile(file.id); }}
-                                    className="absolute top-1 right-1 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                                   >
                                     <X className="w-3 h-3 text-white" />
                                   </button>
-                                  <div className="absolute bottom-1 left-1">
-                                    {file.type === 'image' ? (
-                                      <ImageIcon className="w-4 h-4 text-white drop-shadow-lg" />
-                                    ) : (
-                                      <Film className="w-4 h-4 text-white drop-shadow-lg" />
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                              
-                              {/* Slots vacíos */}
-                              {Array.from({ length: 5 - uploadedFiles.length }).map((_, i) => (
-                                <div 
-                                  key={`empty-${i}`} 
-                                  onClick={() => fileInputRef.current?.click()}
-                                  className="aspect-square rounded-xl border-2 border-dashed border-gray-200 flex items-center justify-center cursor-pointer hover:border-orange-300 transition-colors"
-                                >
-                                  <span className="text-2xl text-gray-300">+</span>
                                 </div>
                               ))}
                             </div>
@@ -450,11 +438,11 @@ export default function Contacto() {
                             id="acepta"
                             checked={formData.acepta}
                             onChange={handleChange}
-                            className="mt-1 w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
+                            className="mt-0.5 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
                           />
                           <label htmlFor="acepta" className="text-sm text-gray-600 cursor-pointer">
-                            He leído y acepto la{" "}
-                            <Link href="/privacidad" className="text-orange-600 hover:underline font-medium">
+                            Acepto la{" "}
+                            <Link href="/privacidad" className="text-orange-600 hover:underline">
                               política de privacidad
                             </Link>
                           </label>
@@ -464,12 +452,12 @@ export default function Contacto() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center gap-3 disabled:opacity-50 shadow-lg shadow-orange-500/25 hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-0.5"
+                          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                         >
                           {isSubmitting ? (
                             <>
                               <Loader2 className="w-5 h-5 animate-spin" />
-                              Enviando mensaje...
+                              Enviando...
                             </>
                           ) : (
                             <>
@@ -482,74 +470,27 @@ export default function Contacto() {
                     </>
                   )}
                 </div>
-              </div>
 
-              {/* FAQs */}
-              <div className="order-2">
-                <div className="mb-8">
-                  <span className="inline-block text-sm font-semibold text-orange-600 uppercase tracking-wider mb-3">
-                    Preguntas Frecuentes
-                  </span>
-                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                    Resolvemos tus dudas
-                  </h2>
-                  <p className="text-gray-500">
-                    Encuentra respuestas rápidas a las consultas más habituales sobre nuestros servicios.
-                  </p>
-                </div>
-
-                <div className="space-y-3">
-                  {faqs.map((faq, index) => {
-                    const IconComponent = faq.icon
-                    const isOpen = openFaq === faq.id
-                    const colors = index % 2 === 0 
-                      ? 'from-violet-500 to-violet-600' 
-                      : 'from-orange-500 to-orange-600'
-                    
-                    return (
-                      <div 
-                        key={faq.id}
-                        className={`bg-white rounded-2xl transition-all duration-300 ${
-                          isOpen 
-                            ? 'shadow-lg shadow-gray-200/50 ring-1 ring-gray-100' 
-                            : 'shadow-sm hover:shadow-md'
-                        }`}
-                      >
-                        <button
-                          onClick={() => toggleFaq(faq.id)}
-                          className="w-full flex items-center gap-4 p-5 text-left"
-                        >
-                          <div className={`w-11 h-11 bg-gradient-to-br ${colors} rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg`}>
-                            <IconComponent className="w-5 h-5 text-white" />
-                          </div>
-                          <span className="flex-1 font-semibold text-gray-900 pr-4">
-                            {faq.question}
-                          </span>
-                          <div className={`w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`}>
-                            <ChevronDown className="w-4 h-4 text-gray-500" />
-                          </div>
-                        </button>
-                        
-                        <div className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
-                          <div className="overflow-hidden">
-                            <div className="px-5 pb-5 pt-0 pl-20">
-                              <p className="text-gray-600 leading-relaxed">
-                                {faq.answer}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-
-                {/* CTA adicional */}
-                <div className="mt-8 bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-6 text-center">
-                  <p className="text-gray-400 mb-2">¿No encuentras lo que buscas?</p>
-                  <a href="tel:+34912345678" className="inline-flex items-center gap-2 text-white font-semibold hover:text-orange-400 transition-colors">
-                    <Phone className="w-4 h-4" />
-                    Llámanos al 912 345 678
+                {/* Info de contacto compacta */}
+                <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                  <a href="tel:+34912345678" className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-orange-200 transition-colors flex-1">
+                    <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Teléfono</p>
+                      <p className="font-semibold text-gray-900">912 345 678</p>
+                    </div>
+                  </a>
+                  
+                  <a href="mailto:info@uniclima.es" className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-violet-200 transition-colors flex-1">
+                    <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500">Email</p>
+                      <p className="font-semibold text-gray-900">info@uniclima.es</p>
+                    </div>
                   </a>
                 </div>
               </div>
