@@ -150,5 +150,17 @@ export const breadcrumbsConfig: Record<string, BreadcrumbItem[]> = {
   ],
   profesionales: [
     { label: 'Zona Profesionales' }
+  ],
+  // Rutas de repuestos
+  repuestos: [
+    { label: 'Repuestos' }
+  ],
+  repuestosCalderas: [
+    { label: 'Repuestos', href: '/repuestos' },
+    { label: 'Calderas' }
+  ],
+  repuestosAire: [
+    { label: 'Repuestos', href: '/repuestos' },
+    { label: 'Aire Acondicionado' }
   ]
 };
