@@ -114,7 +114,7 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-12 bg-white">
+    <section className="py-16 bg-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Carrusel con scroll fluido bidireccional */}
         <div 
@@ -125,16 +125,16 @@ export default function BrandScroller() {
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-2xl -translate-x-1/2"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
+            <ChevronLeft className="w-8 h-8 sm:w-9 sm:h-9 text-orange-600" />
           </button>
 
           {/* Contenedor de scroll fluido */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-6 sm:gap-8 overflow-x-auto scroll-smooth px-4 py-4"
+            className="flex gap-8 sm:gap-10 lg:gap-12 overflow-x-auto scroll-smooth px-6 py-6"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
           >
             {/* Duplicamos las marcas para efecto infinito */}
@@ -142,13 +142,13 @@ export default function BrandScroller() {
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-44 h-28 sm:w-52 sm:h-32 lg:w-60 lg:h-36 flex items-center justify-center p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-orange-400 hover:shadow-2xl hover:bg-orange-50/30 transition-all duration-300 cursor-pointer group/brand"
+                className="flex-shrink-0 w-56 h-40 sm:w-64 sm:h-44 lg:w-72 lg:h-48 flex items-center justify-center p-8 bg-white rounded-2xl border-2 border-gray-100 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 cursor-pointer group/brand"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="max-h-20 sm:max-h-24 lg:max-h-28 max-w-full w-auto object-contain group-hover/brand:scale-110 transition-all duration-300"
+                  className="h-28 sm:h-32 lg:h-36 max-w-full w-auto object-contain grayscale opacity-70 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
                   draggable={false}
                   loading="lazy"
                 />
@@ -159,15 +159,15 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-2xl translate-x-1/2"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 text-orange-600" />
+            <ChevronRight className="w-8 h-8 sm:w-9 sm:h-9 text-orange-600" />
           </button>
 
           {/* Gradientes de fade en los bordes */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-16 bg-gradient-to-r from-white to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-16 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-20 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-20 bg-gradient-to-l from-white to-transparent pointer-events-none" />
         </div>
       </div>
 
