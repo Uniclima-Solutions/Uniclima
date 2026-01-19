@@ -9,9 +9,9 @@ import {
   CheckCircle,
   Loader2,
   ChevronDown,
+  ChevronRight,
   Recycle,
   Wind,
-  FileText,
   Thermometer,
   Shield,
   RotateCcw,
@@ -19,8 +19,12 @@ import {
   Award,
   Upload,
   X,
-  ImageIcon,
-  Film
+  Film,
+  Package,
+  Snowflake,
+  Flame,
+  Clock,
+  BadgeCheck
 } from "lucide-react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -29,7 +33,7 @@ interface FormData {
   nombre: string
   email: string
   telefono: string
-  asunto: string
+  tipoConsulta: string
   mensaje: string
   acepta: boolean
 }
@@ -41,55 +45,74 @@ interface UploadedFile {
   type: 'image' | 'video'
 }
 
-const faqs = [
+// FAQs organizadas por categorías según el mockup
+const faqCategories = [
   {
-    id: 1,
-    icon: Recycle,
-    question: '¿Por qué elegir repuestos reacondicionados?',
-    answer: 'Los repuestos reacondicionados representan una alternativa económica y sostenible sin comprometer la calidad. Cada componente es sometido a rigurosos controles de calidad y pruebas de funcionamiento. Ofrecemos 1 año de garantía cuando la instalación es realizada por nuestros técnicos.'
+    id: 'repuestos',
+    title: 'Repuestos',
+    icon: Package,
+    color: 'orange',
+    questions: [
+      {
+        id: 'r1',
+        question: '¿Por qué elegir repuestos reacondicionados?',
+        answer: 'Los repuestos reacondicionados ofrecen una alternativa económica y sostenible con plenas garantías de funcionamiento. Cada componente pasa por un exhaustivo proceso de verificación y pruebas técnicas antes de su venta. Ofrecemos hasta 1 año de garantía en repuestos reacondicionados, siempre que la instalación sea realizada por nuestro equipo técnico autorizado, lo que asegura un montaje correcto y preserva la integridad del producto.'
+      },
+      {
+        id: 'r2',
+        question: '¿Qué incluye la garantía?',
+        answer: 'Nuestra garantía cubre defectos de funcionamiento o reparación durante 1 año en repuestos reacondicionados, conforme a la normativa vigente. Esta garantía es válida exclusivamente cuando la instalación ha sido efectuada por nuestros técnicos autorizados. Quedan expresamente excluidos de cobertura: daños derivados de uso inadecuado, instalación realizada por terceros no autorizados, falta de mantenimiento preventivo, sobretensiones eléctricas, manipulación incorrecta o factores externos. La garantía se aplica únicamente al componente específico suministrado, no al sistema completo del equipo.'
+      },
+      {
+        id: 'r3',
+        question: '¿Puedo devolver un repuesto electrónico?',
+        answer: 'Los componentes electrónicos (placas base, módulos de control, inversores, sensores electrónicos, etc.) NO admiten devolución una vez entregados, conforme al artículo 103.i) del Real Decreto Legislativo 1/2007 que excluye del derecho de desistimiento los productos que puedan verse afectados por su manipulación. Los componentes electrónicos son extremadamente sensibles a descargas electrostáticas (ESD) y manipulación incorrecta, siendo imposible verificar su estado original tras la entrega. Para repuestos mecánicos no instalados, dispone de 14 días naturales para ejercer el derecho de desistimiento, siempre que el producto permanezca sin usar, sin instalar, en su embalaje original con todos los precintos intactos y documentación completa.'
+      }
+    ]
   },
   {
-    id: 2,
-    icon: Wind,
-    question: '¿Con qué frecuencia debo limpiar los filtros?',
-    answer: 'Recomendamos la limpieza de filtros cada 6 meses como mínimo. Los filtros sucios pueden provocar problemas respiratorios y reducir la eficiencia energética hasta un 15%.'
+    id: 'aire',
+    title: 'Aire acondicionado',
+    icon: Snowflake,
+    color: 'blue',
+    questions: [
+      {
+        id: 'a1',
+        question: '¿Cada cuánto debo limpiar los filtros?',
+        answer: 'Recomendamos la limpieza de filtros cada 4-6 meses como mínimo, o con mayor frecuencia en entornos con alta concentración de polvo o alérgenos. Los filtros obstruidos acumulan polvo, ácaros, bacterias y otros microorganismos que se dispersan por el aire interior, pudiendo provocar problemas respiratorios, alergias e infecciones. Esta situación es especialmente crítica en hogares con niños pequeños, personas mayores o individuos con patologías respiratorias. Además, unos filtros limpios mejoran la eficiencia energética del equipo hasta un 15% y prolongan significativamente su vida útil.'
+      },
+      {
+        id: 'a2',
+        question: '¿Qué mantenimiento necesita?',
+        answer: 'Los equipos de aire acondicionado requieren un mantenimiento preventivo anual que incluye: limpieza profunda de filtros y unidades interior/exterior, verificación de niveles de refrigerante, comprobación del correcto funcionamiento del compresor, revisión de conexiones eléctricas, limpieza del sistema de drenaje y calibración del termostato. Un mantenimiento adecuado previene averías costosas, asegura un rendimiento óptimo con menor consumo energético y garantiza la calidad del aire interior. La falta de mantenimiento puede reducir la vida útil del equipo hasta un 40%.'
+      }
+    ]
   },
   {
-    id: 3,
-    icon: FileText,
-    question: '¿Cómo funcionan los presupuestos?',
-    answer: 'Los presupuestos son gratuitos y sin compromiso, con validez de 30 días. Para detección de averías aplicamos 60€ que se descuentan si acepta la reparación.'
-  },
-  {
-    id: 4,
-    icon: Thermometer,
-    question: '¿Qué ventajas tiene la aerotermia?',
-    answer: 'La aerotermia extrae hasta el 75% de la energía del aire exterior, logrando ahorros de hasta 70% comparado con sistemas convencionales. Proporciona calefacción, refrigeración y ACS.'
-  },
-  {
-    id: 5,
-    icon: Shield,
-    question: '¿Qué incluye la garantía de repuestos?',
-    answer: 'Garantizamos 1 año en repuestos reacondicionados cuando la instalación es realizada por nuestros técnicos. Cubre defectos de funcionamiento según normativa vigente.'
-  },
-  {
-    id: 6,
-    icon: RotateCcw,
-    question: '¿Puedo devolver un repuesto electrónico?',
-    answer: 'Los componentes electrónicos no admiten devolución por su naturaleza técnica. Para repuestos mecánicos, dispone de 14 días si está sin usar y en embalaje original.'
-  },
-  {
-    id: 7,
-    icon: Wrench,
-    question: '¿Qué mantenimiento necesita mi caldera?',
-    answer: 'Las calderas requieren revisión anual obligatoria según el RITE. Incluye limpieza del quemador, verificación de combustión, comprobación de presión y seguridades.'
-  },
-  {
-    id: 8,
-    icon: Award,
-    question: '¿Ofrecen garantía en las reparaciones?',
-    answer: 'Sí, ofrecemos 6 meses de garantía en mano de obra y 1 año en repuestos instalados por nuestros técnicos certificados.'
+    id: 'calderas',
+    title: 'Calderas y aerotermia',
+    icon: Flame,
+    color: 'violet',
+    questions: [
+      {
+        id: 'c1',
+        question: '¿Qué ventajas tiene la aerotermia?',
+        answer: 'La aerotermia es una tecnología renovable de alta eficiencia que extrae hasta el 75% de la energía necesaria del aire exterior, consumiendo únicamente un 25% de electricidad. Esto se traduce en ahorros energéticos de hasta el 70% comparado con sistemas convencionales de gas o gasóleo. Una única instalación proporciona calefacción, refrigeración y agua caliente sanitaria, reduciendo significativamente las emisiones de CO₂ y contribuyendo a la sostenibilidad medioambiental. Es compatible con suelo radiante, radiadores de baja temperatura y fancoils.'
+      },
+      {
+        id: 'c2',
+        question: '¿Qué garantía ofrecen en las reparaciones?',
+        answer: 'Ofrecemos 6 meses de garantía en mano de obra para todas las reparaciones y 1 año de garantía en los repuestos instalados por nuestros técnicos certificados. La garantía cubre exclusivamente el elemento reparado o sustituido, sin extenderse al resto de componentes del equipo. Quedan excluidos de garantía los daños ocasionados por: uso inadecuado del equipo, instalaciones eléctricas deficientes, falta de mantenimiento preventivo, sobretensiones, inundaciones u otros factores externos no imputables a nuestra intervención. Todos los trabajos se realizan conforme a la normativa técnica vigente y el RITE.'
+      }
+    ]
   }
+]
+
+// Badges informativos
+const infoBadges = [
+  { icon: Shield, text: 'Hasta 1 año de garantía', color: 'violet' },
+  { icon: Clock, text: 'Envíos rápidos 48/72h', color: 'orange' },
+  { icon: BadgeCheck, text: 'Repuestos reacondicionados certificados', color: 'violet' }
 ]
 
 export default function Contacto() {
@@ -97,13 +120,14 @@ export default function Contacto() {
     nombre: "",
     email: "",
     telefono: "",
-    asunto: "consulta",
+    tipoConsulta: "repuesto",
     mensaje: "",
     acepta: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [expandedCategory, setExpandedCategory] = useState<string | null>('repuestos')
+  const [expandedQuestion, setExpandedQuestion] = useState<string | null>(null)
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -128,8 +152,14 @@ export default function Contacto() {
     setSubmitted(true)
   }
 
-  const toggleFaq = (id: number) => {
-    setOpenFaq(openFaq === id ? null : id)
+  const toggleCategory = (categoryId: string) => {
+    setExpandedCategory(expandedCategory === categoryId ? null : categoryId)
+    setExpandedQuestion(null)
+  }
+
+  const toggleQuestion = (questionId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setExpandedQuestion(expandedQuestion === questionId ? null : questionId)
   }
 
   const processFiles = useCallback((files: FileList | File[]) => {
@@ -180,210 +210,274 @@ export default function Contacto() {
     setUploadedFiles(prev => prev.filter(f => f.id !== id))
   }
 
+  const getCategoryColors = (color: string) => {
+    switch (color) {
+      case 'orange':
+        return {
+          bg: 'bg-orange-500',
+          bgLight: 'bg-orange-50',
+          text: 'text-orange-600',
+          border: 'border-orange-200',
+          hover: 'hover:bg-orange-100'
+        }
+      case 'blue':
+        return {
+          bg: 'bg-sky-500',
+          bgLight: 'bg-sky-50',
+          text: 'text-sky-600',
+          border: 'border-sky-200',
+          hover: 'hover:bg-sky-100'
+        }
+      case 'violet':
+        return {
+          bg: 'bg-violet-500',
+          bgLight: 'bg-violet-50',
+          text: 'text-violet-600',
+          border: 'border-violet-200',
+          hover: 'hover:bg-violet-100'
+        }
+      default:
+        return {
+          bg: 'bg-gray-500',
+          bgLight: 'bg-gray-50',
+          text: 'text-gray-600',
+          border: 'border-gray-200',
+          hover: 'hover:bg-gray-100'
+        }
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
       
       <main>
-        {/* Hero Simple */}
-        <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
-                Contacta con nosotros
-              </h1>
-              <p className="text-lg text-orange-100 max-w-2xl mx-auto">
-                Estamos aquí para ayudarte con cualquier consulta sobre climatización y repuestos.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Main Content */}
-        <section className="py-12 md:py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+        {/* Main Content Section con fondo degradado */}
+        <section className="relative py-12 md:py-16 overflow-hidden">
+          {/* Fondo degradado estilo mockup */}
+          <div className="absolute inset-0 bg-gradient-to-br from-slate-100 via-violet-50/50 to-blue-50/50" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-violet-100/40 via-transparent to-transparent" />
+          
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
               
-              {/* FAQs */}
-              <div className="order-2 lg:order-1">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Preguntas Frecuentes
-                </h2>
+              {/* Columna izquierda - FAQs por categorías */}
+              <div>
+                <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-8">
+                  Preguntas frecuentes
+                </p>
 
+                {/* Categorías de FAQs */}
                 <div className="space-y-4">
-                  {faqs.map((faq, index) => {
-                    const IconComponent = faq.icon
-                    const isOpen = openFaq === faq.id
-                    const isViolet = index % 2 === 0
+                  {faqCategories.map((category) => {
+                    const IconComponent = category.icon
+                    const colors = getCategoryColors(category.color)
+                    const isExpanded = expandedCategory === category.id
                     
                     return (
                       <div 
-                        key={faq.id}
-                        className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-100"
+                        key={category.id}
+                        className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
                       >
+                        {/* Header de categoría */}
                         <button
-                          onClick={() => toggleFaq(faq.id)}
-                          className="w-full flex items-center gap-4 p-4 md:p-5 text-left hover:bg-gray-50 transition-colors"
+                          onClick={() => toggleCategory(category.id)}
+                          className="w-full flex items-center gap-4 p-4 md:p-5 text-left hover:bg-gray-50/50 transition-colors"
                         >
-                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                            isViolet 
-                              ? 'bg-violet-500' 
-                              : 'bg-orange-500'
-                          }`}>
+                          <div className={`w-11 h-11 ${colors.bg} rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm`}>
                             <IconComponent className="w-5 h-5 text-white" />
                           </div>
                           
-                          <span className="flex-1 font-medium text-gray-900 text-sm md:text-base leading-tight">
-                            {faq.question}
-                          </span>
+                          <div className="flex-1 min-w-0">
+                            <span className="font-semibold text-gray-900 text-base md:text-lg">
+                              {category.title}
+                            </span>
+                          </div>
                           
                           <ChevronDown className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${
-                            isOpen ? 'rotate-180' : ''
+                            isExpanded ? 'rotate-180' : ''
                           }`} />
                         </button>
-                        
-                        <div className={`grid transition-all duration-300 ease-in-out ${
-                          isOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+
+                        {/* Preguntas de la categoría */}
+                        <div className={`transition-all duration-300 ease-in-out ${
+                          isExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
                         }`}>
-                          <div className="overflow-hidden">
-                            <div className="px-4 md:px-5 pb-4 md:pb-5 pt-0 ml-14">
-                              <p className="text-gray-600 text-sm leading-relaxed">
-                                {faq.answer}
-                              </p>
-                            </div>
+                          <div className="px-4 md:px-5 pb-4 md:pb-5 space-y-2">
+                            {category.questions.map((q) => {
+                              const isQuestionExpanded = expandedQuestion === q.id
+                              
+                              return (
+                                <div 
+                                  key={q.id}
+                                  className={`rounded-xl border ${colors.border} overflow-hidden transition-all ${
+                                    isQuestionExpanded ? colors.bgLight : 'bg-white'
+                                  }`}
+                                >
+                                  <button
+                                    onClick={(e) => toggleQuestion(q.id, e)}
+                                    className={`w-full flex items-start gap-3 p-3 md:p-4 text-left ${colors.hover} transition-colors`}
+                                  >
+                                    <ChevronRight className={`w-4 h-4 ${colors.text} flex-shrink-0 mt-0.5 transition-transform duration-200 ${
+                                      isQuestionExpanded ? 'rotate-90' : ''
+                                    }`} />
+                                    <span className="text-sm md:text-base text-gray-700 leading-snug">
+                                      ¿{q.question}
+                                    </span>
+                                  </button>
+                                  
+                                  <div className={`transition-all duration-300 ease-in-out ${
+                                    isQuestionExpanded ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+                                  }`}>
+                                    <div className="px-4 md:px-5 pb-4 md:pb-5 pl-10 md:pl-11">
+                                      <p className="text-sm text-gray-600 leading-relaxed">
+                                        {q.answer}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
                           </div>
                         </div>
                       </div>
                     )
                   })}
                 </div>
+
+                {/* Badges informativos */}
+                <div className="mt-8 space-y-3">
+                  {infoBadges.map((badge, index) => {
+                    const IconComponent = badge.icon
+                    const isViolet = badge.color === 'violet'
+                    
+                    return (
+                      <div 
+                        key={index}
+                        className="flex items-center gap-3 text-gray-700"
+                      >
+                        <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                          isViolet ? 'bg-violet-100' : 'bg-orange-100'
+                        }`}>
+                          <IconComponent className={`w-3.5 h-3.5 ${
+                            isViolet ? 'text-violet-600' : 'text-orange-600'
+                          }`} />
+                        </div>
+                        <span className="text-sm font-medium">{badge.text}</span>
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
 
-              {/* Formulario */}
-              <div className="order-1 lg:order-2">
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              {/* Columna derecha - Formulario */}
+              <div className="lg:sticky lg:top-8">
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
                   {submitted ? (
                     <div className="text-center py-8">
                       <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <CheckCircle className="w-8 h-8 text-green-600" />
                       </div>
-                      <h2 className="text-xl font-bold text-gray-900 mb-2">¡Mensaje enviado!</h2>
-                      <p className="text-gray-600 mb-6">Te responderemos lo antes posible.</p>
+                      <p className="text-xl font-bold text-gray-900 mb-2">¡Mensaje enviado!</p>
+                      <p className="text-gray-600 mb-6">Te responderemos en menos de 24h laborables.</p>
                       <button
                         onClick={() => {
                           setSubmitted(false)
-                          setFormData({ nombre: "", email: "", telefono: "", asunto: "consulta", mensaje: "", acepta: false })
+                          setFormData({ nombre: "", email: "", telefono: "", tipoConsulta: "repuesto", mensaje: "", acepta: false })
                           setUploadedFiles([])
                         }}
                         className="text-orange-600 hover:text-orange-700 font-medium"
                       >
-                        Enviar otro mensaje →
+                        Enviar otro mensaje
                       </button>
                     </div>
                   ) : (
                     <>
-                      <h2 className="text-xl font-bold text-gray-900 mb-6">Envíanos un mensaje</h2>
+                      {/* Header del formulario */}
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center">
+                          <Mail className="w-5 h-5 text-white" />
+                        </div>
+                        <div>
+                          <p className="font-bold text-gray-900 text-lg">Escríbenos y te respondemos lo antes posible</p>
+                          <p className="text-sm text-gray-500">Normalmente respondemos en menos de 24h laborables.</p>
+                        </div>
+                      </div>
 
-                      <form onSubmit={handleSubmit} className="space-y-5">
+                      <form onSubmit={handleSubmit} className="space-y-4">
                         {/* Nombre */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Nombre completo <span className="text-orange-500">*</span>
-                          </label>
                           <input
                             type="text"
                             name="nombre"
                             value={formData.nombre}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
-                            placeholder="Tu nombre"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="Nombre:"
                           />
                         </div>
 
                         {/* Email */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Email <span className="text-orange-500">*</span>
-                          </label>
                           <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
-                            placeholder="tu@email.com"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="Email:"
                           />
                         </div>
 
                         {/* Teléfono */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Teléfono
-                          </label>
                           <input
                             type="tel"
                             name="telefono"
                             value={formData.telefono}
                             onChange={handleChange}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
-                            placeholder="612 345 678"
+                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400"
+                            placeholder="Teléfono (opcional, para una respuesta más rápida):"
                           />
                         </div>
 
-                        {/* Motivo - Desplegable mejorado */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Motivo de contacto <span className="text-orange-500">*</span>
-                          </label>
+                        {/* Tipo de consulta - Dropdowns */}
+                        <div className="grid grid-cols-2 gap-3">
                           <div className="relative">
                             <select
-                              name="asunto"
-                              value={formData.asunto}
+                              name="tipoConsulta"
+                              value={formData.tipoConsulta}
                               onChange={handleChange}
-                              required
-                              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 appearance-none cursor-pointer pr-10"
+                              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-700 appearance-none cursor-pointer pr-10 text-sm"
                             >
-                              <option value="consulta">Consulta sobre productos</option>
-                              <option value="presupuesto">Solicitar presupuesto</option>
-                              <option value="tecnico">Soporte técnico / Avería</option>
-                              <option value="pedido">Información sobre pedido</option>
-                              <option value="devolucion">Devolución</option>
-                              <option value="otro">Otro motivo</option>
+                              <option value="repuesto">Repuesto / compatibilidad</option>
+                              <option value="reparacion">Reparación</option>
+                              <option value="pedido">Pedido / envío</option>
+                              <option value="zonaPro">Zona PRO</option>
+                              <option value="otro">Otro</option>
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                           </div>
-                        </div>
-
-                        {/* Mensaje */}
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Mensaje <span className="text-orange-500">*</span>
-                          </label>
-                          <textarea
-                            name="mensaje"
-                            value={formData.mensaje}
-                            onChange={handleChange}
-                            required
-                            rows={4}
-                            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-900 placeholder-gray-400 resize-none"
-                            placeholder="Describe tu consulta..."
-                          />
+                          <div className="relative">
+                            <select
+                              className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-gray-700 appearance-none cursor-pointer pr-10 text-sm"
+                            >
+                              <option value="">Otro</option>
+                            </select>
+                            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                          </div>
                         </div>
 
                         {/* File Upload */}
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                            Adjuntar archivos <span className="text-gray-400 font-normal">(máx. 5)</span>
-                          </label>
-                          
                           <div
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             onClick={() => fileInputRef.current?.click()}
-                            className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
+                            className={`relative border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all ${
                               isDragging 
                                 ? 'border-orange-500 bg-orange-50' 
                                 : 'border-gray-200 hover:border-orange-300 hover:bg-gray-50'
@@ -398,31 +492,31 @@ export default function Contacto() {
                               className="hidden"
                             />
                             
-                            <Upload className={`w-8 h-8 mx-auto mb-2 ${isDragging ? 'text-orange-500' : 'text-gray-400'}`} />
+                            <Upload className={`w-7 h-7 mx-auto mb-2 ${isDragging ? 'text-orange-500' : 'text-gray-400'}`} />
                             <p className="text-sm text-gray-600">
-                              <span className="font-medium text-orange-600">Seleccionar archivos</span> o arrastrar aquí
+                              Adjunta tu archivos y peticiones para <span className="font-medium text-orange-600">busqueda reparemos</span>
                             </p>
-                            <p className="text-xs text-gray-400 mt-1">PNG, JPG, MP4</p>
+                            <p className="text-xs text-gray-400 mt-1">.jpg, .png, .JPG, PNG, MP4</p>
                           </div>
 
                           {/* Preview de archivos */}
                           {uploadedFiles.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-2">
                               {uploadedFiles.map((file) => (
-                                <div key={file.id} className="relative group w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+                                <div key={file.id} className="relative group w-14 h-14 rounded-lg overflow-hidden bg-gray-100">
                                   {file.type === 'image' ? (
                                     <img src={file.preview} alt="" className="w-full h-full object-cover" />
                                   ) : (
                                     <div className="w-full h-full flex items-center justify-center bg-slate-700">
-                                      <Film className="w-5 h-5 text-white" />
+                                      <Film className="w-4 h-4 text-white" />
                                     </div>
                                   )}
                                   <button
                                     type="button"
                                     onClick={(e) => { e.stopPropagation(); removeFile(file.id); }}
-                                    className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    className="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                                   >
-                                    <X className="w-3 h-3 text-white" />
+                                    <X className="w-2.5 h-2.5 text-white" />
                                   </button>
                                 </div>
                               ))}
@@ -441,7 +535,7 @@ export default function Contacto() {
                             className="mt-0.5 w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500 cursor-pointer"
                           />
                           <label htmlFor="acepta" className="text-sm text-gray-600 cursor-pointer">
-                            Acepto la{" "}
+                            Al enviar aceptas la{" "}
                             <Link href="/privacidad" className="text-orange-600 hover:underline">
                               política de privacidad
                             </Link>
@@ -452,7 +546,7 @@ export default function Contacto() {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3.5 px-6 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3.5 px-6 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 shadow-lg shadow-orange-500/25"
                         >
                           {isSubmitting ? (
                             <>
@@ -473,7 +567,7 @@ export default function Contacto() {
 
                 {/* Info de contacto compacta */}
                 <div className="mt-6 flex flex-col sm:flex-row gap-4">
-                  <a href="tel:+34912345678" className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-orange-200 transition-colors flex-1">
+                  <a href="tel:+34912345678" className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-orange-200 hover:shadow-md transition-all flex-1">
                     <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Phone className="w-5 h-5 text-white" />
                     </div>
@@ -483,7 +577,7 @@ export default function Contacto() {
                     </div>
                   </a>
                   
-                  <a href="mailto:info@uniclima.es" className="flex items-center gap-3 bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:border-violet-200 transition-colors flex-1">
+                  <a href="mailto:info@uniclima.es" className="flex items-center gap-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-violet-200 hover:shadow-md transition-all flex-1">
                     <div className="w-10 h-10 bg-violet-500 rounded-lg flex items-center justify-center flex-shrink-0">
                       <Mail className="w-5 h-5 text-white" />
                     </div>
