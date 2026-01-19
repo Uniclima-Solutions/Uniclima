@@ -148,7 +148,7 @@ export default function BrandScroller() {
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain grayscale opacity-40 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
+                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain opacity-100 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
                   draggable={false}
                   loading="lazy"
                 />
