@@ -638,19 +638,19 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
     <div className={`relative flex flex-col bg-white rounded-2xl shadow-lg border ${
       isHighlighted ? `${getBorderColor()} ring-2 ring-offset-2` : 'border-gray-100'
     }`}>
-      {/* Badge Recomendado - Estrella más visible y texto más legible */}
+      {/* Badge Popular - Estrella más visible y texto más legible */}
       {isHighlighted && (
         <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
           <div className={`${getBadgeColor()} text-white text-xs font-bold px-5 py-2 rounded-full shadow-xl whitespace-nowrap flex items-center gap-1.5`}>
             <Star className="w-4 h-4 fill-yellow-300 text-yellow-300" />
-            <span className="tracking-wide">RECOMENDADO</span>
+            <span className="tracking-wide">POPULAR</span>
           </div>
         </div>
       )}
       
-      {/* Header con degradado - Nombre, descripción y precio - Texto blanco puro más legible */}
-      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-5 py-4 rounded-t-2xl ${isHighlighted ? 'pt-6' : ''}`}>
-        <div className="flex items-center gap-2 mb-1">
+      {/* Header con degradado - Nombre, descripción y precio - Textos centrados */}
+      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-5 py-4 rounded-t-2xl text-center ${isHighlighted ? 'pt-6' : ''}`}>
+        <div className="flex items-center justify-center gap-2 mb-1">
           <PlanIcon icono={plan.icono} className="w-5 h-5 text-white" />
           <h3 className="text-lg font-bold text-white drop-shadow-sm">{plan.nombre}</h3>
         </div>

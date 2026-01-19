@@ -682,7 +682,7 @@ function ContratoMantenimientoContent() {
         </div>
       )}
       
-      <main className="flex-1 py-8">
+      <main className="flex-1 py-4">
         <div className="max-w-6xl mx-auto px-4">
           
           {/* Paso Completado */}
@@ -786,7 +786,7 @@ function ContratoMantenimientoContent() {
                         <p className="font-semibold text-gray-900">{plan}</p>
                         {plan === 'Confort' && (
                           <span className="text-[10px] bg-yellow-400 text-gray-900 px-2 py-0.5 rounded-full">
-                            RECOMENDADO
+                            POPULAR
                           </span>
                         )}
                       </button>
