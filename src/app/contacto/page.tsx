@@ -322,7 +322,7 @@ export default function Contacto() {
                                       isQuestionExpanded ? 'rotate-90' : ''
                                     }`} />
                                     <span className="text-sm md:text-base text-gray-700 leading-snug">
-                                      ¿{q.question}
+                                      {q.question}
                                     </span>
                                   </button>
                                   
