@@ -318,9 +318,14 @@ function ContratoMantenimientoContent() {
     // Marcar que se ha seleccionado para evitar que el useEffect vuelva a buscar
     setDireccionSeleccionada(true);
     
-    // Cerrar dropdown inmediatamente
+    // Cerrar dropdown inmediatamente y limpiar sugerencias
     setDireccionOpen(false);
     setDireccionesSugeridas([]);
+    
+    // Quitar el foco del input para evitar que se reabra el dropdown
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     
     // Actualizar con los datos básicos
     setFormData(prev => ({
@@ -800,6 +805,10 @@ function ContratoMantenimientoContent() {
                           value={formData.direccion}
                           onChange={(e) => updateField('direccion', e.target.value)}
                           onFocus={() => direccionesSugeridas.length > 0 && setDireccionOpen(true)}
+                          onBlur={() => {
+                            // Cerrar dropdown con delay para permitir click en opciones
+                            setTimeout(() => setDireccionOpen(false), 200);
+                          }}
                           placeholder="Ej: Calle Gran Vía 25, Calle Grafito 12..."
                           className={cn(
                             "flex h-10 w-full rounded-lg border bg-white px-3 py-2 text-sm shadow-sm transition-all",
@@ -822,6 +831,10 @@ function ContratoMantenimientoContent() {
                               <button
                                 key={dir.id}
                                 type="button"
+                                onMouseDown={(e) => {
+                                  // Prevenir blur antes de ejecutar el click
+                                  e.preventDefault();
+                                }}
                                 onClick={() => handleDireccionSelect(dir)}
                                 className="w-full flex items-start gap-3 px-4 py-3 text-left hover:bg-orange-50 transition-colors border-b border-gray-50 last:border-0"
                               >
