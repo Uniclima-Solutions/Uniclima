@@ -184,13 +184,13 @@ export default function BrandSlider({
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-32 sm:w-40 lg:w-44 flex items-center justify-center p-4 sm:p-5 bg-white rounded-2xl border border-gray-100 shadow-sm hover:border-orange-300 hover:shadow-lg transition-all duration-300 group/brand"
+                className="flex-shrink-0 w-32 sm:w-40 lg:w-44 flex items-center justify-center p-4 sm:p-5 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-orange-400 hover:shadow-xl hover:bg-orange-50/50 transition-all duration-300 cursor-pointer group/brand"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain grayscale opacity-50 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 transition-all duration-300"
+                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain grayscale opacity-40 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
                   draggable={false}
                   loading="lazy"
                 />
