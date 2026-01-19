@@ -100,8 +100,8 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-white">
-      <div className="w-full max-w-7xl mx-auto px-4">
+    <section className="py-6 bg-white">
+      <div className="w-full px-2">
         <div 
           className="relative"
           onMouseEnter={handleMouseEnter}
@@ -110,23 +110,23 @@ export default function BrandScroller() {
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
             aria-label="Anterior"
           >
             <ChevronLeft className="w-5 h-5 text-white" />
           </button>
 
-          {/* Contenedor de logos */}
+          {/* Contenedor de logos - gap reducido, márgenes mínimos */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-4 overflow-x-auto mx-12 py-4"
+            className="flex items-center gap-3 overflow-x-auto mx-10 py-3"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="group flex-shrink-0 w-36 h-24 sm:w-44 sm:h-28 lg:w-52 lg:h-32 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 flex items-center justify-center p-3 transition-all duration-300"
+                className="group flex-shrink-0 w-32 h-20 sm:w-40 sm:h-24 lg:w-44 lg:h-28 bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 flex items-center justify-center p-2 transition-all duration-300"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
@@ -143,7 +143,7 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
             aria-label="Siguiente"
           >
             <ChevronRight className="w-5 h-5 text-white" />
