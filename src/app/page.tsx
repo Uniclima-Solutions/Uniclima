@@ -474,17 +474,24 @@ function CategoryCarousel({
 const planesCaldera = [
   {
     id: 1,
-    nombre: "Básico",
+    nombre: "Esencial",
     precio: 90,
     periodo: "año",
     destacado: false,
     color: "emerald",
     icono: "shield",
-    descripcion: "La base para mantener tu caldera en buen estado",
+    descripcion: "Mantenimiento preventivo anual",
     caracteristicas: [
-      "Prevención de averías básicas durante todo el año",
-      "Verificación completa de seguridad para tu tranquilidad",
-      "Ideal para viviendas con uso moderado de calefacción",
+      "1 intervención preventiva (oct-nov)",
+      "Revisión completa de seguridad",
+      "Control de presión y estanqueidad",
+      "Limpieza de quemador",
+      "Certificado de mantenimiento",
+    ],
+    ventajas: [
+      "Cumple normativa vigente",
+      "Previene averías en invierno",
+      "Optimiza el consumo de gas",
     ],
   },
   {
@@ -495,11 +502,18 @@ const planesCaldera = [
     destacado: true,
     color: "orange",
     icono: "star",
-    descripcion: "El equilibrio perfecto entre precio y servicio",
+    descripcion: "Preventivo + reparaciones prioritarias",
     caracteristicas: [
-      "Análisis de combustión para máxima eficiencia energética",
-      "Descuento del 5% en mano de obra y repuestos",
-      "Perfecto para hogares con uso regular de calefacción",
+      "1 intervención preventiva (oct-nov)",
+      "Reparaciones en 48-72 horas",
+      "10% dto. en repuestos",
+      "Atención telefónica prioritaria",
+      "Sin costes de desplazamiento",
+    ],
+    ventajas: [
+      "Respuesta rápida ante averías",
+      "Ahorro en repuestos originales",
+      "Tranquilidad todo el año",
     ],
   },
   {
@@ -510,11 +524,18 @@ const planesCaldera = [
     destacado: false,
     color: "violet",
     icono: "crown",
-    descripcion: "La máxima tranquilidad para tu hogar",
+    descripcion: "Cobertura completa + verano",
     caracteristicas: [
-      "Atención preferente en 24-72h laborables",
-      "Descuento del 10% en mano de obra y repuestos",
-      "Ideal para viviendas con alto uso de calefacción",
+      "2 intervenciones anuales",
+      "Reparaciones en 48-72 horas",
+      "15% dto. en repuestos",
+      "Mano de obra incluida",
+      "Atención telefónica prioritaria",
+    ],
+    ventajas: [
+      "Doble revisión = doble seguridad",
+      "Respuesta urgente garantizada",
+      "El mejor precio en reparaciones",
     ],
   }
 ];
@@ -523,17 +544,24 @@ const planesCaldera = [
 const planesAire = [
   {
     id: 1,
-    nombre: "Básico",
+    nombre: "Esencial",
     precio: 70,
     periodo: "año",
     destacado: false,
     color: "sky",
     icono: "shield",
-    descripcion: "La base para mantener tu aire acondicionado en forma",
+    descripcion: "Mantenimiento preventivo anual",
     caracteristicas: [
-      "Revisión preventiva anual para evitar averías",
-      "Limpieza de filtros para mejor calidad del aire",
-      "Ideal para equipos con uso ocasional en verano",
+      "1 intervención preventiva (mar-abr)",
+      "Limpieza completa de filtros",
+      "Revisión gas refrigerante",
+      "Comprobación eléctrica",
+      "Certificado de mantenimiento",
+    ],
+    ventajas: [
+      "Equipo listo para el verano",
+      "Mejora la calidad del aire",
+      "Reduce el consumo eléctrico",
     ],
   },
   {
@@ -544,11 +572,18 @@ const planesAire = [
     destacado: true,
     color: "blue",
     icono: "star",
-    descripcion: "El equilibrio perfecto para tu climatización",
+    descripcion: "Preventivo + reparaciones prioritarias",
     caracteristicas: [
-      "Comprobación del gas refrigerante incluida",
-      "Descuento del 5% en repuestos y mano de obra",
-      "Perfecto para equipos con uso regular en verano",
+      "1 intervención preventiva (mar-abr)",
+      "Reparaciones en 48-72 horas",
+      "Limpieza unidad exterior",
+      "10% dto. en repuestos",
+      "Sin costes de desplazamiento",
+    ],
+    ventajas: [
+      "Respuesta rápida en verano",
+      "Ahorro en repuestos originales",
+      "Tranquilidad todo el año",
     ],
   },
   {
@@ -559,11 +594,18 @@ const planesAire = [
     destacado: false,
     color: "indigo",
     icono: "crown",
-    descripcion: "La máxima protección para tu equipo",
+    descripcion: "Cobertura completa + invierno",
     caracteristicas: [
-      "Dos revisiones anuales para máxima tranquilidad",
-      "Descuento del 10% en repuestos y mano de obra",
-      "Ideal para equipos con uso intensivo todo el año",
+      "2 intervenciones anuales",
+      "Reparaciones en 24-72 horas",
+      "15% dto. en repuestos",
+      "Recarga gas incluida",
+      "Atención telefónica prioritaria",
+    ],
+    ventajas: [
+      "Doble revisión = doble seguridad",
+      "Respuesta urgente garantizada",
+      "El mejor precio en reparaciones",
     ],
   }
 ];
@@ -600,7 +642,7 @@ const PlanIcon = ({ icono, className }: { icono: string; className?: string }) =
   }
 };
 
-// Componente de tarjeta de precio - Diseño degradado completo estilo corporativo
+// Componente de tarjeta de precio - Diseño fondo blanco con header degradado
 function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipoEquipo: 'calderas' | 'aire' }) {
   // Mapear tipo de equipo a valor del formulario
   const tipoAparatoParam = tipoEquipo === 'calderas' ? 'Caldera de Gas' : 'Aire A. Split';
@@ -615,58 +657,93 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
     window.location.href = `/contrato-mantenimiento?${urlParams.toString()}`;
   };
   
-  // Gradientes según tipo de equipo - Naranja para calderas, Azul para aire
-  const getGradient = () => {
+  // Gradientes según tipo de equipo - Naranja para calderas, Azul/Violeta para aire
+  const getHeaderGradient = () => {
     if (tipoEquipo === 'calderas') {
-      if (plan.nombre === 'Básico') return 'from-orange-500 via-orange-600 to-red-600';
-      if (plan.nombre === 'Confort') return 'from-orange-600 via-red-500 to-red-600';
-      return 'from-red-500 via-red-600 to-red-700';
+      if (plan.nombre === 'Esencial') return 'from-orange-400 to-orange-500';
+      if (plan.nombre === 'Confort') return 'from-orange-500 to-orange-600';
+      return 'from-orange-600 to-orange-700';
     } else {
-      if (plan.nombre === 'Básico') return 'from-sky-400 via-sky-500 to-blue-500';
-      if (plan.nombre === 'Confort') return 'from-blue-500 via-blue-600 to-blue-700';
-      return 'from-blue-600 via-blue-700 to-indigo-700';
+      if (plan.nombre === 'Esencial') return 'from-blue-500 to-indigo-600';
+      if (plan.nombre === 'Confort') return 'from-indigo-500 to-purple-600';
+      return 'from-purple-600 to-violet-700';
     }
   };
   
+  const getAccentColor = () => {
+    if (tipoEquipo === 'calderas') return 'text-orange-500';
+    return 'text-indigo-600';
+  };
+  
+  const getVentajasColor = () => {
+    if (tipoEquipo === 'calderas') return 'bg-orange-50 border-orange-200';
+    return 'bg-indigo-50 border-indigo-200';
+  };
+  
   return (
-    <div className={`relative rounded-3xl overflow-hidden flex-shrink-0 w-[280px] sm:w-full h-[420px] flex flex-col bg-gradient-to-br ${getGradient()} shadow-xl transition-transform duration-300 hover:scale-[1.02] ${
-      isHighlighted ? 'ring-4 ring-yellow-400 ring-offset-2' : ''
+    <div className={`relative rounded-2xl overflow-hidden flex-shrink-0 w-[300px] sm:w-full bg-white shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl ${
+      isHighlighted ? 'ring-2 ring-orange-400 ring-offset-2' : ''
     }`}>
       {/* Badge Recomendado */}
       {isHighlighted && (
-        <div className="absolute top-4 right-4 z-10">
-          <div className="bg-yellow-400 text-gray-900 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">
+        <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+          <div className="bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
             ★ RECOMENDADO
           </div>
         </div>
       )}
       
-      {/* Contenido principal */}
-      <div className="flex-1 px-6 pt-8 pb-4 text-white flex flex-col">
-        {/* Título y descripción */}
-        <div className="text-center mb-6">
-          <h3 className="text-2xl font-black mb-3 text-yellow-300 drop-shadow-lg">Plan {plan.nombre}</h3>
-          <p className="text-white/90 text-sm leading-relaxed">{plan.descripcion}</p>
+      {/* Header con degradado */}
+      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-6 py-5 text-white ${isHighlighted ? 'pt-8' : ''}`}>
+        <div className="flex items-center gap-3 mb-2">
+          <PlanIcon icono={plan.icono} className="w-6 h-6" />
+          <h3 className="text-xl font-bold">{plan.nombre}</h3>
         </div>
-        
-        {/* Características con estrellas */}
-        <ul className="space-y-4 flex-1">
-          {plan.caracteristicas.slice(0, 3).map((caracteristica, idx) => (
+        <p className="text-white/80 text-sm">{plan.descripcion}</p>
+        <div className="mt-3">
+          <span className="text-3xl font-black">€{plan.precio}</span>
+          <span className="text-white/80 text-sm">/{plan.periodo}</span>
+        </div>
+      </div>
+      
+      {/* Características */}
+      <div className="px-6 py-5">
+        <ul className="space-y-3">
+          {plan.caracteristicas.map((caracteristica, idx) => (
             <li key={idx} className="flex items-start gap-3">
-              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 flex-shrink-0 mt-0.5" />
-              <span className="text-sm text-white/90 leading-snug">{caracteristica}</span>
+              <Check className={`w-5 h-5 ${getAccentColor()} flex-shrink-0 mt-0.5`} />
+              <span className="text-sm text-gray-700">{caracteristica}</span>
             </li>
           ))}
         </ul>
       </div>
       
-      {/* Botón CONTRATAR destacado */}
+      {/* Ventajas incluidas */}
+      {plan.ventajas && plan.ventajas.length > 0 && (
+        <div className={`mx-4 mb-4 p-4 rounded-xl border ${getVentajasColor()}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className={`w-4 h-4 ${getAccentColor()}`} />
+            <span className={`text-xs font-bold uppercase ${getAccentColor()}`}>Ventajas incluidas</span>
+          </div>
+          <ul className="space-y-1.5">
+            {plan.ventajas.map((ventaja, idx) => (
+              <li key={idx} className="flex items-center gap-2">
+                <div className={`w-1.5 h-1.5 rounded-full ${tipoEquipo === 'calderas' ? 'bg-orange-400' : 'bg-indigo-400'}`}></div>
+                <span className="text-xs text-gray-600">{ventaja}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      
+      {/* Botón Ver detalles */}
       <div className="px-6 pb-6">
         <button
           onClick={handleContract}
-          className="w-full bg-white text-gray-900 py-4 rounded-2xl text-base font-black uppercase tracking-wider shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300"
+          className="w-full border border-gray-300 text-gray-600 py-3 rounded-full text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 flex items-center justify-center gap-2"
         >
-          CONTRATAR
+          <ArrowRight className="w-4 h-4" />
+          Click para ver detalles
         </button>
       </div>
     </div>
