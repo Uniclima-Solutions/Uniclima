@@ -474,32 +474,20 @@ function CategoryCarousel({
 const planesCaldera = [
   {
     id: 1,
-    nombre: "Esencial",
+    nombre: "Básico",
     precio: 90,
     periodo: "año",
     destacado: false,
     color: "emerald",
     icono: "shield",
-    descripcion: "Mantenimiento preventivo anual",
+    descripcion: "Mantenimiento esencial",
     caracteristicas: [
-      "1 intervención preventiva (oct-nov)",
-      "Revisión completa de seguridad",
-      "Control de presión y estanqueidad",
-      "Limpieza de quemador",
-      "Certificado de mantenimiento",
+      "Revisión general del equipo",
+      "Ajuste de presión del circuito",
+      "Purgado de bomba y sistema",
+      "Verificación básica de seguridad",
+      "Desplazamiento incluido",
     ],
-    detalles: [
-      "Intervención programada entre octubre y noviembre",
-      "Técnico certificado en calderas de gas",
-      "Informe detallado del estado del equipo",
-      "Recomendaciones de uso y ahorro",
-      "Garantía de servicio 30 días",
-    ],
-    ventajas: [
-      "Cumple normativa vigente",
-      "Previene averías en invierno",
-      "Optimiza el consumo de gas",
-    ]
   },
   {
     id: 2,
@@ -509,26 +497,15 @@ const planesCaldera = [
     destacado: true,
     color: "orange",
     icono: "star",
-    descripcion: "Preventivo + reparaciones prioritarias",
+    descripcion: "Mantenimiento avanzado",
     caracteristicas: [
-      "1 intervención preventiva (oct-nov)",
-      "Reparaciones en 48-72 horas",
-      "10% dto. en repuestos",
-      "Atención telefónica prioritaria",
-      "Sin costes de desplazamiento",
+      "Revisión general del equipo",
+      "Ajuste de presión del circuito",
+      "Purgado de bomba y sistema",
+      "Análisis de combustión básico",
+      "5% dto. mano de obra y repuestos",
+      "Desplazamiento incluido",
     ],
-    detalles: [
-      "Todo lo incluido en el plan Esencial",
-      "Prioridad en la asignación de técnicos",
-      "Diagnóstico telefónico gratuito",
-      "Presupuesto sin compromiso en reparaciones",
-      "Seguimiento post-intervención",
-    ],
-    ventajas: [
-      "Respuesta rápida ante averías",
-      "Ahorro en repuestos originales",
-      "Tranquilidad todo el año",
-    ]
   },
   {
     id: 3,
@@ -538,26 +515,16 @@ const planesCaldera = [
     destacado: false,
     color: "violet",
     icono: "crown",
-    descripcion: "Cobertura completa + verano",
+    descripcion: "Mantenimiento preferente",
     caracteristicas: [
-      "2 intervenciones anuales",
-      "Reparaciones en 48-72 horas",
-      "15% dto. en repuestos",
-      "Mano de obra incluida",
-      "Atención telefónica prioritaria",
+      "Revisión general del equipo",
+      "Ajuste de presión del circuito",
+      "Purgado de bomba y sistema",
+      "Análisis de combustión básico",
+      "Atención preferente 24-72h (laboral)",
+      "10% dto. mano de obra y repuestos",
+      "Desplazamiento incluido",
     ],
-    detalles: [
-      "1ª intervención preventiva (oct-nov)",
-      "2ª intervención de verificación (verano)",
-      "Máxima prioridad en reparaciones urgentes",
-      "Repuestos originales con descuento máximo",
-      "Garantía extendida en reparaciones",
-    ],
-    ventajas: [
-      "Doble revisión = doble seguridad",
-      "Respuesta urgente garantizada",
-      "El mejor precio en reparaciones",
-    ]
   }
 ];
 
@@ -679,10 +646,8 @@ const PlanIcon = ({ icono, className }: { icono: string; className?: string }) =
   }
 };
 
-// Componente de tarjeta de precio - Diseño Premium sin flip
+// Componente de tarjeta de precio - Diseño limpio y directo
 function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipoEquipo: 'calderas' | 'aire' }) {
-  const [showDetails, setShowDetails] = useState(false);
-  
   // Mapear tipo de equipo a valor del formulario
   const tipoAparatoParam = tipoEquipo === 'calderas' ? 'Caldera de Gas' : 'Aire A. Split';
   const urlParams = new URLSearchParams({
@@ -694,114 +659,67 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
   const colors = getColors(tipoEquipo, plan.nombre);
   const isHighlighted = plan.destacado;
   
-  const handleContract = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleContract = () => {
     window.location.href = `/contrato-mantenimiento?${urlParams.toString()}`;
   };
   
   return (
-    <div className={`relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 bg-white flex-shrink-0 w-[280px] sm:w-full ${
+    <div className={`relative rounded-2xl overflow-hidden bg-white flex-shrink-0 w-[280px] sm:w-full transition-shadow duration-300 ${
       isHighlighted 
-        ? 'ring-2 ring-orange-500 ring-offset-2 scale-[1.02]' 
-        : 'border border-gray-200'
+        ? 'ring-2 ring-orange-500 shadow-xl' 
+        : 'border border-gray-200 shadow-md'
     }`}>
       {/* Badge Recomendado */}
       {isHighlighted && (
         <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-[10px] font-bold px-3 py-1 rounded-b-lg shadow-md">
+          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-[10px] font-bold px-4 py-1 rounded-b-lg shadow-md">
             ★ RECOMENDADO
           </div>
         </div>
       )}
       
       {/* Header con gradiente */}
-      <div className={`bg-gradient-to-br ${colors.gradient} px-4 py-4 text-white relative overflow-hidden`}>
-        {/* Patrón decorativo */}
-        <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+      <div className={`bg-gradient-to-br ${colors.gradient} px-5 py-5 text-white relative overflow-hidden`}>
+        {/* Patrón decorativo sutil */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
         
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <PlanIcon icono={plan.icono} className="w-5 h-5" />
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <PlanIcon icono={plan.icono} className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-lg font-bold leading-tight">{plan.nombre}</h3>
-              <p className="text-white/80 text-xs leading-tight">{plan.descripcion}</p>
+              <h3 className="text-xl font-bold leading-tight">{plan.nombre}</h3>
+              <p className="text-white/80 text-sm leading-tight">{plan.descripcion}</p>
             </div>
           </div>
           
           {/* Precio */}
-          <div className="flex items-baseline gap-1 mt-3">
-            <span className="text-3xl font-black">€{plan.precio}</span>
-            <span className="text-white/70 text-sm">/{plan.periodo}</span>
+          <div className="flex items-baseline gap-1">
+            <span className="text-4xl font-black">€{plan.precio}</span>
+            <span className="text-white/70 text-base">/{plan.periodo}</span>
           </div>
         </div>
       </div>
       
       {/* Contenido */}
-      <div className="px-4 py-4 bg-white">
+      <div className="px-5 py-5 bg-white">
         {/* Características principales */}
-        <ul className="space-y-2 mb-4">
+        <ul className="space-y-3 mb-5">
           {plan.caracteristicas.map((caracteristica, idx) => (
-            <li key={idx} className="flex items-start gap-2">
+            <li key={idx} className="flex items-start gap-3">
               <div className={`w-5 h-5 rounded-full ${colors.accent} flex items-center justify-center flex-shrink-0 mt-0.5`}>
                 <Check className={`w-3 h-3 ${colors.text}`} />
               </div>
-              <span className="text-sm text-gray-700 leading-tight">{caracteristica}</span>
+              <span className="text-sm text-gray-700 leading-snug">{caracteristica}</span>
             </li>
           ))}
         </ul>
         
-        {/* Ventajas destacadas */}
-        <div className={`${colors.bgLight} rounded-xl p-3 mb-4 border ${colors.border}`}>
-          <p className={`text-xs font-bold ${colors.text} mb-2 flex items-center gap-1.5 uppercase tracking-wider`}>
-            <Zap className="w-3 h-3" /> Ventajas incluidas
-          </p>
-          <ul className="space-y-1">
-            {plan.ventajas.map((ventaja, idx) => (
-              <li key={idx} className="text-xs text-gray-600 flex items-center gap-2">
-                <span className={`w-1.5 h-1.5 rounded-full ${colors.bg}`}></span>
-                {ventaja}
-              </li>
-            ))}
-          </ul>
-        </div>
-        
-        {/* Botón ver detalles */}
-        <button
-          onClick={() => setShowDetails(!showDetails)}
-          className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium ${colors.bgLight} ${colors.text} hover:opacity-80 transition-all mb-3`}
-        >
-          <Info className="w-3.5 h-3.5" />
-          {showDetails ? 'Ocultar detalles' : 'Ver detalles del servicio'}
-          <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showDetails ? 'rotate-180' : ''}`} />
-        </button>
-        
-        {/* Detalles expandibles */}
-        {showDetails && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
-            <p className={`text-xs font-bold ${colors.text} mb-2 uppercase tracking-wider flex items-center gap-1.5`}>
-              <Info className="w-3 h-3" />
-              Detalles del servicio
-            </p>
-            <ul className="space-y-2">
-              {plan.detalles.map((detalle, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <div className={`w-4 h-4 rounded-md ${colors.accent} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                    <ArrowRight className={`w-2.5 h-2.5 ${colors.text}`} />
-                  </div>
-                  <span className="text-xs text-gray-700 leading-tight">{detalle}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-        
         {/* Botón contratar */}
         <button
           onClick={handleContract}
-          className={`w-full bg-gradient-to-r ${colors.gradient} text-white py-3 rounded-xl text-sm font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2`}
+          className={`w-full bg-gradient-to-r ${colors.gradient} text-white py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center justify-center gap-2`}
         >
           Contratar ahora
           <ArrowRight className="w-4 h-4" />
