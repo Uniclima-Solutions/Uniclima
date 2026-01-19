@@ -93,99 +93,75 @@ const preciosPorPlan = {
   aire: { Esencial: 70, Confort: 95, Premium: 120 }
 };
 
-// Detalles de cada plan por tipo
+// Detalles de cada plan por tipo con características incluidas/no incluidas
 const detallesPlan = {
   caldera: {
     Esencial: {
       descripcion: "Mantenimiento preventivo anual",
+      precio: 90,
       caracteristicas: [
-        "1 intervención preventiva (oct-nov)",
-        "Revisión completa de seguridad",
-        "Control de presión y estanqueidad",
-        "Limpieza de quemador",
-        "Certificado de mantenimiento",
-      ],
-      ventajas: [
-        "Cumple normativa vigente",
-        "Previene averías en invierno",
-        "Optimiza el consumo de gas",
+        { texto: "Revisión elementos internos", incluido: true },
+        { texto: "Control de presión del sistema", incluido: true },
+        { texto: "Verificación sistema seguridad", incluido: true },
+        { texto: "Prueba de combustión", incluido: false },
+        { texto: "Asistencia técnica incluida", incluido: false },
       ],
     },
     Confort: {
       descripcion: "Preventivo + reparaciones prioritarias",
+      precio: 120,
       caracteristicas: [
-        "1 intervención preventiva (oct-nov)",
-        "Reparaciones en 48-72 horas",
-        "10% dto. en repuestos",
-        "Atención telefónica prioritaria",
-        "Sin costes de desplazamiento",
-      ],
-      ventajas: [
-        "Respuesta rápida ante averías",
-        "Ahorro en repuestos originales",
-        "Tranquilidad todo el año",
+        { texto: "Revisión elementos internos", incluido: true },
+        { texto: "Control de presión del sistema", incluido: true },
+        { texto: "Verificación sistema seguridad", incluido: true },
+        { texto: "Prueba de combustión completa", incluido: true },
+        { texto: "Asistencia técnica incluida", incluido: false },
       ],
     },
     Premium: {
       descripcion: "Cobertura completa + verano",
+      precio: 140,
       caracteristicas: [
-        "2 intervenciones anuales",
-        "Reparaciones en 48-72 horas",
-        "15% dto. en repuestos",
-        "Mano de obra incluida",
-        "Atención telefónica prioritaria",
-      ],
-      ventajas: [
-        "Doble revisión = doble seguridad",
-        "Respuesta urgente garantizada",
-        "El mejor precio en reparaciones",
+        { texto: "Revisión elementos internos", incluido: true },
+        { texto: "Control de presión del sistema", incluido: true },
+        { texto: "Verificación sistema seguridad", incluido: true },
+        { texto: "Prueba de combustión completa", incluido: true },
+        { texto: "2 horas asistencia técnica", incluido: true },
       ],
     },
   },
   aire: {
     Esencial: {
       descripcion: "Mantenimiento preventivo anual",
+      precio: 70,
       caracteristicas: [
-        "1 intervención preventiva (mar-abr)",
-        "Limpieza completa de filtros",
-        "Revisión gas refrigerante",
-        "Comprobación eléctrica",
-        "Certificado de mantenimiento",
-      ],
-      ventajas: [
-        "Equipo listo para el verano",
-        "Mejora la calidad del aire",
-        "Reduce el consumo eléctrico",
+        { texto: "Limpieza completa de filtros", incluido: true },
+        { texto: "Revisión gas refrigerante", incluido: true },
+        { texto: "Comprobación eléctrica", incluido: true },
+        { texto: "Limpieza unidad exterior", incluido: false },
+        { texto: "Recarga gas incluida", incluido: false },
       ],
     },
     Confort: {
       descripcion: "Preventivo + reparaciones prioritarias",
+      precio: 95,
       caracteristicas: [
-        "1 intervención preventiva (mar-abr)",
-        "Reparaciones en 48-72 horas",
-        "Limpieza unidad exterior",
-        "10% dto. en repuestos",
-        "Sin costes de desplazamiento",
-      ],
-      ventajas: [
-        "Respuesta rápida en verano",
-        "Ahorro en repuestos originales",
-        "Tranquilidad todo el año",
+        { texto: "Limpieza completa de filtros", incluido: true },
+        { texto: "Revisión gas refrigerante", incluido: true },
+        { texto: "Comprobación eléctrica", incluido: true },
+        { texto: "Limpieza unidad exterior", incluido: true },
+        { texto: "Recarga gas incluida", incluido: false },
       ],
     },
     Premium: {
       descripcion: "Cobertura completa + invierno",
+      precio: 120,
       caracteristicas: [
-        "2 intervenciones anuales",
-        "Reparaciones en 24-72 horas",
-        "15% dto. en repuestos",
-        "Recarga gas incluida",
-        "Atención telefónica prioritaria",
-      ],
-      ventajas: [
-        "Doble revisión = doble seguridad",
-        "Respuesta urgente garantizada",
-        "El mejor precio en reparaciones",
+        { texto: "Limpieza completa de filtros", incluido: true },
+        { texto: "Revisión gas refrigerante", incluido: true },
+        { texto: "Comprobación eléctrica", incluido: true },
+        { texto: "Limpieza unidad exterior", incluido: true },
+        { texto: "Recarga gas incluida", incluido: true },
       ],
     },
   },
@@ -875,38 +851,33 @@ function ContratoMantenimientoContent() {
                         {planSeleccionado === 'Confort' && <Star className="w-5 h-5 text-orange-500" />}
                         {planSeleccionado === 'Premium' && <Crown className="w-5 h-5 text-orange-500" />}
                         <h3 className="font-bold text-gray-900">Plan {planSeleccionado} - {tipoSeleccionado.tipo === 'caldera' ? 'Calderas' : 'Aire Acondicionado'}</h3>
-                        <span className="ml-auto text-lg font-bold text-orange-600">€{precioBase}/{tipoSeleccionado.tipo === 'caldera' ? 'año' : 'año'}</span>
+                        <span className="ml-auto text-lg font-bold text-orange-600">€{precioBase}/año</span>
                       </div>
                       <p className="text-sm text-gray-600 mb-3">
                         {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].descripcion}
                       </p>
                       
-                      <div className="grid sm:grid-cols-2 gap-4">
-                        {/* Características incluidas */}
-                        <div>
-                          <p className="text-xs font-semibold text-orange-600 uppercase mb-2">Características incluidas</p>
-                          <ul className="space-y-1.5">
-                            {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].caracteristicas.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                                <Check className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        {/* Ventajas incluidas */}
-                        <div>
-                          <p className="text-xs font-semibold text-orange-600 uppercase mb-2">Ventajas incluidas</p>
-                          <ul className="space-y-1.5">
-                            {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].ventajas.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
-                                <div className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0 mt-1.5"></div>
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      {/* Características con incluido/no incluido */}
+                      <div>
+                        <p className="text-xs font-semibold text-orange-600 uppercase mb-2">Servicios del plan</p>
+                        <ul className="space-y-2">
+                          {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].caracteristicas.map((item: { texto: string; incluido: boolean }, idx: number) => (
+                            <li key={idx} className="flex items-center gap-2">
+                              {item.incluido ? (
+                                <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
+                                  <Check className="w-3 h-3 text-white" />
+                                </div>
+                              ) : (
+                                <div className="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                                  <X className="w-3 h-3 text-gray-400" />
+                                </div>
+                              )}
+                              <span className={`text-sm ${item.incluido ? 'text-gray-700' : 'text-gray-400'}`}>
+                                {item.texto}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   )}
