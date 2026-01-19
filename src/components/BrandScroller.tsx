@@ -67,11 +67,10 @@ export default function BrandScroller() {
       lastTimeRef.current = currentTime;
 
       const container = scrollContainerRef.current;
-      const scrollSpeed = 0.3; // píxeles por milisegundo
+      const scrollSpeed = 0.3;
       
       container.scrollLeft += scrollSpeed * (deltaTime / 16);
 
-      // Reset al inicio cuando llega al final (scroll infinito)
       const maxScroll = container.scrollWidth - container.clientWidth;
       if (container.scrollLeft >= maxScroll - 1) {
         container.scrollLeft = 0;
@@ -89,7 +88,6 @@ export default function BrandScroller() {
     };
   }, [isMounted, isPaused]);
 
-  // Scroll fluido con flechas
   const scroll = (direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (container) {
@@ -101,11 +99,7 @@ export default function BrandScroller() {
     }
   };
 
-  // Pausar al hacer hover
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-  };
-
+  const handleMouseEnter = () => setIsPaused(true);
   const handleMouseLeave = () => {
     setIsPaused(false);
     lastTimeRef.current = 0;
@@ -114,41 +108,39 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-16 bg-white">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Carrusel con scroll fluido bidireccional */}
+    <section className="py-6 bg-white">
+      <div className="w-full px-0">
         <div 
-          className="relative group"
+          className="relative"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-2xl -translate-x-1/2"
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-50"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-8 h-8 sm:w-9 sm:h-9 text-orange-600" />
+            <ChevronLeft className="w-6 h-6 text-orange-600" />
           </button>
 
-          {/* Contenedor de scroll fluido */}
+          {/* Contenedor de logos - sin padding, gap mínimo */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-8 sm:gap-10 lg:gap-12 overflow-x-auto scroll-smooth px-6 py-6"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            className="flex items-center gap-4 overflow-x-auto px-12"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {/* Duplicamos las marcas para efecto infinito */}
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-56 h-40 sm:w-64 sm:h-44 lg:w-72 lg:h-48 flex items-center justify-center p-8 bg-white rounded-2xl border-2 border-gray-100 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 cursor-pointer group/brand"
+                className="flex-shrink-0 w-40 h-24 flex items-center justify-center bg-white rounded-lg border border-gray-200 hover:border-orange-400 hover:shadow-lg transition-all duration-200 group/brand"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="h-28 sm:h-32 lg:h-36 max-w-full w-auto object-contain grayscale opacity-70 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
+                  className="w-[85%] h-[85%] object-contain grayscale opacity-60 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-200"
                   draggable={false}
                   loading="lazy"
                 />
@@ -159,20 +151,15 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full shadow-xl flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-2xl translate-x-1/2"
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-50"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-8 h-8 sm:w-9 sm:h-9 text-orange-600" />
+            <ChevronRight className="w-6 h-6 text-orange-600" />
           </button>
-
-          {/* Gradientes de fade en los bordes */}
-          <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-20 bg-gradient-to-r from-white to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-20 bg-gradient-to-l from-white to-transparent pointer-events-none" />
         </div>
       </div>
 
       <style>{`
-        .scrollbar-hide::-webkit-scrollbar,
         div[style*="scrollbarWidth"]::-webkit-scrollbar {
           display: none;
         }
