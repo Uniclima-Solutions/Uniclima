@@ -116,7 +116,7 @@ export default function BrandScroller() {
             <ChevronLeft className="w-5 h-5 text-white" />
           </button>
 
-          {/* Contenedor de logos - gap reducido, márgenes mínimos */}
+          {/* Contenedor de logos - FONDO TRANSPARENTE */}
           <div
             ref={scrollContainerRef}
             className="flex items-center gap-3 overflow-x-auto mx-10 py-3"
@@ -126,7 +126,7 @@ export default function BrandScroller() {
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="group flex-shrink-0 w-32 h-20 sm:w-40 sm:h-24 lg:w-44 lg:h-28 bg-white rounded-lg border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 flex items-center justify-center p-2 transition-all duration-300"
+                className="group flex-shrink-0 w-32 h-20 sm:w-40 sm:h-24 lg:w-44 lg:h-28 bg-transparent flex items-center justify-center p-2 transition-all duration-300"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
