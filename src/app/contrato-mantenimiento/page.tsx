@@ -442,14 +442,7 @@ function ContratoMantenimientoContent() {
     if (errores.length > 0) {
       setCamposConError(errores);
       setCampoIncompleto(errores[0]);
-      
-      setTimeout(() => {
-        const elemento = document.getElementById(`field-${errores[0]}`);
-        if (elemento) {
-          elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-      }, 100);
-      
+      // Sin scroll automático - solo marcar los campos con error
       return false;
     }
     
@@ -593,17 +586,22 @@ function ContratoMantenimientoContent() {
       <Header />
       <Breadcrumbs items={breadcrumbsConfig.contratoMantenimiento} />
       
-      {/* Banner de campo incompleto */}
+      {/* Aviso discreto de campos incompletos */}
       {campoIncompleto && (
-        <div className="sticky top-0 z-50 bg-red-500 text-white px-4 py-3 shadow-lg">
-          <div className="max-w-6xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <AlertTriangle className="w-5 h-5" />
-              <span className="font-medium">
-                Campo incompleto: <strong>{nombresCampos[campoIncompleto] || campoIncompleto}</strong>
-              </span>
+        <div className="fixed bottom-4 right-4 z-50 max-w-sm animate-in slide-in-from-bottom-2 duration-300">
+          <div className="bg-white border border-orange-200 rounded-lg shadow-lg p-3 flex items-center gap-3">
+            <div className="flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+              <AlertTriangle className="w-4 h-4 text-orange-500" />
             </div>
-            <button onClick={() => setCampoIncompleto(null)} className="p-1 hover:bg-red-600 rounded">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm text-gray-600">
+                Completa: <span className="font-medium text-gray-900">{nombresCampos[campoIncompleto] || campoIncompleto}</span>
+              </p>
+            </div>
+            <button 
+              onClick={() => setCampoIncompleto(null)} 
+              className="flex-shrink-0 p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors"
+            >
               <X className="w-4 h-4" />
             </button>
           </div>
@@ -700,10 +698,10 @@ function ContratoMantenimientoContent() {
                         type="button"
                         onClick={() => setPlanSeleccionado(plan)}
                         className={cn(
-                          "p-4 rounded-xl border-2 transition-all text-center",
+                          "p-4 rounded-xl border-2 transition-all duration-200 text-center cursor-pointer hover:scale-[1.02] active:scale-[0.98]",
                           planSeleccionado === plan
-                            ? "border-orange-500 bg-orange-50"
-                            : "border-gray-200 hover:border-orange-300"
+                            ? "border-orange-500 bg-orange-50 shadow-md"
+                            : "border-gray-200 hover:border-orange-300 hover:shadow-sm"
                         )}
                       >
                         <div className="mb-2">
@@ -968,7 +966,7 @@ function ContratoMantenimientoContent() {
                     <button
                       type="button"
                       onClick={() => setContratoAmpliado(true)}
-                      className="flex items-center gap-1 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 text-sm font-medium"
+                      className="flex items-center gap-1 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 hover:scale-105 active:scale-95 text-sm font-medium transition-all duration-200 cursor-pointer"
                     >
                       <Maximize2 className="w-4 h-4" />
                       Pantalla Completa
@@ -1064,7 +1062,7 @@ function ContratoMantenimientoContent() {
                       <button
                         type="button"
                         onClick={mostrarFormularioPago}
-                        className="w-full px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl text-lg font-bold hover:shadow-lg hover:scale-[1.02] transition-all flex items-center justify-center gap-2"
+                        className="w-full px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl text-lg font-bold hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <CreditCard className="w-5 h-5" />
                         Proceder al Pago (€{precioTotal})
@@ -1232,7 +1230,7 @@ function ContratoMantenimientoContent() {
                       <div className="mt-4 pt-4 border-t border-orange-200">
                         <button
                           onClick={mostrarFormularioPago}
-                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2"
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
                         >
                           <CreditCard className="w-5 h-5" />
                           Proceder al Pago
