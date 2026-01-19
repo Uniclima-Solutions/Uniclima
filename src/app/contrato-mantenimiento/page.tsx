@@ -280,12 +280,13 @@ function ContratoMantenimientoContent() {
   
   // Estado para controlar si se acaba de seleccionar una dirección
   const [direccionSeleccionada, setDireccionSeleccionada] = useState(false);
+  // Referencia para saber si el input de dirección tiene el foco
+  const [direccionInputFocused, setDireccionInputFocused] = useState(false);
   
   // Buscar direcciones con debounce
   useEffect(() => {
-    // Si se acaba de seleccionar una dirección, no buscar
+    // Si se acaba de seleccionar una dirección, no buscar y mantener cerrado
     if (direccionSeleccionada) {
-      setDireccionSeleccionada(false);
       return;
     }
     
@@ -295,12 +296,18 @@ function ContratoMantenimientoContent() {
       return;
     }
     
+    // Solo buscar si el input tiene el foco
+    if (!direccionInputFocused) {
+      return;
+    }
+    
     const timeoutId = setTimeout(async () => {
       setBuscandoDirecciones(true);
       try {
         const resultados = await buscarDireccionesMadrid(formData.direccion);
         setDireccionesSugeridas(resultados);
-        if (resultados.length > 0) {
+        // Solo abrir si el input sigue con foco y no se ha seleccionado una dirección
+        if (resultados.length > 0 && direccionInputFocused && !direccionSeleccionada) {
           setDireccionOpen(true);
         }
       } catch (error) {
@@ -311,12 +318,13 @@ function ContratoMantenimientoContent() {
     }, 400);
     
     return () => clearTimeout(timeoutId);
-  }, [formData.direccion, direccionSeleccionada]);
+  }, [formData.direccion, direccionSeleccionada, direccionInputFocused]);
   
   // Seleccionar dirección
   const handleDireccionSelect = async (dir: DireccionSugerida) => {
     // Marcar que se ha seleccionado para evitar que el useEffect vuelva a buscar
     setDireccionSeleccionada(true);
+    setDireccionInputFocused(false);
     
     // Cerrar dropdown inmediatamente y limpiar sugerencias
     setDireccionOpen(false);
@@ -803,11 +811,24 @@ function ContratoMantenimientoContent() {
                         <input
                           type="text"
                           value={formData.direccion}
-                          onChange={(e) => updateField('direccion', e.target.value)}
-                          onFocus={() => direccionesSugeridas.length > 0 && setDireccionOpen(true)}
+                          onChange={(e) => {
+                            // Resetear el estado de selección cuando el usuario escribe
+                            setDireccionSeleccionada(false);
+                            updateField('direccion', e.target.value);
+                          }}
+                          onFocus={() => {
+                            setDireccionInputFocused(true);
+                            // Solo abrir si hay sugerencias y no se acaba de seleccionar
+                            if (direccionesSugeridas.length > 0 && !direccionSeleccionada) {
+                              setDireccionOpen(true);
+                            }
+                          }}
                           onBlur={() => {
                             // Cerrar dropdown con delay para permitir click en opciones
-                            setTimeout(() => setDireccionOpen(false), 200);
+                            setTimeout(() => {
+                              setDireccionOpen(false);
+                              setDireccionInputFocused(false);
+                            }, 250);
                           }}
                           placeholder="Ej: Calle Gran Vía 25, Calle Grafito 12..."
                           className={cn(
