@@ -14,8 +14,8 @@ interface Plan {
   icono: string;
   descripcion: string;
   caracteristicas: string[];
-  detalles: string[];
-  ventajas: string[];
+  detalles?: string[];
+  ventajas?: string[];
 }
 
 // Colores con degradados - Naranja para calderas, Azul para aire
@@ -137,20 +137,22 @@ export default function PricingCardFlip({ plan, tipoEquipo }: { plan: Plan; tipo
               ))}
             </ul>
             
-            {/* Ventajas destacadas */}
-            <div className={`bg-gradient-to-r ${colors.bgLight} rounded-lg p-3 mb-4 border ${colors.border}`}>
-              <p className={`text-[10px] font-bold ${colors.text} mb-2 flex items-center gap-1 uppercase tracking-wider`}>
-                <Zap className="w-3 h-3" /> Ventajas incluidas
-              </p>
-              <ul className="space-y-1">
-                {plan.ventajas.map((ventaja, idx) => (
-                  <li key={idx} className="text-[10px] text-gray-600 flex items-center gap-1.5">
-                    <span className={`w-1.5 h-1.5 rounded-full ${colors.bg}`}></span>
-                    {ventaja}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/* Ventajas destacadas - solo si existen */}
+            {plan.ventajas && plan.ventajas.length > 0 && (
+              <div className={`bg-gradient-to-r ${colors.bgLight} rounded-lg p-3 mb-4 border ${colors.border}`}>
+                <p className={`text-[10px] font-bold ${colors.text} mb-2 flex items-center gap-1 uppercase tracking-wider`}>
+                  <Zap className="w-3 h-3" /> Ventajas incluidas
+                </p>
+                <ul className="space-y-1">
+                  {plan.ventajas.map((ventaja, idx) => (
+                    <li key={idx} className="text-[10px] text-gray-600 flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${colors.bg}`}></span>
+                      {ventaja}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             
             {/* Indicador de flip */}
             <div className="text-center">
@@ -194,22 +196,30 @@ export default function PricingCardFlip({ plan, tipoEquipo }: { plan: Plan; tipo
           </div>
           
           <div className="px-4 py-4 flex flex-col h-[calc(100%-60px)]">
-            {/* Detalles completos */}
+            {/* Detalles completos - solo si existen */}
             <div className="flex-1">
-              <p className={`text-[11px] font-bold ${colors.text} mb-3 uppercase tracking-wider flex items-center gap-1.5`}>
-                <Info className="w-3 h-3" />
-                Detalles del servicio
-              </p>
-              <ul className="space-y-2">
-                {plan.detalles.map((detalle, idx) => (
-                  <li key={idx} className="flex items-start gap-2">
-                    <div className={`w-5 h-5 rounded-md ${colors.accent} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                      <ArrowRight className={`w-3 h-3 ${colors.text}`} />
-                    </div>
-                    <span className="text-[12px] text-gray-700 leading-tight">{detalle}</span>
-                  </li>
-                ))}
-              </ul>
+              {plan.detalles && plan.detalles.length > 0 ? (
+                <>
+                  <p className={`text-[11px] font-bold ${colors.text} mb-3 uppercase tracking-wider flex items-center gap-1.5`}>
+                    <Info className="w-3 h-3" />
+                    Detalles del servicio
+                  </p>
+                  <ul className="space-y-2">
+                    {plan.detalles.map((detalle, idx) => (
+                      <li key={idx} className="flex items-start gap-2">
+                        <div className={`w-5 h-5 rounded-md ${colors.accent} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                          <ArrowRight className={`w-3 h-3 ${colors.text}`} />
+                        </div>
+                        <span className="text-[12px] text-gray-700 leading-tight">{detalle}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <div className="text-center text-gray-500 text-sm py-4">
+                  <p>Servicio de mantenimiento profesional</p>
+                </div>
+              )}
             </div>
             
             {/* Precio y botón */}
