@@ -31,8 +31,8 @@ type MenuView =
   | "aires-nuevos"
   | "calderas-reacondicionadas"
   | "servicios"
-  | "faq"
-  | "contacto"
+  
+  
   | "marca-caldera"
   | "marca-aire"
   | "marca-caldera-nueva"
@@ -63,8 +63,8 @@ const categoriasConDesplegable = [
   { id: "aires-nuevos", name: "Aires Acondicionados", icon: Fan, view: "aires-nuevos" as MenuView, hasDropdown: false },
   { id: "servicios", name: "Servicios", icon: Wrench, view: "servicios" as MenuView, hasDropdown: false },
   { id: "mantenimiento", name: "Contratos de Mantenimiento", icon: Shield, href: "/contrato-mantenimiento", hasDropdown: false },
-  { id: "faq", name: "Preguntas Frecuentes", icon: MessageCircleQuestion, view: "faq" as MenuView, hasDropdown: false },
-  { id: "contacto", name: "Contacto", icon: PhoneCall, view: "contacto" as MenuView, hasDropdown: false },
+  
+  { id: "contacto", name: "Contacto", icon: PhoneCall, href: "/contacto", hasDropdown: false },
 ];
 
 // Marcas de calderas para REPUESTOS
@@ -249,14 +249,6 @@ const serviciosItems = [
   { name: "Asistencia técnica", desc: "Servicio técnico especializado" },
 ];
 
-// FAQ
-const faqItems = [
-  { q: "¿Cuánto tarda el envío?", a: "Envío en 24-48 horas para pedidos antes de las 14:00" },
-  { q: "¿Cómo puedo devolver un producto?", a: "Tienes 30 días para devoluciones sin coste" },
-  { q: "¿Los repuestos son originales?", a: "Trabajamos con piezas originales y compatibles de alta calidad" },
-  { q: "¿Ofrecen garantía?", a: "Todos nuestros productos tienen garantía de 1 año" },
-  { q: "¿Cómo encuentro mi repuesto?", a: "Busca por referencia, marca o modelo en nuestro buscador" },
-];
 
 // Productos para búsqueda predictiva
 const productosEjemplo = [
@@ -992,90 +984,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     </motion.div>
   );
 
-  // Render FAQ
-  const renderFAQ = () => (
-    <motion.div
-      key="faq"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-3">Preguntas Frecuentes</h2>
-
-      <div className="space-y-1.5">
-        {faqItems.map((faq, index) => {
-          const isExpanded = expandedAccordion === `faq-${index}`;
-          return (
-            <div key={index} className="border border-slate-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => toggleAccordion(`faq-${index}`)}
-                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors text-left"
-              >
-                <span className="font-medium text-gray-800 text-[13px] pr-2">{faq.q}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-400 flex-shrink-0 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-2.5 bg-white border-t border-slate-100">
-                      <p className="text-[13px] text-gray-600">{faq.a}</p>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-
-  // Render contacto
-  const renderContacto = () => (
-    <motion.div
-      key="contacto"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-3">Contacto</h2>
-
-      <div className="space-y-3">
-        <div className="p-3 bg-orange-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-1">
-            <Phone className="w-4 h-4 text-orange-500" />
-            <span className="text-base font-bold text-gray-800">91 117 77 77</span>
-          </div>
-          <p className="text-xs text-gray-600">Lunes a Viernes: 9:00 - 20:00</p>
-          <p className="text-xs text-gray-600">Sábados: 10:00 - 14:00</p>
-        </div>
-
-        <div className="p-3 bg-orange-50 rounded-lg">
-          <div className="flex items-center gap-2 mb-1">
-            <Mail className="w-4 h-4 text-orange-500" />
-            <span className="text-[13px] font-medium text-gray-800">info@repuestosclima.es</span>
-          </div>
-          <p className="text-xs text-gray-600">Respuesta en menos de 24h</p>
-        </div>
-
-        <button className="w-full py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm rounded-lg transition-colors">
-          Enviar mensaje
-        </button>
-      </div>
-    </motion.div>
-  );
 
   const renderContent = () => {
     switch (currentView) {
@@ -1090,8 +998,6 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       case "marca-aire-nuevo": return renderMarcaAireNuevo();
       case "calderas-reacondicionadas": return renderCalderasReacondicionadas();
       case "servicios": return renderServicios();
-      case "faq": return renderFAQ();
-      case "contacto": return renderContacto();
       default: return renderMain();
     }
   };
