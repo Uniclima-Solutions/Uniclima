@@ -536,7 +536,7 @@ const planesAire = [
       { texto: "Revisión gas refrigerante", incluido: true },
       { texto: "Comprobación eléctrica", incluido: true },
       { texto: "Limpieza unidad exterior", incluido: false },
-      { texto: "Recarga gas incluida", incluido: false },
+      { texto: "Asistencia 48/72 horas", incluido: false },
     ],
   },
   {
@@ -553,7 +553,7 @@ const planesAire = [
       { texto: "Revisión gas refrigerante", incluido: true },
       { texto: "Comprobación eléctrica", incluido: true },
       { texto: "Limpieza unidad exterior", incluido: true },
-      { texto: "Recarga gas incluida", incluido: false },
+      { texto: "Asistencia 48/72 horas", incluido: false },
     ],
   },
   {
@@ -570,7 +570,7 @@ const planesAire = [
       { texto: "Revisión gas refrigerante", incluido: true },
       { texto: "Comprobación eléctrica", incluido: true },
       { texto: "Limpieza unidad exterior", incluido: true },
-      { texto: "Recarga gas incluida", incluido: true },
+      { texto: "Asistencia 48/72 horas", incluido: true },
     ],
   }
 ];
@@ -600,62 +600,64 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
   const isHighlighted = plan.destacado;
   const contractUrl = `/contrato-mantenimiento?${urlParams.toString()}`;
   
-  // Gradientes según tipo de equipo - Naranja para calderas, Azul/Morado para aire
+  // Gradientes según tipo de equipo - Naranja para calderas, Azul más azulado para aire
   const getHeaderGradient = () => {
     if (tipoEquipo === 'calderas') {
       if (plan.nombre === 'Esencial') return 'from-orange-400 to-orange-500';
       if (plan.nombre === 'Confort') return 'from-orange-500 to-orange-600';
       return 'from-orange-600 to-orange-700';
     } else {
-      if (plan.nombre === 'Esencial') return 'from-blue-500 to-indigo-600';
-      if (plan.nombre === 'Confort') return 'from-indigo-500 to-purple-600';
-      return 'from-purple-600 to-violet-700';
+      // Colores más azulados para aire acondicionado
+      if (plan.nombre === 'Esencial') return 'from-sky-500 to-blue-600';
+      if (plan.nombre === 'Confort') return 'from-blue-500 to-blue-700';
+      return 'from-blue-600 to-indigo-700';
     }
   };
 
   const getBorderColor = () => {
     if (tipoEquipo === 'calderas') return 'border-orange-400 ring-orange-400';
-    return 'border-indigo-400 ring-indigo-400';
+    return 'border-blue-400 ring-blue-400';
   };
 
   const getBadgeColor = () => {
-    if (tipoEquipo === 'calderas') return 'bg-orange-500';
-    return 'bg-indigo-500';
+    if (tipoEquipo === 'calderas') return 'bg-gradient-to-r from-orange-500 to-orange-600';
+    return 'bg-gradient-to-r from-blue-500 to-blue-600';
   };
 
   const getButtonGradient = () => {
     if (tipoEquipo === 'calderas') return 'from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700';
-    return 'from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700';
+    return 'from-blue-500 to-blue-700 hover:from-blue-600 hover:to-indigo-700';
   };
 
   const getCheckColor = () => {
     if (tipoEquipo === 'calderas') return 'bg-orange-500';
-    return 'bg-indigo-500';
+    return 'bg-blue-500';
   };
   
   return (
     <div className={`relative flex flex-col bg-white rounded-2xl shadow-lg border ${
       isHighlighted ? `${getBorderColor()} ring-2 ring-offset-2` : 'border-gray-100'
     }`}>
-      {/* Badge Recomendado */}
+      {/* Badge Recomendado - Estrella más visible y texto más legible */}
       {isHighlighted && (
         <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-          <div className={`${getBadgeColor()} text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap`}>
-            ★ RECOMENDADO
+          <div className={`${getBadgeColor()} text-white text-xs font-bold px-5 py-2 rounded-full shadow-xl whitespace-nowrap flex items-center gap-1.5`}>
+            <Star className="w-4 h-4 fill-yellow-300 text-yellow-300" />
+            <span className="tracking-wide">RECOMENDADO</span>
           </div>
         </div>
       )}
       
-      {/* Header con degradado - Nombre, descripción y precio */}
-      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-5 py-4 text-white rounded-t-2xl ${isHighlighted ? 'pt-6' : ''}`}>
+      {/* Header con degradado - Nombre, descripción y precio - Texto blanco puro más legible */}
+      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-5 py-4 rounded-t-2xl ${isHighlighted ? 'pt-6' : ''}`}>
         <div className="flex items-center gap-2 mb-1">
-          <PlanIcon icono={plan.icono} className="w-5 h-5" />
-          <h3 className="text-lg font-bold">{plan.nombre}</h3>
+          <PlanIcon icono={plan.icono} className="w-5 h-5 text-white" />
+          <h3 className="text-lg font-bold text-white drop-shadow-sm">{plan.nombre}</h3>
         </div>
-        <p className="text-white/80 text-xs mb-2">{plan.descripcion}</p>
+        <p className="text-white text-xs mb-2 opacity-90">{plan.descripcion}</p>
         <div>
-          <span className="text-3xl font-black">€{plan.precio}</span>
-          <span className="text-white/80 text-sm">/año</span>
+          <span className="text-3xl font-black text-white drop-shadow-sm">€{plan.precio}</span>
+          <span className="text-white text-sm opacity-90">/año</span>
         </div>
       </div>
       
@@ -694,23 +696,13 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
   );
 }
 
-// Componente para renderizar una sección de tarjetas de mantenimiento
-function MaintenanceCardsSection({ 
-  planes, 
-  tipoEquipo, 
-  title, 
-  subtitle,
-  colorClass 
-}: { 
-  planes: typeof planesCaldera; 
-  tipoEquipo: 'calderas' | 'aire'; 
-  title: string;
-  subtitle: string;
-  colorClass: string;
-}) {
+// Sección de Mantenimiento con pestañas fusionadas
+function MaintenanceSection() {
+  const [activeTab, setActiveTab] = useState<'calderas' | 'aire'>('calderas');
+  const planes = activeTab === 'calderas' ? planesCaldera : planesAire;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll suave para centrar en la tarjeta del medio
+  // Auto-scroll suave para centrar en la tarjeta del medio (Confort - Recomendado)
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -722,70 +714,13 @@ function MaintenanceCardsSection({
     setTimeout(() => {
       container.scrollTo({ left: scrollToMiddle, behavior: 'smooth' });
     }, 100);
-  }, []);
+  }, [activeTab]);
 
-  return (
-    <div className="mb-12">
-      {/* Título de la sección */}
-      <div className="flex items-center gap-3 mb-6">
-        <div className={`p-2 rounded-lg ${colorClass}`}>
-          {tipoEquipo === 'calderas' ? (
-            <Flame className="w-6 h-6 text-white" />
-          ) : (
-            <Wind className="w-6 h-6 text-white" />
-          )}
-        </div>
-        <div>
-          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h3>
-          <p className="text-gray-500 text-sm">{subtitle}</p>
-        </div>
-      </div>
-      
-      {/* Indicador de scroll en móvil */}
-      <div className="md:hidden flex items-center justify-center gap-2 mb-4">
-        <div className="flex items-center gap-1 text-xs text-gray-500">
-          <ChevronLeft className="w-4 h-4 animate-pulse" />
-          <span>Desliza para ver todos los planes</span>
-          <ChevronRight className="w-4 h-4 animate-pulse" />
-        </div>
-      </div>
-      
-      {/* Tarjetas - Grid en desktop, scroll horizontal en móvil */}
-      <div 
-        ref={scrollContainerRef}
-        className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        {planes.map((plan) => (
-          <div 
-            key={plan.id} 
-            className="snap-center flex-shrink-0 w-[300px] md:w-auto"
-          >
-            <PricingCard plan={plan} tipoEquipo={tipoEquipo} />
-          </div>
-        ))}
-      </div>
-      
-      {/* Indicadores de posición en móvil */}
-      <div className="md:hidden flex justify-center gap-2 mt-4">
-        {planes.map((_, idx) => (
-          <div 
-            key={idx} 
-            className="w-2 h-2 rounded-full bg-gray-300"
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// Sección de Mantenimiento con ambas categorías separadas
-function MaintenanceSection() {
   return (
     <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header principal */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-6">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             Contratos de <span className="text-orange-500">Mantenimiento</span>
           </h2>
@@ -794,23 +729,70 @@ function MaintenanceSection() {
           </p>
         </div>
         
-        {/* Sección de Calderas */}
-        <MaintenanceCardsSection 
-          planes={planesCaldera}
-          tipoEquipo="calderas"
-          title="Mantenimiento de Calderas"
-          subtitle="Planes para calderas de gas, atmosféricas y de condensación"
-          colorClass="bg-gradient-to-r from-orange-500 to-orange-600"
-        />
+        {/* Pestañas con colores corporativos */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
+            <button
+              onClick={() => setActiveTab('calderas')}
+              className={`flex items-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm transition-all duration-300 ${
+                activeTab === 'calderas'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
+              }`}
+            >
+              <Flame className="w-4 h-4" />
+              Calderas
+            </button>
+            <button
+              onClick={() => setActiveTab('aire')}
+              className={`flex items-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm transition-all duration-300 ${
+                activeTab === 'aire'
+                  ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg'
+                  : 'text-gray-600 hover:text-blue-500 hover:bg-blue-50'
+              }`}
+            >
+              <Wind className="w-4 h-4" />
+              Aire Acondicionado
+            </button>
+          </div>
+        </div>
         
-        {/* Sección de Aire Acondicionado */}
-        <MaintenanceCardsSection 
-          planes={planesAire}
-          tipoEquipo="aire"
-          title="Mantenimiento de Aire Acondicionado"
-          subtitle="Planes para splits, multisplits y sistemas de climatización"
-          colorClass="bg-gradient-to-r from-indigo-500 to-purple-600"
-        />
+        {/* Indicador de scroll en móvil */}
+        <div className="md:hidden flex items-center justify-center gap-2 mb-4">
+          <div className="flex items-center gap-1 text-xs text-gray-500">
+            <ChevronLeft className="w-4 h-4 animate-pulse" />
+            <span>Desliza para ver todos los planes</span>
+            <ChevronRight className="w-4 h-4 animate-pulse" />
+          </div>
+        </div>
+        
+        {/* Tarjetas - Grid en desktop, scroll horizontal en móvil */}
+        <div 
+          ref={scrollContainerRef}
+          className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-6"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {planes.map((plan) => (
+            <div 
+              key={plan.id} 
+              className="snap-center flex-shrink-0 w-[300px] md:w-auto"
+            >
+              <PricingCard plan={plan} tipoEquipo={activeTab} />
+            </div>
+          ))}
+        </div>
+        
+        {/* Indicadores de posición en móvil */}
+        <div className="md:hidden flex justify-center gap-2 mt-4">
+          {planes.map((_, idx) => (
+            <div 
+              key={idx} 
+              className={`w-2 h-2 rounded-full ${
+                idx === 1 ? (activeTab === 'calderas' ? 'bg-orange-500' : 'bg-blue-500') : 'bg-gray-300'
+              }`}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );
