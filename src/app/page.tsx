@@ -588,7 +588,7 @@ const PlanIcon = ({ icono, className }: { icono: string; className?: string }) =
 // Tipo para características con incluido/no incluido
 type Caracteristica = { texto: string; incluido: boolean };
 
-// Componente de tarjeta de precio - Diseño exacto del mockup
+// Componente de tarjeta de precio - Diseño exacto del mockup con header degradado
 function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipoEquipo: 'calderas' | 'aire' }) {
   // Mapear tipo de equipo a valor del formulario
   const tipoAparatoParam = tipoEquipo === 'calderas' ? 'Caldera de Gas' : 'Aire A. Split';
@@ -600,37 +600,72 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
   const isHighlighted = plan.destacado;
   const contractUrl = `/contrato-mantenimiento?${urlParams.toString()}`;
   
+  // Gradientes según tipo de equipo - Naranja para calderas, Azul/Morado para aire
+  const getHeaderGradient = () => {
+    if (tipoEquipo === 'calderas') {
+      if (plan.nombre === 'Esencial') return 'from-orange-400 to-orange-500';
+      if (plan.nombre === 'Confort') return 'from-orange-500 to-orange-600';
+      return 'from-orange-600 to-orange-700';
+    } else {
+      if (plan.nombre === 'Esencial') return 'from-blue-500 to-indigo-600';
+      if (plan.nombre === 'Confort') return 'from-indigo-500 to-purple-600';
+      return 'from-purple-600 to-violet-700';
+    }
+  };
+
+  const getBorderColor = () => {
+    if (tipoEquipo === 'calderas') return 'border-orange-400 ring-orange-400';
+    return 'border-indigo-400 ring-indigo-400';
+  };
+
+  const getBadgeColor = () => {
+    if (tipoEquipo === 'calderas') return 'bg-orange-500';
+    return 'bg-indigo-500';
+  };
+
+  const getButtonGradient = () => {
+    if (tipoEquipo === 'calderas') return 'from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700';
+    return 'from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700';
+  };
+
+  const getCheckColor = () => {
+    if (tipoEquipo === 'calderas') return 'bg-orange-500';
+    return 'bg-indigo-500';
+  };
+  
   return (
     <div className={`relative flex flex-col bg-white rounded-2xl shadow-lg border ${
-      isHighlighted ? 'border-orange-400 ring-2 ring-orange-400 ring-offset-2' : 'border-gray-100'
+      isHighlighted ? `${getBorderColor()} ring-2 ring-offset-2` : 'border-gray-100'
     }`}>
       {/* Badge Recomendado */}
       {isHighlighted && (
         <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-          <div className="bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
+          <div className={`${getBadgeColor()} text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap`}>
             ★ RECOMENDADO
           </div>
         </div>
       )}
       
-      {/* Precio grande centrado */}
-      <div className={`px-6 py-6 text-center ${isHighlighted ? 'pt-10' : ''}`}>
-        <div className="mb-1">
-          <span className="text-5xl font-black text-gray-900">€{plan.precio}</span>
+      {/* Header con degradado - Nombre, descripción y precio */}
+      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-5 py-4 text-white rounded-t-2xl ${isHighlighted ? 'pt-6' : ''}`}>
+        <div className="flex items-center gap-2 mb-1">
+          <PlanIcon icono={plan.icono} className="w-5 h-5" />
+          <h3 className="text-lg font-bold">{plan.nombre}</h3>
         </div>
-        <p className="text-gray-500 text-sm">por año</p>
+        <p className="text-white/80 text-xs mb-2">{plan.descripcion}</p>
+        <div>
+          <span className="text-3xl font-black">€{plan.precio}</span>
+          <span className="text-white/80 text-sm">/año</span>
+        </div>
       </div>
       
-      {/* Línea divisoria */}
-      <div className="border-t border-gray-200 mx-6"></div>
-      
-      {/* Características con checks rojos/grises */}
-      <div className="px-6 py-5 flex-grow">
-        <ul className="space-y-3">
+      {/* Características con checks */}
+      <div className="px-5 py-4 flex-grow">
+        <ul className="space-y-2.5">
           {(plan.caracteristicas as Caracteristica[]).map((caracteristica, idx) => (
-            <li key={idx} className="flex items-center gap-3">
+            <li key={idx} className="flex items-center gap-2.5">
               {caracteristica.incluido ? (
-                <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0">
+                <div className={`w-5 h-5 rounded-full ${getCheckColor()} flex items-center justify-center flex-shrink-0`}>
                   <Check className="w-3 h-3 text-white" />
                 </div>
               ) : (
@@ -650,7 +685,7 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
       <div className="px-4 pb-4 mt-auto">
         <Link
           href={contractUrl}
-          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white py-3 rounded-lg text-sm font-bold uppercase tracking-wide shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
+          className={`w-full bg-gradient-to-r ${getButtonGradient()} text-white py-3 rounded-lg text-sm font-bold uppercase tracking-wide shadow-lg transition-all duration-300 flex items-center justify-center gap-2`}
         >
           CONTRATAR
         </Link>
