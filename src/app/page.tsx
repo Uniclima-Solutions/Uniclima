@@ -470,7 +470,7 @@ function CategoryCarousel({
   );
 }
 
-// Datos de planes de mantenimiento - Calderas (preventivo: octubre-noviembre)
+// Datos de planes de mantenimiento - Calderas
 const planesCaldera = [
   {
     id: 1,
@@ -480,13 +480,11 @@ const planesCaldera = [
     destacado: false,
     color: "emerald",
     icono: "shield",
-    descripcion: "Mantenimiento esencial",
+    descripcion: "La base para mantener tu caldera en buen estado",
     caracteristicas: [
-      "Revisión general del equipo",
-      "Ajuste de presión del circuito",
-      "Purgado de bomba y sistema",
-      "Verificación básica de seguridad",
-      "Desplazamiento incluido",
+      "Prevención de averías básicas durante todo el año",
+      "Verificación completa de seguridad para tu tranquilidad",
+      "Ideal para viviendas con uso moderado de calefacción",
     ],
   },
   {
@@ -497,14 +495,11 @@ const planesCaldera = [
     destacado: true,
     color: "orange",
     icono: "star",
-    descripcion: "Mantenimiento avanzado",
+    descripcion: "El equilibrio perfecto entre precio y servicio",
     caracteristicas: [
-      "Revisión general del equipo",
-      "Ajuste de presión del circuito",
-      "Purgado de bomba y sistema",
-      "Análisis de combustión básico",
-      "5% dto. mano de obra y repuestos",
-      "Desplazamiento incluido",
+      "Análisis de combustión para máxima eficiencia energética",
+      "Descuento del 5% en mano de obra y repuestos",
+      "Perfecto para hogares con uso regular de calefacción",
     ],
   },
   {
@@ -515,15 +510,11 @@ const planesCaldera = [
     destacado: false,
     color: "violet",
     icono: "crown",
-    descripcion: "Mantenimiento preferente",
+    descripcion: "La máxima tranquilidad para tu hogar",
     caracteristicas: [
-      "Revisión general del equipo",
-      "Ajuste de presión del circuito",
-      "Purgado de bomba y sistema",
-      "Análisis de combustión básico",
-      "Atención preferente 24-72h (laboral)",
-      "10% dto. mano de obra y repuestos",
-      "Desplazamiento incluido",
+      "Atención preferente en 24-72h laborables",
+      "Descuento del 10% en mano de obra y repuestos",
+      "Ideal para viviendas con alto uso de calefacción",
     ],
   }
 ];
@@ -532,29 +523,18 @@ const planesCaldera = [
 const planesAire = [
   {
     id: 1,
-    nombre: "Esencial",
+    nombre: "Básico",
     precio: 70,
     periodo: "año",
     destacado: false,
     color: "sky",
     icono: "shield",
-    descripcion: "Revisión preventiva anual",
+    descripcion: "La base para mantener tu aire acondicionado en forma",
     caracteristicas: [
-      "1 revisión preventiva (abr-may)",
-      "Limpieza de filtros",
-      "Comprobación visual del equipo",
-      "Certificado de mantenimiento",
+      "Revisión preventiva anual para evitar averías",
+      "Limpieza de filtros para mejor calidad del aire",
+      "Ideal para equipos con uso ocasional en verano",
     ],
-    detalles: [
-      "Intervención programada entre abril y mayo",
-      "Técnico certificado en climatización",
-      "Informe básico del estado del equipo",
-      "Recomendaciones de uso",
-    ],
-    ventajas: [
-      "Equipo revisado para el verano",
-      "Cumple normativa vigente",
-    ]
   },
   {
     id: 2,
@@ -564,25 +544,12 @@ const planesAire = [
     destacado: true,
     color: "blue",
     icono: "star",
-    descripcion: "Preventivo + atención prioritaria",
+    descripcion: "El equilibrio perfecto para tu climatización",
     caracteristicas: [
-      "1 revisión preventiva (abr-may)",
-      "Limpieza de filtros y unidad interior",
-      "Comprobación gas refrigerante",
-      "Atención prioritaria en averías",
-      "5% dto. en repuestos",
+      "Comprobación del gas refrigerante incluida",
+      "Descuento del 5% en repuestos y mano de obra",
+      "Perfecto para equipos con uso regular en verano",
     ],
-    detalles: [
-      "Todo lo incluido en el plan Esencial",
-      "Prioridad en la asignación de técnicos",
-      "Diagnóstico telefónico",
-      "Presupuesto sin compromiso",
-    ],
-    ventajas: [
-      "Respuesta más rápida en verano",
-      "Ahorro en repuestos",
-      "Mayor tranquilidad",
-    ]
   },
   {
     id: 3,
@@ -592,25 +559,12 @@ const planesAire = [
     destacado: false,
     color: "indigo",
     icono: "crown",
-    descripcion: "Cobertura ampliada",
+    descripcion: "La máxima protección para tu equipo",
     caracteristicas: [
-      "2 revisiones anuales",
-      "Limpieza completa (interior + exterior)",
-      "Comprobación gas refrigerante",
-      "10% dto. en repuestos",
-      "Atención telefónica prioritaria",
+      "Dos revisiones anuales para máxima tranquilidad",
+      "Descuento del 10% en repuestos y mano de obra",
+      "Ideal para equipos con uso intensivo todo el año",
     ],
-    detalles: [
-      "1ª revisión preventiva (abr-may)",
-      "2ª revisión de verificación (otoño)",
-      "Prioridad en reparaciones",
-      "Repuestos con descuento",
-    ],
-    ventajas: [
-      "Doble revisión anual",
-      "Mejor precio en reparaciones",
-      "Equipo siempre a punto",
-    ]
   }
 ];
 
@@ -691,13 +645,13 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
       <div className="flex-1 px-6 pt-8 pb-4 text-white flex flex-col">
         {/* Título y descripción */}
         <div className="text-center mb-6">
-          <h3 className="text-2xl font-black mb-2">Plan {plan.nombre}</h3>
-          <p className="text-white/80 text-sm">{plan.descripcion}</p>
+          <h3 className="text-2xl font-black mb-3 text-yellow-300 drop-shadow-lg">Plan {plan.nombre}</h3>
+          <p className="text-white/90 text-sm leading-relaxed">{plan.descripcion}</p>
         </div>
         
         {/* Características con estrellas */}
         <ul className="space-y-4 flex-1">
-          {plan.caracteristicas.slice(0, 4).map((caracteristica, idx) => (
+          {plan.caracteristicas.slice(0, 3).map((caracteristica, idx) => (
             <li key={idx} className="flex items-start gap-3">
               <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 flex-shrink-0 mt-0.5" />
               <span className="text-sm text-white/90 leading-snug">{caracteristica}</span>
