@@ -694,33 +694,98 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
   );
 }
 
-// Sección de Mantenimiento con scroll horizontal en móvil y tarjeta central destacada
-function MaintenanceSection() {
-  const [activeTab, setActiveTab] = useState<'calderas' | 'aire'>('calderas');
-  const planes = activeTab === 'calderas' ? planesCaldera : planesAire;
+// Componente para renderizar una sección de tarjetas de mantenimiento
+function MaintenanceCardsSection({ 
+  planes, 
+  tipoEquipo, 
+  title, 
+  subtitle,
+  colorClass 
+}: { 
+  planes: typeof planesCaldera; 
+  tipoEquipo: 'calderas' | 'aire'; 
+  title: string;
+  subtitle: string;
+  colorClass: string;
+}) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll suave de derecha a izquierda en móvil
+  // Auto-scroll suave para centrar en la tarjeta del medio
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    // Centrar en la tarjeta del medio (Confort) al cargar
     const cardWidth = 300;
     const gap = 16;
     const scrollToMiddle = cardWidth + gap;
     
-    // Pequeño delay para asegurar que el DOM está listo
     setTimeout(() => {
       container.scrollTo({ left: scrollToMiddle, behavior: 'smooth' });
     }, 100);
-  }, [activeTab]);
+  }, []);
 
+  return (
+    <div className="mb-12">
+      {/* Título de la sección */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className={`p-2 rounded-lg ${colorClass}`}>
+          {tipoEquipo === 'calderas' ? (
+            <Flame className="w-6 h-6 text-white" />
+          ) : (
+            <Wind className="w-6 h-6 text-white" />
+          )}
+        </div>
+        <div>
+          <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h3>
+          <p className="text-gray-500 text-sm">{subtitle}</p>
+        </div>
+      </div>
+      
+      {/* Indicador de scroll en móvil */}
+      <div className="md:hidden flex items-center justify-center gap-2 mb-4">
+        <div className="flex items-center gap-1 text-xs text-gray-500">
+          <ChevronLeft className="w-4 h-4 animate-pulse" />
+          <span>Desliza para ver todos los planes</span>
+          <ChevronRight className="w-4 h-4 animate-pulse" />
+        </div>
+      </div>
+      
+      {/* Tarjetas - Grid en desktop, scroll horizontal en móvil */}
+      <div 
+        ref={scrollContainerRef}
+        className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {planes.map((plan) => (
+          <div 
+            key={plan.id} 
+            className="snap-center flex-shrink-0 w-[300px] md:w-auto"
+          >
+            <PricingCard plan={plan} tipoEquipo={tipoEquipo} />
+          </div>
+        ))}
+      </div>
+      
+      {/* Indicadores de posición en móvil */}
+      <div className="md:hidden flex justify-center gap-2 mt-4">
+        {planes.map((_, idx) => (
+          <div 
+            key={idx} 
+            className="w-2 h-2 rounded-full bg-gray-300"
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Sección de Mantenimiento con ambas categorías separadas
+function MaintenanceSection() {
   return (
     <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-2">
+        {/* Header principal */}
+        <div className="text-center mb-10">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
             Contratos de <span className="text-orange-500">Mantenimiento</span>
           </h2>
@@ -729,70 +794,23 @@ function MaintenanceSection() {
           </p>
         </div>
         
-        {/* Tabs con colores corporativos */}
-        <div className="flex justify-center mb-6">
-          <div className="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
-            <button
-              onClick={() => setActiveTab('calderas')}
-              className={`flex items-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm transition-all duration-300 ${
-                activeTab === 'calderas'
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
-              }`}
-            >
-              <Flame className="w-4 h-4" />
-              Calderas
-            </button>
-            <button
-              onClick={() => setActiveTab('aire')}
-              className={`flex items-center gap-2 px-5 sm:px-8 py-2.5 sm:py-3 rounded-full font-semibold text-sm transition-all duration-300 ${
-                activeTab === 'aire'
-                  ? 'bg-gradient-to-r from-gray-800 to-gray-900 text-white shadow-lg'
-                  : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
-              }`}
-            >
-              <Wind className="w-4 h-4" />
-              Aire Acondicionado
-            </button>
-          </div>
-        </div>
+        {/* Sección de Calderas */}
+        <MaintenanceCardsSection 
+          planes={planesCaldera}
+          tipoEquipo="calderas"
+          title="Mantenimiento de Calderas"
+          subtitle="Planes para calderas de gas, atmosféricas y de condensación"
+          colorClass="bg-gradient-to-r from-orange-500 to-orange-600"
+        />
         
-        {/* Indicador de scroll en móvil */}
-        <div className="md:hidden flex items-center justify-center gap-2 mb-4">
-          <div className="flex items-center gap-1 text-xs text-gray-500">
-            <ChevronLeft className="w-4 h-4 animate-pulse" />
-            <span>Desliza para ver todos los planes</span>
-            <ChevronRight className="w-4 h-4 animate-pulse" />
-          </div>
-        </div>
-        
-        {/* Tarjetas - Grid en desktop, scroll horizontal en móvil */}
-        <div 
-          ref={scrollContainerRef}
-          className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {planes.map((plan) => (
-            <div 
-              key={plan.id} 
-              className="snap-center flex-shrink-0 w-[300px] md:w-auto"
-            >
-              <PricingCard plan={plan} tipoEquipo={activeTab} />
-            </div>
-          ))}
-        </div>
-        
-        {/* Indicadores de posición en móvil */}
-        <div className="md:hidden flex justify-center gap-2 mt-4">
-          {planes.map((_, idx) => (
-            <div 
-              key={idx} 
-              className="w-2 h-2 rounded-full bg-gray-300"
-            />
-          ))}
-        </div>
-        
-
+        {/* Sección de Aire Acondicionado */}
+        <MaintenanceCardsSection 
+          planes={planesAire}
+          tipoEquipo="aire"
+          title="Mantenimiento de Aire Acondicionado"
+          subtitle="Planes para splits, multisplits y sistemas de climatización"
+          colorClass="bg-gradient-to-r from-indigo-500 to-purple-600"
+        />
       </div>
     </section>
   );
