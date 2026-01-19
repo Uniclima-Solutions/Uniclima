@@ -5,7 +5,7 @@
  * - Flechas de navegación izquierda/derecha
  * - Movimiento automático de izquierda a derecha
  * - Pausa al hacer hover sobre cualquier logo
- * - Logos en grayscale que se colorean al hover
+ * - Logos en color con fondo blanco
  * - Enlaces a páginas de marca (/marca/{slug})
  * - Tarjetas con bordes redondeados estilo mockup
  */
@@ -32,6 +32,8 @@ const boilerBrands: Brand[] = [
   { name: "Biasi", slug: "biasi", logo: "/images/marcas/biasi.png" },
   { name: "Beretta", slug: "beretta", logo: "/images/marcas/beretta.png" },
   { name: "Viessmann", slug: "viessmann", logo: "/images/marcas/viessmann.png" },
+  { name: "Wolf", slug: "wolf", logo: "/images/marcas/wolf.png" },
+  { name: "Bosch", slug: "bosch", logo: "/images/marcas/bosch.png" },
   { name: "Immergas", slug: "immergas", logo: "/images/marcas/immergas.png" },
   { name: "Cointra", slug: "cointra", logo: "/images/marcas/cointra.png" },
   { name: "Tifell", slug: "tifell", logo: "/images/marcas/tifell.png" },
@@ -190,7 +192,7 @@ export default function BrandSlider({
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain grayscale opacity-40 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
+                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain opacity-100 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
                   draggable={false}
                   loading="lazy"
                 />
