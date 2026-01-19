@@ -60,7 +60,7 @@ export default function BrandScroller() {
       lastTimeRef.current = currentTime;
 
       const container = scrollContainerRef.current;
-      const scrollSpeed = 0.4;
+      const scrollSpeed = 0.3;
       
       container.scrollLeft += scrollSpeed * (deltaTime / 16);
 
@@ -101,39 +101,39 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-white">
-      <div className="w-full px-4">
+    <section className="py-8 bg-gray-50">
+      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div 
-          className="relative"
+          className="relative group"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/95 rounded-full shadow-xl flex items-center justify-center hover:bg-orange-50 hover:scale-110 transition-all"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-7 h-7 text-orange-600" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
           </button>
 
-          {/* Contenedor de logos - GRANDE */}
+          {/* Contenedor de logos - tamaño grande uniforme */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-6 overflow-x-auto px-16"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth px-2 py-2"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-48 h-32 sm:w-56 sm:h-36 lg:w-64 lg:h-40 flex items-center justify-center bg-white rounded-xl border border-gray-200 hover:border-orange-400 hover:shadow-xl transition-all duration-200 group/brand"
+                className="flex-shrink-0 w-36 h-24 sm:w-44 sm:h-28 lg:w-52 lg:h-32 flex items-center justify-center p-3 bg-white rounded-xl border border-gray-200 hover:border-orange-400 hover:shadow-xl hover:bg-orange-50/30 transition-all duration-300 cursor-pointer group/brand"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="w-[90%] h-[90%] object-contain grayscale opacity-60 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-200"
+                  className="w-full h-full object-contain grayscale opacity-50 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-300"
                   draggable={false}
                   loading="lazy"
                 />
@@ -144,15 +144,20 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/95 rounded-full shadow-xl flex items-center justify-center hover:bg-orange-50 hover:scale-110 transition-all"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-7 h-7 text-orange-600" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
           </button>
+
+          {/* Gradientes de fade */}
+          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" />
         </div>
       </div>
 
       <style>{`
+        .scrollbar-hide::-webkit-scrollbar,
         div[style*="scrollbarWidth"]::-webkit-scrollbar {
           display: none;
         }
