@@ -174,7 +174,7 @@ export default function RepuestosMaquinaPage() {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-2 lg:gap-4 mt-4 lg:mt-8">
               <div className="bg-white/10 rounded-xl p-2 lg:p-4 backdrop-blur-sm text-center">
-                <div className="text-lg lg:text-2xl font-black">{datos.marcas.reduce((acc, m) => acc + m.count, 0)}+</div>
+                <div className="text-lg lg:text-2xl font-black">1000+</div>
                 <div className="text-white/80 text-xs lg:text-sm">Repuestos</div>
               </div>
               <div className="bg-white/10 rounded-xl p-2 lg:p-4 backdrop-blur-sm text-center">
@@ -224,7 +224,6 @@ export default function RepuestosMaquinaPage() {
                 </div>
                 <div className="text-center">
                   <h3 className="font-semibold text-gray-900 text-xs lg:text-sm truncate">{marca.name}</h3>
-                  <p className="text-xs text-gray-500">{marca.count} repuestos</p>
                 </div>
                 <div className={`mt-2 flex items-center justify-center gap-1 text-xs ${datos.colorText} opacity-0 group-hover:opacity-100 transition-opacity`}>
                   <span>Ver repuestos</span>
