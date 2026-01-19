@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 
-// Lista completa de marcas con logos HD procesados y slugs para enlaces
+// Lista completa de marcas con logos HD 600x600
 const marcasLogos = [
   { name: "Vaillant", slug: "vaillant", logo: "/images/marcas/vaillant.png" },
   { name: "Junkers", slug: "junkers", logo: "/images/marcas/junkers.png" },
@@ -15,14 +15,11 @@ const marcasLogos = [
   { name: "Beretta", slug: "beretta", logo: "/images/marcas/beretta.png" },
   { name: "Chaffoteaux", slug: "chaffoteaux", logo: "/images/marcas/chaffoteaux.png" },
   { name: "Cointra", slug: "cointra", logo: "/images/marcas/cointra.png" },
-  { name: "Biasi", slug: "biasi", logo: "/images/marcas/biasi.png" },
-  { name: "Tifell", slug: "tifell", logo: "/images/marcas/tifell.png" },
-  { name: "Manaut", slug: "manaut", logo: "/images/marcas/manaut.png" },
-  { name: "Lamborghini", slug: "lamborghini", logo: "/images/marcas/lamborghini.png" },
+  { name: "Bosch", slug: "bosch", logo: "/images/marcas/bosch.png" },
+  { name: "Wolf", slug: "wolf", logo: "/images/marcas/wolf.png" },
+  { name: "Roca", slug: "roca", logo: "/images/marcas/roca.png" },
+  { name: "Saunier Duval", slug: "saunier-duval", logo: "/images/marcas/saunier-duval.png" },
   { name: "Immergas", slug: "immergas", logo: "/images/marcas/immergas.png" },
-  { name: "Intergas", slug: "intergas", logo: "/images/marcas/intergas.png" },
-  { name: "Domusa", slug: "domusa", logo: "/images/marcas/domusa.png" },
-  { name: "Fagor", slug: "fagor", logo: "/images/marcas/fagor.png" },
   { name: "Daikin", slug: "daikin", logo: "/images/marcas/daikin.png" },
   { name: "Mitsubishi", slug: "mitsubishi", logo: "/images/marcas/mitsubishi.png" },
   { name: "Fujitsu", slug: "fujitsu", logo: "/images/marcas/fujitsu.png" },
@@ -33,9 +30,6 @@ const marcasLogos = [
   { name: "Panasonic", slug: "panasonic", logo: "/images/marcas/panasonic.png" },
   { name: "Hisense", slug: "hisense", logo: "/images/marcas/hisense.png" },
   { name: "Haier", slug: "haier", logo: "/images/marcas/haier.png" },
-  { name: "Midea", slug: "midea", logo: "/images/marcas/midea.png" },
-  { name: "Daitsu", slug: "daitsu", logo: "/images/marcas/daitsu.png" },
-  { name: "DeLonghi", slug: "delonghi", logo: "/images/marcas/delonghi.png" },
 ];
 
 export default function BrandScroller() {
@@ -49,7 +43,6 @@ export default function BrandScroller() {
     setIsMounted(true);
   }, []);
 
-  // Scroll automático suave
   useEffect(() => {
     if (!isMounted) return;
 
@@ -67,7 +60,7 @@ export default function BrandScroller() {
       lastTimeRef.current = currentTime;
 
       const container = scrollContainerRef.current;
-      const scrollSpeed = 0.3;
+      const scrollSpeed = 0.4;
       
       container.scrollLeft += scrollSpeed * (deltaTime / 16);
 
@@ -108,8 +101,8 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-6 bg-white">
-      <div className="w-full px-0">
+    <section className="py-8 bg-white">
+      <div className="w-full px-4">
         <div 
           className="relative"
           onMouseEnter={handleMouseEnter}
@@ -118,29 +111,29 @@ export default function BrandScroller() {
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-50"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/95 rounded-full shadow-xl flex items-center justify-center hover:bg-orange-50 hover:scale-110 transition-all"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-6 h-6 text-orange-600" />
+            <ChevronLeft className="w-7 h-7 text-orange-600" />
           </button>
 
-          {/* Contenedor de logos - sin padding, gap mínimo */}
+          {/* Contenedor de logos - GRANDE */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-4 overflow-x-auto px-12"
+            className="flex items-center gap-6 overflow-x-auto px-16"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-40 h-24 flex items-center justify-center bg-white rounded-lg border border-gray-200 hover:border-orange-400 hover:shadow-lg transition-all duration-200 group/brand"
+                className="flex-shrink-0 w-48 h-32 sm:w-56 sm:h-36 lg:w-64 lg:h-40 flex items-center justify-center bg-white rounded-xl border border-gray-200 hover:border-orange-400 hover:shadow-xl transition-all duration-200 group/brand"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="w-[85%] h-[85%] object-contain grayscale opacity-60 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-200"
+                  className="w-[90%] h-[90%] object-contain grayscale opacity-60 group-hover/brand:grayscale-0 group-hover/brand:opacity-100 group-hover/brand:scale-105 transition-all duration-200"
                   draggable={false}
                   loading="lazy"
                 />
@@ -151,10 +144,10 @@ export default function BrandScroller() {
           {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 bg-white/90 rounded-full shadow-lg flex items-center justify-center hover:bg-orange-50"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-white/95 rounded-full shadow-xl flex items-center justify-center hover:bg-orange-50 hover:scale-110 transition-all"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-6 h-6 text-orange-600" />
+            <ChevronRight className="w-7 h-7 text-orange-600" />
           </button>
         </div>
       </div>
