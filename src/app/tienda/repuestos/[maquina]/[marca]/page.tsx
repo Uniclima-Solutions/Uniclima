@@ -20,24 +20,30 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+// Familias de piezas de calderas con imágenes de /images/boiler-parts/
 const familiasCalderas = [
-  { name: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/productos/placa-electronica.png", count: 45 },
-  { name: "Bombas de Circulación", slug: "bombas-circulacion", image: "/images/productos/bomba-circulacion.png", count: 23 },
-  { name: "Intercambiadores", slug: "intercambiadores", image: "/images/productos/intercambiador.png", count: 18 },
-  { name: "Válvulas de Gas", slug: "valvulas-gas", image: "/images/productos/valvula-gas.png", count: 21 },
-  { name: "Ventiladores", slug: "ventiladores", image: "/images/productos/bomba-circulacion.png", count: 15 },
-  { name: "Electrodos y Sondas", slug: "electrodos-sondas", image: "/images/productos/placa-electronica.png", count: 32 },
-  { name: "Presostatos", slug: "presostatos", image: "/images/productos/valvula-gas.png", count: 12 },
-  { name: "Motores", slug: "motores", image: "/images/productos/bomba-circulacion.png", count: 8 }
+  { name: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/boiler-parts/placa-electronica.png", count: 45 },
+  { name: "Bombas de Circulación", slug: "bombas-circulacion", image: "/images/boiler-parts/bomba-circulacion.png", count: 23 },
+  { name: "Intercambiadores", slug: "intercambiadores", image: "/images/boiler-parts/intercambiador-placas.png", count: 18 },
+  { name: "Válvulas de Gas", slug: "valvulas-gas", image: "/images/boiler-parts/valvula-gas.png", count: 21 },
+  { name: "Ventiladores", slug: "ventiladores", image: "/images/boiler-parts/ventilador.png", count: 15 },
+  { name: "Presostatos", slug: "presostatos", image: "/images/boiler-parts/presostato.png", count: 12 },
+  { name: "Válvulas 3 Vías", slug: "valvulas-3-vias", image: "/images/boiler-parts/valvula-3-vias.png", count: 18 },
+  { name: "Quemadores", slug: "quemadores", image: "/images/boiler-parts/quemador.png", count: 14 },
+  { name: "Cuerpos Hidráulicos", slug: "cuerpos-hidraulicos", image: "/images/boiler-parts/cuerpo-hidraulico.png", count: 10 },
+  { name: "Sensores de Presión", slug: "sensores-presion", image: "/images/boiler-parts/sensor-presion.png", count: 22 },
+  { name: "Displays y Paneles", slug: "displays-paneles", image: "/images/boiler-parts/display-panel.png", count: 16 },
+  { name: "Vasos de Expansión", slug: "vasos-expansion", image: "/images/boiler-parts/vaso-expansion.png", count: 8 }
 ];
 
+// Familias de piezas de aire acondicionado con imágenes de /images/ac-parts/
 const familiasAire = [
-  { name: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/productos/placa-electronica.png", count: 38 },
-  { name: "Motores Ventilador", slug: "motores-ventilador", image: "/images/productos/bomba-circulacion.png", count: 25 },
-  { name: "Sensores y Sondas", slug: "sensores-sondas", image: "/images/productos/placa-electronica.png", count: 19 },
-  { name: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/productos/placa-electronica.png", count: 22 },
-  { name: "Compresores", slug: "compresores", image: "/images/productos/bomba-circulacion.png", count: 14 },
-  { name: "Tarjetas de Control", slug: "tarjetas-control", image: "/images/productos/placa-electronica.png", count: 16 }
+  { name: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/ac-parts/placa-electronica.png", count: 38 },
+  { name: "Motores Ventilador", slug: "motores-ventilador", image: "/images/ac-parts/motor-ventilador.png", count: 25 },
+  { name: "Compresores", slug: "compresores", image: "/images/ac-parts/compresor.png", count: 14 },
+  { name: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/ac-parts/mando-distancia.png", count: 22 },
+  { name: "Sensores y Sondas", slug: "sensores-sondas", image: "/images/ac-parts/placa-electronica.png", count: 19 },
+  { name: "Tarjetas de Control", slug: "tarjetas-control", image: "/images/ac-parts/placa-electronica.png", count: 16 }
 ];
 
 const coloresMaquina: Record<string, { gradient: string; claro: string; hover: string; text: string; bg: string }> = {
