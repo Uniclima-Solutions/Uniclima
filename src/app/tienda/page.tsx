@@ -61,9 +61,10 @@ export default function TiendaPage() {
       title: "Repuestos",
       description: "Componentes y piezas de recambio para calderas y aire acondicionado",
       href: "/tienda/repuestos",
-      image: "/images/productos/placa-electronica.png",
+      icon: Wrench,
       color: "from-gray-600 to-gray-800",
       bgColor: "bg-gray-100",
+      iconColor: "text-gray-700",
       stats: { productos: "5.000+", marcas: "24+" },
       subcategorias: [
         { name: "Calderas", href: "/tienda/repuestos/calderas", icon: Flame, color: "text-orange-500", bgColor: "bg-orange-50" },
@@ -74,9 +75,10 @@ export default function TiendaPage() {
       title: "Calderas",
       description: "Calderas de condensación nuevas y reacondicionadas con garantía",
       href: "/tienda/calderas",
-      image: "/images/productos/caldera-condensacion.png",
+      icon: Flame,
       color: "from-orange-500 to-red-600",
       bgColor: "bg-orange-50",
+      iconColor: "text-orange-600",
       stats: { productos: "150+", marcas: "12" },
       subcategorias: [
         { name: "Nuevas", href: "/tienda/calderas/nuevas", icon: Sparkles, color: "text-green-500", bgColor: "bg-green-50" },
@@ -87,9 +89,10 @@ export default function TiendaPage() {
       title: "Aire Acondicionado",
       description: "Equipos de climatización nuevos y reacondicionados",
       href: "/tienda/aire-acondicionado",
-      image: "/images/productos/aire-split.png",
+      icon: Wind,
       color: "from-blue-500 to-indigo-600",
       bgColor: "bg-blue-50",
+      iconColor: "text-blue-600",
       stats: { productos: "200+", marcas: "15" },
       subcategorias: [
         { name: "Nuevos", href: "/tienda/aire-acondicionado/nuevos", icon: Sparkles, color: "text-green-500", bgColor: "bg-green-50" },
@@ -194,20 +197,15 @@ export default function TiendaPage() {
             <h2 className="text-xl lg:text-2xl font-bold text-gray-900 mb-2 text-center">¿Qué estás buscando?</h2>
             <p className="text-gray-500 mb-6 lg:mb-8 text-center text-sm lg:text-base">Selecciona una categoría para explorar nuestro catálogo</p>
             
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
               {categorias.map((cat) => (
                 <div key={cat.title} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300">
-                  {/* Header con imagen */}
+                  {/* Header con icono */}
                   <div className={`relative ${cat.bgColor} p-4 lg:p-6`}>
                     <div className="flex items-center gap-4">
-                      {/* Imagen del producto */}
-                      <div className="relative w-20 h-20 lg:w-24 lg:h-24 flex-shrink-0">
-                        <Image
-                          src={cat.image}
-                          alt={cat.title}
-                          fill
-                          className="object-contain"
-                        />
+                      {/* Icono */}
+                      <div className={`w-16 h-16 lg:w-20 lg:h-20 flex-shrink-0 rounded-2xl bg-white/80 flex items-center justify-center shadow-sm`}>
+                        <cat.icon className={`w-8 h-8 lg:w-10 lg:h-10 ${cat.iconColor}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="text-lg lg:text-xl font-bold text-gray-900">{cat.title}</h3>

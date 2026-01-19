@@ -144,13 +144,8 @@ export default function RepuestosMaquinaPage() {
           <div className={`bg-gradient-to-br ${datos.color} rounded-2xl p-4 lg:p-8 text-white mb-6 lg:mb-8`}>
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
               <div className="flex items-center gap-4">
-                <div className="relative w-16 h-16 lg:w-20 lg:h-20 flex-shrink-0 bg-white/20 rounded-xl p-2">
-                  <Image
-                    src={datos.imagen}
-                    alt={datos.nombre}
-                    fill
-                    className="object-contain"
-                  />
+                <div className="w-14 h-14 lg:w-16 lg:h-16 flex-shrink-0 bg-white/20 rounded-xl flex items-center justify-center">
+                  <Icono className="w-7 h-7 lg:w-8 lg:h-8 text-white" />
                 </div>
                 <div>
                   <h1 className="text-2xl lg:text-3xl font-black">
