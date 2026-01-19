@@ -93,6 +93,104 @@ const preciosPorPlan = {
   aire: { Esencial: 70, Confort: 95, Premium: 120 }
 };
 
+// Detalles de cada plan por tipo
+const detallesPlan = {
+  caldera: {
+    Esencial: {
+      descripcion: "Mantenimiento preventivo anual",
+      caracteristicas: [
+        "1 intervención preventiva (oct-nov)",
+        "Revisión completa de seguridad",
+        "Control de presión y estanqueidad",
+        "Limpieza de quemador",
+        "Certificado de mantenimiento",
+      ],
+      ventajas: [
+        "Cumple normativa vigente",
+        "Previene averías en invierno",
+        "Optimiza el consumo de gas",
+      ],
+    },
+    Confort: {
+      descripcion: "Preventivo + reparaciones prioritarias",
+      caracteristicas: [
+        "1 intervención preventiva (oct-nov)",
+        "Reparaciones en 48-72 horas",
+        "10% dto. en repuestos",
+        "Atención telefónica prioritaria",
+        "Sin costes de desplazamiento",
+      ],
+      ventajas: [
+        "Respuesta rápida ante averías",
+        "Ahorro en repuestos originales",
+        "Tranquilidad todo el año",
+      ],
+    },
+    Premium: {
+      descripcion: "Cobertura completa + verano",
+      caracteristicas: [
+        "2 intervenciones anuales",
+        "Reparaciones en 48-72 horas",
+        "15% dto. en repuestos",
+        "Mano de obra incluida",
+        "Atención telefónica prioritaria",
+      ],
+      ventajas: [
+        "Doble revisión = doble seguridad",
+        "Respuesta urgente garantizada",
+        "El mejor precio en reparaciones",
+      ],
+    },
+  },
+  aire: {
+    Esencial: {
+      descripcion: "Mantenimiento preventivo anual",
+      caracteristicas: [
+        "1 intervención preventiva (mar-abr)",
+        "Limpieza completa de filtros",
+        "Revisión gas refrigerante",
+        "Comprobación eléctrica",
+        "Certificado de mantenimiento",
+      ],
+      ventajas: [
+        "Equipo listo para el verano",
+        "Mejora la calidad del aire",
+        "Reduce el consumo eléctrico",
+      ],
+    },
+    Confort: {
+      descripcion: "Preventivo + reparaciones prioritarias",
+      caracteristicas: [
+        "1 intervención preventiva (mar-abr)",
+        "Reparaciones en 48-72 horas",
+        "Limpieza unidad exterior",
+        "10% dto. en repuestos",
+        "Sin costes de desplazamiento",
+      ],
+      ventajas: [
+        "Respuesta rápida en verano",
+        "Ahorro en repuestos originales",
+        "Tranquilidad todo el año",
+      ],
+    },
+    Premium: {
+      descripcion: "Cobertura completa + invierno",
+      caracteristicas: [
+        "2 intervenciones anuales",
+        "Reparaciones en 24-72 horas",
+        "15% dto. en repuestos",
+        "Recarga gas incluida",
+        "Atención telefónica prioritaria",
+      ],
+      ventajas: [
+        "Doble revisión = doble seguridad",
+        "Respuesta urgente garantizada",
+        "El mejor precio en reparaciones",
+      ],
+    },
+  },
+};
+
 // Tipos de aparato
 const tiposAparato = [
   { value: "aire-split", label: "Aire A. Split", tipo: "aire" },
@@ -768,6 +866,50 @@ function ContratoMantenimientoContent() {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Detalles del plan seleccionado */}
+                  {tipoSeleccionado && (
+                    <div className="mt-6 p-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl border border-orange-200">
+                      <div className="flex items-center gap-2 mb-3">
+                        {planSeleccionado === 'Esencial' && <Shield className="w-5 h-5 text-orange-500" />}
+                        {planSeleccionado === 'Confort' && <Star className="w-5 h-5 text-orange-500" />}
+                        {planSeleccionado === 'Premium' && <Crown className="w-5 h-5 text-orange-500" />}
+                        <h3 className="font-bold text-gray-900">Plan {planSeleccionado} - {tipoSeleccionado.tipo === 'caldera' ? 'Calderas' : 'Aire Acondicionado'}</h3>
+                        <span className="ml-auto text-lg font-bold text-orange-600">€{precioBase}/{tipoSeleccionado.tipo === 'caldera' ? 'año' : 'año'}</span>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-3">
+                        {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].descripcion}
+                      </p>
+                      
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        {/* Características incluidas */}
+                        <div>
+                          <p className="text-xs font-semibold text-orange-600 uppercase mb-2">Características incluidas</p>
+                          <ul className="space-y-1.5">
+                            {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].caracteristicas.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                                <Check className="w-4 h-4 text-orange-500 flex-shrink-0 mt-0.5" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        
+                        {/* Ventajas incluidas */}
+                        <div>
+                          <p className="text-xs font-semibold text-orange-600 uppercase mb-2">Ventajas incluidas</p>
+                          <ul className="space-y-1.5">
+                            {detallesPlan[tipoSeleccionado.tipo as 'caldera' | 'aire'][planSeleccionado as 'Esencial' | 'Confort' | 'Premium'].ventajas.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-gray-700">
+                                <div className="w-2 h-2 rounded-full bg-orange-400 flex-shrink-0 mt-1.5"></div>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Datos del Cliente */}

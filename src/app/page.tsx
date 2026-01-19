@@ -369,108 +369,103 @@ function CategoryCarousel({
   basePath?: string;
   colorType?: "orange" | "blue";
 }) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Actualizar estado de scroll
-  const updateScrollState = () => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      setCanScrollLeft(container.scrollLeft > 0);
-      setCanScrollRight(
-        container.scrollLeft < container.scrollWidth - container.clientWidth - 10
-      );
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
     }
   };
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      container.addEventListener("scroll", updateScrollState);
-      updateScrollState();
-      return () => container.removeEventListener("scroll", updateScrollState);
+    checkScroll();
+    const scrollEl = scrollRef.current;
+    if (scrollEl) {
+      scrollEl.addEventListener('scroll', checkScroll);
+      return () => scrollEl.removeEventListener('scroll', checkScroll);
     }
   }, []);
 
-  const scroll = (direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
-    if (container) {
-      const cardWidth = 200; // Ancho aproximado de cada tarjeta
-      const visibleCards = Math.floor(container.clientWidth / cardWidth);
-      const scrollAmount = cardWidth * Math.max(1, visibleCards - 1);
-      container.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = scrollRef.current.clientWidth * 0.8;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
       });
     }
   };
 
   return (
-      <section className="py-6 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-1">
+    <section className="py-4 sm:py-6 lg:py-8 bg-white">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
+        {/* Header con título y botón ver todos */}
+        <div className="flex items-center justify-between mb-2 sm:mb-4 lg:mb-6">
           <div>
-            <h2 className="text-base sm:text-lg lg:text-2xl font-bold text-gray-900">{title}</h2>
-            {subtitle && <p className="text-gray-500 text-[10px] sm:text-xs lg:text-sm mt-0.5 hidden sm:block">{subtitle}</p>}
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900">{title}</h2>
+            {subtitle && (
+              <p className="text-xs sm:text-sm text-gray-500 mt-0.5">{subtitle}</p>
+            )}
           </div>
-          <Link href={viewAllLink} className="flex items-center gap-0.5 sm:gap-1 text-orange-600 hover:text-orange-700 font-medium text-xs sm:text-sm transition-colors">
+          <Link 
+            href={viewAllLink}
+            className={`text-xs sm:text-sm font-semibold flex items-center gap-1 ${
+              colorType === 'orange' ? 'text-orange-600 hover:text-orange-700' : 'text-indigo-600 hover:text-indigo-700'
+            }`}
+          >
             Ver todos
-            <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </Link>
         </div>
 
-        {/* Carrusel con scroll fluido */}
-        <div className="relative group">
-          {/* Flecha izquierda */}
-          <button
-            onClick={() => scroll("left")}
-            className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl ${
-              canScrollLeft
-                ? "opacity-100 -translate-x-1/2"
-                : "opacity-0 pointer-events-none -translate-x-full"
-            }`}
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
-          </button>
+        {/* Carrusel */}
+        <div className="relative">
+          {/* Botón izquierda */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll('left')}
+              className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-30 w-8 h-8 lg:w-10 lg:h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronLeft className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+            </button>
+          )}
 
-          {/* Contenedor de scroll fluido */}
+          {/* Contenedor scroll */}
           <div
-            ref={scrollContainerRef}
-            className="flex gap-3 sm:gap-4 lg:gap-5 overflow-x-auto scrollbar-hide scroll-smooth px-2 py-2"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            ref={scrollRef}
+            className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="flex-shrink-0 w-[160px] sm:w-[200px] lg:w-[240px]"
+                className="flex-shrink-0 w-[calc(25%-6px)] sm:w-[calc(20%-10px)] lg:w-[calc(16.666%-14px)]"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
             ))}
           </div>
 
-          {/* Flecha derecha */}
-          <button
-            onClick={() => scroll("right")}
-            className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl ${
-              canScrollRight
-                ? "opacity-100 translate-x-1/2"
-                : "opacity-0 pointer-events-none translate-x-full"
-            }`}
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
-          </button>
+          {/* Botón derecha */}
+          {canScrollRight && (
+            <button
+              onClick={() => scroll('right')}
+              className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-30 w-8 h-8 lg:w-10 lg:h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
+            </button>
+          )}
         </div>
       </div>
     </section>
   );
 }
 
-// Datos de planes de mantenimiento - Calderas
+// Datos de planes de mantenimiento - Calderas (preventivo: octubre-noviembre)
 const planesCaldera = [
   {
     id: 1,
@@ -478,7 +473,7 @@ const planesCaldera = [
     precio: 90,
     periodo: "año",
     destacado: false,
-    color: "emerald",
+    color: "orange",
     icono: "shield",
     descripcion: "Mantenimiento preventivo anual",
     caracteristicas: [
@@ -610,28 +605,6 @@ const planesAire = [
   }
 ];
 
-// Colores con degradados - Naranja para calderas, Azul para aire
-// Calderas: degradados de naranja claro a oscuro según plan
-const calderaColors = {
-  esencial: { gradient: 'from-orange-400 to-orange-500', bg: 'bg-orange-400', bgLight: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-300', accent: 'bg-orange-100' },
-  confort: { gradient: 'from-orange-500 to-orange-600', bg: 'bg-orange-500', bgLight: 'bg-orange-50', text: 'text-orange-600', border: 'border-orange-400', accent: 'bg-orange-100' },
-  premium: { gradient: 'from-orange-600 to-orange-700', bg: 'bg-orange-600', bgLight: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-500', accent: 'bg-orange-100' },
-};
-
-// Aire: degradados de azul claro a oscuro según plan
-const aireColors = {
-  esencial: { gradient: 'from-sky-400 to-sky-500', bg: 'bg-sky-400', bgLight: 'bg-sky-50', text: 'text-sky-600', border: 'border-sky-300', accent: 'bg-sky-100' },
-  confort: { gradient: 'from-blue-500 to-blue-600', bg: 'bg-blue-500', bgLight: 'bg-blue-50', text: 'text-blue-600', border: 'border-blue-400', accent: 'bg-blue-100' },
-  premium: { gradient: 'from-blue-600 to-blue-700', bg: 'bg-blue-600', bgLight: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-500', accent: 'bg-blue-100' },
-};
-
-// Función para obtener colores según tipo de equipo y plan
-const getColors = (tipoEquipo: 'calderas' | 'aire', planNombre: string) => {
-  const colorSet = tipoEquipo === 'calderas' ? calderaColors : aireColors;
-  const planKey = planNombre.toLowerCase() as keyof typeof calderaColors;
-  return colorSet[planKey] || colorSet.confort;
-};
-
 // Iconos por tipo
 const PlanIcon = ({ icono, className }: { icono: string; className?: string }) => {
   switch (icono) {
@@ -642,7 +615,7 @@ const PlanIcon = ({ icono, className }: { icono: string; className?: string }) =
   }
 };
 
-// Componente de tarjeta de precio - Diseño fondo blanco con header degradado
+// Componente de tarjeta de precio - Diseño exacto del mockup
 function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipoEquipo: 'calderas' | 'aire' }) {
   // Mapear tipo de equipo a valor del formulario
   const tipoAparatoParam = tipoEquipo === 'calderas' ? 'Caldera de Gas' : 'Aire A. Split';
@@ -679,22 +652,27 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
     if (tipoEquipo === 'calderas') return 'bg-orange-50 border-orange-200';
     return 'bg-indigo-50 border-indigo-200';
   };
+
+  const getButtonColor = () => {
+    if (tipoEquipo === 'calderas') return 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700';
+    return 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700';
+  };
   
   return (
-    <div className={`relative rounded-2xl overflow-hidden flex-shrink-0 w-[300px] sm:w-full bg-white shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl ${
-      isHighlighted ? 'ring-2 ring-orange-400 ring-offset-2' : ''
+    <div className={`relative flex flex-col bg-white rounded-2xl shadow-lg border ${
+      isHighlighted ? 'border-orange-400 ring-2 ring-orange-400 ring-offset-2' : 'border-gray-100'
     }`}>
       {/* Badge Recomendado */}
       {isHighlighted && (
         <div className="absolute -top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
-          <div className="bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+          <div className="bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg whitespace-nowrap">
             ★ RECOMENDADO
           </div>
         </div>
       )}
       
       {/* Header con degradado */}
-      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-6 py-5 text-white ${isHighlighted ? 'pt-8' : ''}`}>
+      <div className={`bg-gradient-to-r ${getHeaderGradient()} px-6 py-5 text-white rounded-t-2xl ${isHighlighted ? 'pt-8' : ''}`}>
         <div className="flex items-center gap-3 mb-2">
           <PlanIcon icono={plan.icono} className="w-6 h-6" />
           <h3 className="text-xl font-bold">{plan.nombre}</h3>
@@ -707,7 +685,7 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
       </div>
       
       {/* Características */}
-      <div className="px-6 py-5">
+      <div className="px-6 py-5 flex-grow">
         <ul className="space-y-3">
           {plan.caracteristicas.map((caracteristica, idx) => (
             <li key={idx} className="flex items-start gap-3">
@@ -736,25 +714,40 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
         </div>
       )}
       
-      {/* Botón Ver detalles */}
-      <div className="px-6 pb-6">
+      {/* Botón CONTRATAR AHORA */}
+      <div className="px-4 pb-4">
         <button
           onClick={handleContract}
-          className="w-full border border-gray-300 text-gray-600 py-3 rounded-full text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 flex items-center justify-center gap-2"
+          className={`w-full ${getButtonColor()} text-white py-3 rounded-lg text-sm font-bold uppercase tracking-wide shadow-lg transition-all duration-300 flex items-center justify-center gap-2`}
         >
-          <ArrowRight className="w-4 h-4" />
-          Click para ver detalles
+          CONTRATAR AHORA
         </button>
       </div>
     </div>
   );
 }
 
-// Sección de Mantenimiento con scroll horizontal en móvil
+// Sección de Mantenimiento con scroll horizontal en móvil y tarjeta central destacada
 function MaintenanceSection() {
   const [activeTab, setActiveTab] = useState<'calderas' | 'aire'>('calderas');
   const planes = activeTab === 'calderas' ? planesCaldera : planesAire;
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll suave de derecha a izquierda en móvil
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Centrar en la tarjeta del medio (Confort) al cargar
+    const cardWidth = 300;
+    const gap = 16;
+    const scrollToMiddle = cardWidth + gap;
+    
+    // Pequeño delay para asegurar que el DOM está listo
+    setTimeout(() => {
+      container.scrollTo({ left: scrollToMiddle, behavior: 'smooth' });
+    }, 100);
+  }, [activeTab]);
 
   return (
     <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
@@ -770,7 +763,7 @@ function MaintenanceSection() {
         </div>
         
         {/* Tabs con colores corporativos */}
-        <div className="flex justify-center mb-2">
+        <div className="flex justify-center mb-6">
           <div className="inline-flex bg-white rounded-full p-1.5 shadow-lg border border-gray-100">
             <button
               onClick={() => setActiveTab('calderas')}
@@ -806,14 +799,17 @@ function MaintenanceSection() {
           </div>
         </div>
         
-        {/* Tarjetas con scroll horizontal en móvil */}
+        {/* Tarjetas - Grid en desktop, scroll horizontal en móvil */}
         <div 
           ref={scrollContainerRef}
-          className="flex md:grid md:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4 scrollbar-hide"
+          className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth pb-4 md:pb-0 pt-4"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
           {planes.map((plan) => (
-            <div key={plan.id} className="snap-center">
+            <div 
+              key={plan.id} 
+              className="snap-center flex-shrink-0 w-[300px] md:w-auto"
+            >
               <PricingCard plan={plan} tipoEquipo={activeTab} />
             </div>
           ))}
@@ -828,6 +824,8 @@ function MaintenanceSection() {
             />
           ))}
         </div>
+        
+
       </div>
     </section>
   );
@@ -898,23 +896,21 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 lg:gap-4">
             {categoriasPCC.map((cat) => (
-              <Link key={cat.id} href={`/c/${cat.slug}`}>
-                <div className="group relative aspect-square rounded-lg sm:rounded-xl lg:rounded-2xl overflow-hidden bg-gray-100 hover:shadow-xl transition-all duration-300">
-                  {/* Imagen de fondo */}
-                  <img
-                    src={cat.image}
-                    alt={cat.nombre.replace('\n', ' ')}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  {/* Overlay con gradiente */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                  {/* Título en esquina inferior izquierda */}
-                  <div className="absolute bottom-0 left-0 p-2 sm:p-3 lg:p-5">
-                    <h3 className="text-white font-bold text-xs sm:text-sm lg:text-lg leading-tight whitespace-pre-line drop-shadow-lg">
-                      {cat.nombre}
-                    </h3>
-                  </div>
+              <Link 
+                key={cat.id}
+                href={`/c/${cat.slug}`}
+                className="relative aspect-[4/3] rounded-xl overflow-hidden group"
+              >
+                <img 
+                  src={cat.image} 
+                  alt={cat.nombre.replace('\n', ' ')}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4">
+                  <h3 className="text-white font-bold text-sm sm:text-base lg:text-lg whitespace-pre-line leading-tight">
+                    {cat.nombre}
+                  </h3>
                 </div>
               </Link>
             ))}
@@ -922,118 +918,55 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner CTA Profesionales - Diseño Premium */}
-      <section className="py-10 bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700">
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 lg:p-10 border border-white/20">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-              {/* Contenido izquierdo */}
-              <div className="text-white text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 rounded-full text-white text-xs font-medium mb-4">
-                  <Shield className="w-4 h-4" />
-                  Exclusivo para profesionales
-                </div>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 leading-tight">
-                  ¿Eres profesional del sector?
-                </h2>
-                <p className="text-orange-100 text-sm sm:text-base lg:text-lg mb-6 leading-relaxed">
-                  Únete a más de 500 instaladores que ya disfrutan de descuentos exclusivos, 
-                  envío prioritario y soporte técnico dedicado.
-                </p>
-                
-                {/* Beneficios */}
-                <div className="grid grid-cols-2 gap-3 mb-6">
-                  <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                      <Percent className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Hasta 25% dto.</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                      <Truck className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Envío prioritario</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                      <Headphones className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Soporte dedicado</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-white/90 text-xs sm:text-sm">
-                    <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                      <CreditCard className="w-3.5 h-3.5" />
-                    </div>
-                    <span>Pago a 30 días</span>
-                  </div>
-                </div>
-                
-                {/* Botones CTA */}
-                <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
-                  <Link 
-                    href="/registro-profesional" 
-                    className="px-6 py-3 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-100 transition-all duration-300 text-center text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-105"
-                  >
-                    Crear Cuenta PRO
-                  </Link>
-                  <Link 
-                    href="/contacto" 
-                    className="px-6 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-orange-600 transition-all duration-300 text-center text-sm sm:text-base"
-                  >
-                    Solicitar Presupuesto
-                  </Link>
-                </div>
+      {/* Zona Profesionales */}
+      <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+            <div className="text-white text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 mb-4">
+                <Shield className="w-4 h-4" />
+                <span className="text-sm font-medium">Exclusivo para profesionales</span>
               </div>
-              
-              {/* Stats derecha - solo desktop */}
-              <div className="hidden lg:grid grid-cols-2 gap-4">
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-5 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-1">500+</div>
-                  <div className="text-orange-100 text-sm">Profesionales activos</div>
-                </div>
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-5 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-1">25%</div>
-                  <div className="text-orange-100 text-sm">Descuento máximo</div>
-                </div>
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-5 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-1">24h</div>
-                  <div className="text-orange-100 text-sm">Envío express</div>
-                </div>
-                <div className="bg-white/15 backdrop-blur-sm rounded-xl p-5 text-center border border-white/20">
-                  <div className="text-4xl font-bold text-white mb-1">30</div>
-                  <div className="text-orange-100 text-sm">Días para pagar</div>
-                </div>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2">¿Eres profesional del sector?</h2>
+              <p className="text-white/90 max-w-xl">
+                Únete a más de 500 instaladores que ya disfrutan de descuentos exclusivos, envío prioritario y soporte técnico dedicado.
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 text-center">
+                <div className="text-3xl font-black text-white">500+</div>
+                <div className="text-white/80 text-sm">Profesionales activos</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl px-6 py-4 text-center">
+                <div className="text-3xl font-black text-white">25%</div>
+                <div className="text-white/80 text-sm">Descuento máximo</div>
               </div>
             </div>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 mt-6 justify-center lg:justify-start">
+            <Link 
+              href="/profesionales/registro"
+              className="inline-flex items-center justify-center gap-2 bg-white text-orange-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transition-all"
+            >
+              Crear Cuenta PRO
+            </Link>
+            <Link 
+              href="/profesionales/presupuesto"
+              className="inline-flex items-center justify-center gap-2 bg-transparent border-2 border-white text-white px-6 py-3 rounded-full font-semibold hover:bg-white/10 transition-all"
+            >
+              Solicitar Presupuesto
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Sección Contratos de Mantenimiento */}
+      {/* Sección de Mantenimiento */}
       <MaintenanceSection />
 
-      {/* Reseñas de Google */}
+      {/* Google Reviews */}
       <GoogleReviews />
 
-      {/* Banner Reparación de Placas - ADAPTATIVO */}
-      <section className="w-full flex justify-center py-8">
-        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
-          <Link href="/diagnostico-placas" className="block w-full">
-            <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_placa_mobile_final.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_placa_tablet_final.png" />
-              <img 
-                src="/banner_placa_final.png" 
-                alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía"
-                className="w-full h-auto block rounded-2xl shadow-lg"
-              />
-            </picture>
-          </Link>
-        </div>
-      </section>
-
-      {/* Marcas */}
+      {/* Marcas Slider */}
       <BrandScroller />
 
       <Footer />
