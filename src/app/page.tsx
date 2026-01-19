@@ -646,7 +646,7 @@ const PlanIcon = ({ icono, className }: { icono: string; className?: string }) =
   }
 };
 
-// Componente de tarjeta de precio - Diseño limpio y directo
+// Componente de tarjeta de precio - Diseño degradado completo estilo corporativo
 function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipoEquipo: 'calderas' | 'aire' }) {
   // Mapear tipo de equipo a valor del formulario
   const tipoAparatoParam = tipoEquipo === 'calderas' ? 'Caldera de Gas' : 'Aire A. Split';
@@ -655,74 +655,64 @@ function PricingCard({ plan, tipoEquipo }: { plan: typeof planesCaldera[0]; tipo
     plan: plan.nombre
   });
   
-  // Obtener colores según tipo de equipo y plan
-  const colors = getColors(tipoEquipo, plan.nombre);
   const isHighlighted = plan.destacado;
   
   const handleContract = () => {
     window.location.href = `/contrato-mantenimiento?${urlParams.toString()}`;
   };
   
+  // Gradientes según tipo de equipo - Naranja para calderas, Azul para aire
+  const getGradient = () => {
+    if (tipoEquipo === 'calderas') {
+      if (plan.nombre === 'Básico') return 'from-orange-500 via-orange-600 to-red-600';
+      if (plan.nombre === 'Confort') return 'from-orange-600 via-red-500 to-red-600';
+      return 'from-red-500 via-red-600 to-red-700';
+    } else {
+      if (plan.nombre === 'Básico') return 'from-sky-400 via-sky-500 to-blue-500';
+      if (plan.nombre === 'Confort') return 'from-blue-500 via-blue-600 to-blue-700';
+      return 'from-blue-600 via-blue-700 to-indigo-700';
+    }
+  };
+  
   return (
-    <div className={`relative rounded-2xl overflow-hidden bg-white flex-shrink-0 w-[280px] sm:w-full transition-shadow duration-300 ${
-      isHighlighted 
-        ? 'ring-2 ring-orange-500 shadow-xl' 
-        : 'border border-gray-200 shadow-md'
+    <div className={`relative rounded-3xl overflow-hidden flex-shrink-0 w-[280px] sm:w-full h-[420px] flex flex-col bg-gradient-to-br ${getGradient()} shadow-xl transition-transform duration-300 hover:scale-[1.02] ${
+      isHighlighted ? 'ring-4 ring-yellow-400 ring-offset-2' : ''
     }`}>
       {/* Badge Recomendado */}
       {isHighlighted && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 text-[10px] font-bold px-4 py-1 rounded-b-lg shadow-md">
+        <div className="absolute top-4 right-4 z-10">
+          <div className="bg-yellow-400 text-gray-900 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg">
             ★ RECOMENDADO
           </div>
         </div>
       )}
       
-      {/* Header con gradiente */}
-      <div className={`bg-gradient-to-br ${colors.gradient} px-5 py-5 text-white relative overflow-hidden`}>
-        {/* Patrón decorativo sutil */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        
-        <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <PlanIcon icono={plan.icono} className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-xl font-bold leading-tight">{plan.nombre}</h3>
-              <p className="text-white/80 text-sm leading-tight">{plan.descripcion}</p>
-            </div>
-          </div>
-          
-          {/* Precio */}
-          <div className="flex items-baseline gap-1">
-            <span className="text-4xl font-black">€{plan.precio}</span>
-            <span className="text-white/70 text-base">/{plan.periodo}</span>
-          </div>
+      {/* Contenido principal */}
+      <div className="flex-1 px-6 pt-8 pb-4 text-white flex flex-col">
+        {/* Título y descripción */}
+        <div className="text-center mb-6">
+          <h3 className="text-2xl font-black mb-2">Plan {plan.nombre}</h3>
+          <p className="text-white/80 text-sm">{plan.descripcion}</p>
         </div>
-      </div>
-      
-      {/* Contenido */}
-      <div className="px-5 py-5 bg-white">
-        {/* Características principales */}
-        <ul className="space-y-3 mb-5">
-          {plan.caracteristicas.map((caracteristica, idx) => (
+        
+        {/* Características con estrellas */}
+        <ul className="space-y-4 flex-1">
+          {plan.caracteristicas.slice(0, 4).map((caracteristica, idx) => (
             <li key={idx} className="flex items-start gap-3">
-              <div className={`w-5 h-5 rounded-full ${colors.accent} flex items-center justify-center flex-shrink-0 mt-0.5`}>
-                <Check className={`w-3 h-3 ${colors.text}`} />
-              </div>
-              <span className="text-sm text-gray-700 leading-snug">{caracteristica}</span>
+              <Star className="w-5 h-5 text-yellow-400 fill-yellow-400 flex-shrink-0 mt-0.5" />
+              <span className="text-sm text-white/90 leading-snug">{caracteristica}</span>
             </li>
           ))}
         </ul>
-        
-        {/* Botón contratar */}
+      </div>
+      
+      {/* Botón CONTRATAR destacado */}
+      <div className="px-6 pb-6">
         <button
           onClick={handleContract}
-          className={`w-full bg-gradient-to-r ${colors.gradient} text-white py-3.5 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-shadow duration-300 flex items-center justify-center gap-2`}
+          className="w-full bg-white text-gray-900 py-4 rounded-2xl text-base font-black uppercase tracking-wider shadow-lg hover:shadow-xl hover:bg-gray-50 transition-all duration-300"
         >
-          Contratar ahora
-          <ArrowRight className="w-4 h-4" />
+          CONTRATAR
         </button>
       </div>
     </div>
