@@ -783,7 +783,7 @@ function MaintenanceSection() {
         >
           {planes.map((plan) => (
             <div key={plan.id} className="snap-center">
-              <PricingCardFlip plan={plan} tipoEquipo={activeTab} />
+              <PricingCard plan={plan} tipoEquipo={activeTab} />
             </div>
           ))}
         </div>
