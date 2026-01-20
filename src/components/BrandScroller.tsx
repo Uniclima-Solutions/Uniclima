@@ -107,7 +107,7 @@ export default function BrandScroller() {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Flecha izquierda - más pequeña en móvil */}
+          {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
@@ -116,23 +116,23 @@ export default function BrandScroller() {
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
           </button>
 
-          {/* Contenedor de logos - RESPONSIVO para mostrar 3+ en móvil */}
+          {/* Contenedor de logos con recuadros */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-2 sm:gap-3 md:gap-4 overflow-x-auto mx-9 sm:mx-11 md:mx-14 py-3 sm:py-4 md:py-6"
+            className="flex items-center gap-3 sm:gap-4 md:gap-5 overflow-x-auto mx-9 sm:mx-11 md:mx-14 py-3 sm:py-4 md:py-6"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
               <Link
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
-                className="group flex-shrink-0 flex items-center justify-center transition-all duration-300"
+                className="group flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-orange-300 transition-all duration-300 p-2 sm:p-3 md:p-4"
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-24 h-12 sm:w-32 sm:h-16 md:w-40 md:h-20 lg:w-48 lg:h-24"
+                  className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-20 h-10 sm:w-28 sm:h-14 md:w-36 md:h-18 lg:w-44 lg:h-22"
                   draggable={false}
                   loading="lazy"
                 />
@@ -140,7 +140,7 @@ export default function BrandScroller() {
             ))}
           </div>
 
-          {/* Flecha derecha - más pequeña en móvil */}
+          {/* Flecha derecha */}
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
