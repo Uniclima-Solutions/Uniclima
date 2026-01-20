@@ -954,6 +954,19 @@ export default function Home() {
       {/* Google Reviews */}
       <GoogleReviews />
 
+      {/* Banner Reparación de Placas - Encima de Marcas */}
+      <section className="w-full flex justify-center py-8">
+        <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+          <Link href="/diagnostico-placas" className="block w-full group">
+            <img 
+              src="/images/banners/banner-reparacion-placas-v2.webp" 
+              alt="¿No encuentras tu placa? ¡La reparamos! Técnicos especializados con 1 año de garantía - 48/72h - Hasta 60% descuento"
+              className="w-full h-auto block rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+            />
+          </Link>
+        </div>
+      </section>
+
       {/* Marcas Slider */}
       <BrandScroller />
 
