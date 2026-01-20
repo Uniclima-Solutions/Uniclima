@@ -141,6 +141,12 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <head>
+        {/* Preload de imágenes críticas para LCP */}
+        <link rel="preload" as="image" href="/images/categorias/placa-electronica.webp" />
+        <link rel="preload" as="image" href="/images/categorias/intercambiador.webp" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
         {/* Schemas JSON-LD para SEO */}
         <Script
           id="organization-schema"
