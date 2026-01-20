@@ -1,44 +1,56 @@
-'use client';
-
 /**
- * PÁGINA PREMIUM: Repuestos de Aire Acondicionado
- * Diseño UI/UX cuidado con experiencia de usuario optimizada
- * Incluye enlace a contratos de mantenimiento
+ * PÁGINA OPTIMIZADA: Repuestos de Aire Acondicionado
+ * 
+ * Optimizaciones LCP implementadas:
+ * - Server Component para Hero (renderizado inmediato)
+ * - Streaming SSR con Suspense
+ * - Static Generation con revalidación
+ * - Preload de imágenes críticas
  * 
  * SEO Optimizado:
- * - Title: "Repuestos Aire Acondicionado | Splits y Climatización | Uniclima"
- * - H1: "Repuestos de Aire Acondicionado: Splits, Multisplits y Climatización"
- * - Intención: Transaccional + Comercial
- * 
- * UI/UX Mejorado:
- * - Animaciones suaves y microinteracciones
- * - Bordes redondeados consistentes
- * - Transiciones fluidas
- * - Efectos hover refinados
+ * - Title: "Repuestos de Aire Acondicionado | +2.500 Referencias | Uniclima"
+ * - H1: "Repuestos de Aire Acondicionado: Splits y Climatización"
  */
 
-import { useState } from "react";
-import Link from "next/link";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Suspense } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { CategoryGrid } from "@/components/CategoryGrid"
+import { BrandGrid } from "@/components/BrandGrid"
+import { CategoriesSkeleton, BrandsSkeleton } from "@/components/Skeletons"
 import { 
   ChevronRight, 
-  Search, 
-  Snowflake,
+  Wind,
   Truck,
   Shield,
   Clock,
   ArrowRight,
-  Phone,
   CheckCircle,
-  Thermometer,
-  Sparkles,
+  Wrench,
   Package,
   BadgeCheck,
-  Wind
-} from "lucide-react";
-import Image from "next/image";
-import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
+  Snowflake,
+  Thermometer
+} from "lucide-react"
+import { AIRE_BRANDS } from "@/lib/brands"
+import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd"
+import type { Metadata } from 'next'
+
+// Static Generation con revalidación cada hora
+export const revalidate = 3600
+
+// Metadata para SEO
+export const metadata: Metadata = {
+  title: 'Repuestos de Aire Acondicionado | +2.500 Referencias | Uniclima',
+  description: 'Más de 2.500 repuestos de aire acondicionado originales y compatibles. Mitsubishi, Daikin, Fujitsu, LG y más marcas. Envío 24-48h. Garantía 1 año.',
+  openGraph: {
+    title: 'Repuestos de Aire Acondicionado | Uniclima',
+    description: 'Más de 2.500 repuestos de aire acondicionado originales y compatibles.',
+    type: 'website',
+  },
+}
 
 // Categorías de Repuestos de Aire Acondicionado
 const repuestosAire = [
@@ -51,171 +63,179 @@ const repuestosAire = [
   { id: 7, name: "B. Conductos", fullName: "Bomba Condensados Conductos", slug: "bomba-condensado-conductos", image: "/images/categorias/BombaCondensadoConductos.webp", count: 145, popular: false },
   { id: 8, name: "B. Cassette", fullName: "Bomba Condensados Cassette", slug: "bomba-condensados-cassette", image: "/images/categorias/BombaCondensadosCassette.webp", count: 89, popular: false },
   { id: 9, name: "Mandos", fullName: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/categorias/MandosDistanciaSplit.webp", count: 167, popular: true }
-];
+]
 
-// Marcas de aire acondicionado con logos
-const marcas = [
-  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 523, logo: "/images/marcas/mitsubishi.webp" },
-  { name: "Daikin", slug: "daikin", count: 467, logo: "/images/marcas/daikin.webp" },
-  { name: "Fujitsu", slug: "fujitsu", count: 389, logo: "/images/marcas/fujitsu.webp" },
-  { name: "LG", slug: "lg", count: 345, logo: "/images/marcas/lg.webp" },
-  { name: "Samsung", slug: "samsung", count: 312, logo: "/images/marcas/samsung.webp" },
-  { name: "Panasonic", slug: "panasonic", count: 278, logo: "/images/marcas/panasonic.webp" },
-  { name: "Toshiba", slug: "toshiba", count: 234, logo: "/images/marcas/toshiba.webp" },
-  { name: "Hisense", slug: "hisense", count: 198, logo: "/images/marcas/hisense.webp" },
-  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.webp" },
-  { name: "Carrier", slug: "carrier", count: 145, logo: "/images/marcas/carrier.webp" },
-  { name: "Midea", slug: "midea", count: 123, logo: "/images/marcas/midea.webp" },
-  { name: "Gree", slug: "gree", count: 98, logo: "/images/marcas/gree.webp" }
-];
+// Tipos de aire acondicionado
+const tiposAire = [
+  { name: "Split", icon: Wind, description: "Unidades de pared", count: 1200 },
+  { name: "Multisplit", icon: Snowflake, description: "Múltiples unidades", count: 450 },
+  { name: "Conductos", icon: Thermometer, description: "Instalación oculta", count: 380 },
+  { name: "Cassette", icon: Package, description: "Techo comercial", count: 290 }
+]
 
-// Formas de onda para las tarjetas (azul)
-const waveShapes = [
-  "M0,40 C80,40 120,15 200,15 C280,15 320,40 400,40 L400,100 L0,100 Z",
-  "M0,50 C100,50 150,20 250,20 C350,20 400,50 400,50 L400,100 L0,100 Z",
-  "M0,30 C60,30 100,50 200,50 C300,50 340,30 400,30 L400,100 L0,100 Z",
-  "M0,45 C50,20 100,20 150,35 C200,50 250,50 300,35 C350,20 400,20 400,45 L400,100 L0,100 Z",
-];
+// Marcas disponibles
+const marcas = AIRE_BRANDS
 
-// Componente de tarjeta de categoría con animaciones mejoradas
-function CategoryCard({ category, index }: { category: typeof repuestosAire[0]; index: number }) {
-  const waveIndex = index % waveShapes.length;
-  const wavePath = waveShapes[waveIndex];
-  
+// Cálculos estáticos
+const totalProductos = repuestosAire.reduce((acc, cat) => acc + cat.count, 0)
+
+// Schemas para SEO
+const breadcrumbSchema = createBreadcrumbSchema([
+  { name: "Inicio", url: "https://uniclima.es" },
+  { name: "Repuestos de Aire Acondicionado" }
+])
+
+const collectionSchema = createCollectionPageSchema(
+  "Repuestos de Aire Acondicionado",
+  `Más de ${totalProductos.toLocaleString()} repuestos originales y compatibles para aire acondicionado de todas las marcas. Envío 24-48h y garantía 1 año.`,
+  "https://uniclima.es/c/aire-acondicionado",
+  repuestosAire.map(cat => ({
+    name: cat.fullName,
+    url: `https://uniclima.es/c/aire-acondicionado/${cat.slug}`
+  }))
+)
+
+// Componente StatCard (Server Component)
+function StatCard({ value, label, icon: Icon }: { value: string; label: string; icon: React.ElementType }) {
   return (
-    <Link href={`/c/aire-acondicionado/${category.slug}`} className="group block">
-      <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 ease-out relative aspect-square border border-gray-100/80 hover:border-blue-200 transform hover:-translate-y-1">
-        {/* Badge popular con animación */}
-        {category.popular && (
-          <div className="absolute top-2.5 right-2.5 z-30 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow-lg animate-pulse">
-            <span className="flex items-center gap-1">
-              <Sparkles className="w-3 h-3" />
-              Popular
-            </span>
-          </div>
-        )}
-        
-        {/* Banner con forma de onda */}
-        <div className="absolute bottom-0 left-0 right-0 h-[42%]">
-          <svg 
-            className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105" 
-            viewBox="0 0 400 100" 
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient id={`gradient-aire-${category.slug}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#60a5fa" />
-                <stop offset="50%" stopColor="#3b82f6" />
-                <stop offset="100%" stopColor="#1d4ed8" />
-              </linearGradient>
-            </defs>
-            <path d={wavePath} fill={`url(#gradient-aire-${category.slug})`} className="transition-all duration-500" />
-          </svg>
-        </div>
-        
-        {/* Imagen con animación suave - optimizada para LCP */}
-        <div className="absolute inset-0 flex items-center justify-center p-3 z-10">
-          <Image
-            src={category.image}
-            alt={category.fullName}
-            width={200}
-            height={200}
-            priority={index < 6}
-            className="w-full h-full object-contain drop-shadow-xl max-w-[85%] max-h-[75%] transition-all duration-500 ease-out group-hover:scale-110 group-hover:drop-shadow-2xl"
-          />
-        </div>
-        
-        {/* Texto con mejor tipografía */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3.5 px-2">
-          <h3 className="text-white font-bold text-[10px] sm:text-xs leading-tight text-center drop-shadow-lg uppercase tracking-wider">
-            {category.name}
-          </h3>
-        </div>
-      </div>
-      {/* Contador con animación */}
-      <p className="text-[11px] text-gray-500 text-center mt-2 font-medium transition-colors duration-300 group-hover:text-blue-600">
-        {category.count} productos
-      </p>
-    </Link>
-  );
-}
-
-// Componente de tarjeta de marca con animaciones mejoradas
-function BrandCard({ marca }: { marca: typeof marcas[0] }) {
-  return (
-    <Link 
-      href={`/c/aire-acondicionado?marca=${marca.slug}`}
-      className="group bg-white rounded-2xl p-3 sm:p-4 border border-gray-100 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-400 ease-out flex items-center justify-center aspect-[4/3] transform hover:-translate-y-0.5"
-    >
-      <Image 
-        src={marca.logo} 
-        alt={marca.name}
-        width={100}
-        height={75}
-        className="w-full h-full object-contain transition-all duration-400 ease-out group-hover:scale-110"
-        loading="lazy"
-      />
-    </Link>
-  );
-}
-
-// Componente de stat card con animación
-function StatCard({ value, label, icon: Icon }: { value: string; label: string; icon?: any }) {
-  return (
-    <div className="bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-      <div className="flex items-center gap-3">
-        {Icon && (
-          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <Icon className="w-5 h-5 text-white" />
-          </div>
-        )}
-        <div>
-          <div className="text-2xl font-black text-white">{value}</div>
-          <div className="text-blue-200 text-sm font-medium">{label}</div>
-        </div>
-      </div>
+    <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center">
+      <Icon className="w-6 h-6 mx-auto mb-2 text-white/80" />
+      <div className="text-2xl lg:text-3xl font-bold text-white">{value}</div>
+      <div className="text-xs lg:text-sm text-white/70 mt-1">{label}</div>
     </div>
-  );
+  )
 }
 
-// Componente de tipo de equipo
-function EquipmentTypeCard({ href, icon: Icon, title, subtitle }: { href: string; icon: any; title: string; subtitle: string }) {
+// Componente de beneficios (Server Component)
+function BenefitsBar() {
+  const benefits = [
+    { icon: Truck, text: "Envío gratis +120€", color: "text-blue-500" },
+    { icon: Clock, text: "Entrega 24-48h", color: "text-blue-500" },
+    { icon: Shield, text: "Garantía 1 año", color: "text-blue-500" },
+    { icon: CheckCircle, text: "Repuestos verificados", color: "text-blue-500" }
+  ]
+
   return (
-    <Link href={href} className="group bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-xl transition-all duration-400 transform hover:-translate-y-1">
-      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mb-4 group-hover:from-blue-500 group-hover:to-blue-600 transition-all duration-400">
-        <Icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors duration-400" />
+    <section className="bg-white border-b border-gray-100 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
+          {benefits.map((benefit, index) => (
+            <div key={index} className="flex items-center gap-2 text-gray-700">
+              <benefit.icon className={`w-5 h-5 ${benefit.color}`} />
+              <span className="font-medium">{benefit.text}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      <h3 className="font-bold text-gray-900 mb-1 text-lg">{title}</h3>
-      <p className="text-sm text-gray-500">{subtitle}</p>
-    </Link>
-  );
+    </section>
+  )
 }
 
-export default function RepuestosAireAcondicionado() {
-  const [busqueda, setBusqueda] = useState("");
-  const [mostrarTodas, setMostrarTodas] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
-  
-  const totalProductos = repuestosAire.reduce((acc, cat) => acc + cat.count, 0);
-  const categoriasPopulares = repuestosAire.filter(c => c.popular);
-  const categoriasAMostrar = mostrarTodas ? repuestosAire : categoriasPopulares;
+// Componente de tipos de aire (Server Component)
+function TiposAireSection() {
+  return (
+    <section className="py-12 bg-blue-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
+          Repuestos según Tipo de Aire Acondicionado
+        </h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {tiposAire.map((tipo, index) => (
+            <Link
+              key={index}
+              href={`/c/aire-acondicionado/tipo/${tipo.name.toLowerCase()}`}
+              className="bg-white rounded-2xl p-6 text-center hover:shadow-lg transition-all duration-300 border border-blue-100 hover:border-blue-300 group"
+            >
+              <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-200 transition-colors">
+                <tipo.icon className="w-7 h-7 text-blue-600" />
+              </div>
+              <h3 className="font-bold text-gray-900 mb-1">{tipo.name}</h3>
+              <p className="text-sm text-gray-500 mb-2">{tipo.description}</p>
+              <span className="text-xs text-blue-600 font-medium">{tipo.count} productos</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
-  // Schemas para SEO
-  const breadcrumbSchema = createBreadcrumbSchema([
-    { name: "Inicio", url: "https://uniclima.es" },
-    { name: "Repuestos de Aire Acondicionado" }
-  ]);
+// Componente de CTA Mantenimiento (Server Component)
+function MaintenanceCTA() {
+  return (
+    <section className="py-12 bg-gradient-to-r from-blue-500 to-blue-600">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="text-white text-center lg:text-left">
+            <h2 className="text-2xl lg:text-3xl font-bold mb-2">
+              ¿Necesitas Mantenimiento Profesional?
+            </h2>
+            <p className="text-blue-100 text-lg">
+              Contrata nuestro servicio de mantenimiento anual para tu aire acondicionado
+            </p>
+          </div>
+          <Link
+            href="/contrato-mantenimiento"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          >
+            <Wrench className="w-5 h-5" />
+            Ver Contratos de Mantenimiento
+            <ArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </div>
+    </section>
+  )
+}
 
-  const collectionSchema = createCollectionPageSchema(
-    "Repuestos de Aire Acondicionado",
-    `Más de ${totalProductos.toLocaleString()} repuestos originales y compatibles para splits, multisplits y sistemas de climatización. Envío 24-48h.`,
-    "https://uniclima.es/c/aire-acondicionado",
-    repuestosAire.map(cat => ({
-      name: cat.fullName,
-      url: `https://uniclima.es/c/aire-acondicionado/${cat.slug}`
-    }))
-  );
+// Componente de contenido SEO (Server Component)
+function SEOContent() {
+  return (
+    <section className="py-14 bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
+          Guía de Compra: Repuestos de Aire Acondicionado
+        </h2>
+        
+        <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900">
+          <p>
+            En Uniclima Solutions somos especialistas en <strong>repuestos de aire acondicionado</strong> para todas las marcas 
+            y modelos del mercado. Disponemos de un amplio catálogo de componentes originales y compatibles, 
+            desde placas electrónicas hasta compresores, motores y turbinas.
+          </p>
+          
+          <h3>Catálogo de Repuestos para Aire Acondicionado</h3>
+          <p>
+            Nuestro catálogo incluye más de {totalProductos.toLocaleString()} referencias de repuestos para aire acondicionado:
+          </p>
+          <ul>
+            <li><strong>Placas electrónicas:</strong> El cerebro de tu equipo. Disponemos de placas para Mitsubishi, Daikin, Fujitsu y más.</li>
+            <li><strong>Compresores:</strong> El corazón del sistema de refrigeración.</li>
+            <li><strong>Motores y turbinas:</strong> Para la circulación del aire en unidades interiores y exteriores.</li>
+            <li><strong>Mandos a distancia:</strong> Originales y compatibles para todas las marcas.</li>
+            <li><strong>Sensores:</strong> Para el control preciso de la temperatura.</li>
+          </ul>
+          
+          <h3>Marcas de Aire Acondicionado Disponibles</h3>
+          <p>
+            Trabajamos con las principales marcas del sector: Mitsubishi Electric, Daikin, Fujitsu, LG, Samsung, 
+            Panasonic, Toshiba, Hisense, Haier, Carrier, Midea y Gree.
+          </p>
+          
+          <h3>Mantenimiento de Aire Acondicionado</h3>
+          <p>
+            Un correcto mantenimiento de tu aire acondicionado es esencial para su eficiencia y durabilidad. 
+            Ofrecemos <strong>contratos de mantenimiento anual</strong> que incluyen revisión completa, 
+            limpieza de filtros y comprobación del gas refrigerante.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
 
+// Página principal (Server Component)
+export default function AireAcondicionadoPage() {
   return (
     <>
       {/* Schema.org JSON-LD para SEO */}
@@ -223,21 +243,21 @@ export default function RepuestosAireAcondicionado() {
       
       <Header />
       <main className="pt-20 lg:pt-28 bg-gradient-to-b from-gray-50 to-white min-h-screen">
-        {/* Hero Section con diseño mejorado */}
+        {/* Hero Section - Server Component para LCP óptimo */}
         <section className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 text-white relative overflow-hidden">
           {/* Elementos decorativos de fondo */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
+          <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl" />
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
-            {/* Breadcrumbs con animación */}
-            <nav className="flex items-center gap-2 text-blue-100 text-sm mb-8">
-              <Link href="/" className="hover:text-white transition-colors duration-300 hover:underline underline-offset-4">
+            {/* Breadcrumbs */}
+            <nav className="flex items-center gap-2 text-blue-100 text-sm mb-8" aria-label="Breadcrumb">
+              <Link href="/" className="hover:text-white transition-colors duration-300">
                 Inicio
               </Link>
-              <ChevronRight className="w-4 h-4 animate-pulse" />
+              <ChevronRight className="w-4 h-4" />
               <span className="text-white font-semibold">Repuestos Aire Acondicionado</span>
             </nav>
             
@@ -251,30 +271,15 @@ export default function RepuestosAireAcondicionado() {
                     Repuestos de Aire Acondicionado
                   </h1>
                 </div>
+                {/* Elemento LCP - Texto renderizado inmediatamente en el servidor */}
                 <p className="text-blue-100 text-lg lg:text-xl leading-relaxed">
                   Más de <span className="text-white font-bold">{totalProductos.toLocaleString()}</span> referencias de repuestos para 
                   <span className="text-white font-semibold"> Daikin, Mitsubishi, Fujitsu, LG</span> y más marcas.
                 </p>
               </div>
-              
-              {/* Buscador mejorado */}
-              <div className="w-full lg:w-[420px]">
-                <div className={`relative transition-all duration-300 ${searchFocused ? 'transform scale-105' : ''}`}>
-                  <Search className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${searchFocused ? 'text-blue-500' : 'text-gray-400'}`} />
-                  <input
-                    type="text"
-                    placeholder="Buscar por referencia, marca..."
-                    value={busqueda}
-                    onChange={(e) => setBusqueda(e.target.value)}
-                    onFocus={() => setSearchFocused(true)}
-                    onBlur={() => setSearchFocused(false)}
-                    className="w-full pl-14 pr-5 py-4 rounded-2xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300/50 shadow-2xl transition-all duration-300 text-base"
-                  />
-                </div>
-              </div>
             </div>
             
-            {/* Stats con iconos y animaciones */}
+            {/* Stats */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
               <StatCard value={totalProductos.toLocaleString()} label="Productos" icon={Package} />
               <StatCard value={marcas.length.toString()} label="Marcas" icon={BadgeCheck} />
@@ -284,202 +289,61 @@ export default function RepuestosAireAcondicionado() {
           </div>
         </section>
         
-        {/* Beneficios con diseño mejorado */}
-        <section className="bg-white border-b border-gray-100 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-            <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
-              {[
-                { icon: Truck, text: "Envío gratis +120€", color: "text-blue-500" },
-                { icon: Clock, text: "Entrega 24-48h", color: "text-blue-500" },
-                { icon: Shield, text: "Garantía 1 año", color: "text-blue-500" },
-                { icon: CheckCircle, text: "Repuestos verificados", color: "text-blue-500" }
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2.5 text-gray-600 hover:text-gray-900 transition-colors duration-300 group cursor-default">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
-                    <item.icon className={`w-5 h-5 ${item.color}`} />
-                  </div>
-                  <span className="font-medium">{item.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Beneficios */}
+        <BenefitsBar />
         
-        {/* Categorías con diseño mejorado */}
-        <section className="py-14">
+        {/* Categorías con Suspense streaming */}
+        <section className="py-12 lg:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-8">
-              <div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                  {mostrarTodas ? "Categorías de Repuestos de Aire Acondicionado" : "Repuestos de Aire Acondicionado Más Buscados"}
-                </h2>
-                <p className="text-gray-500 mt-2">
-                  {mostrarTodas ? `${repuestosAire.length} tipos de componentes disponibles` : `${categoriasPopulares.length} categorías con mayor demanda`}
-                </p>
-              </div>
-              <button
-                onClick={() => setMostrarTodas(!mostrarTodas)}
-                className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1.5 px-4 py-2 rounded-xl hover:bg-blue-50 transition-all duration-300"
-              >
-                {mostrarTodas ? "Ver menos" : "Ver todas"}
-                <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${mostrarTodas ? "rotate-90" : ""}`} />
-              </button>
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
+                Repuestos de Aire Acondicionado Más Buscados
+              </h2>
             </div>
             
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 sm:gap-5">
-              {categoriasAMostrar.map((category, index) => (
-                <CategoryCard key={category.id} category={category} index={index} />
-              ))}
-            </div>
+            <Suspense fallback={<CategoriesSkeleton count={6} />}>
+              <CategoryGrid 
+                categories={repuestosAire} 
+                baseUrl="/c/aire-acondicionado"
+                showToggle={true}
+              />
+            </Suspense>
           </div>
         </section>
         
-        {/* Banner Mantenimiento con diseño premium */}
-        <section className="py-10">
+        {/* Tipos de Aire */}
+        <TiposAireSection />
+        
+        {/* CTA Mantenimiento */}
+        <MaintenanceCTA />
+        
+        {/* Marcas con Suspense streaming */}
+        <section className="py-12 lg:py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-8 lg:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
-              {/* Elementos decorativos */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl"></div>
-              
-              <div className="flex items-center gap-5 relative z-10">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
-                  <Thermometer className="w-8 h-8 text-white" />
-                </div>
-                <div className="text-white">
-                  <h3 className="text-2xl font-bold mb-2">¿Prefieres que lo hagamos nosotros?</h3>
-                  <p className="text-gray-400 text-base">
-                    Contrata nuestro servicio de mantenimiento y olvídate de problemas. <span className="text-blue-400 font-semibold">Desde 70€/año.</span>
-                  </p>
-                </div>
-              </div>
-              <Link 
-                href="/contrato-mantenimiento"
-                className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 whitespace-nowrap shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 relative z-10"
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
+              Repuestos de Aire Acondicionado por Marca
+            </h2>
+            
+            <Suspense fallback={<BrandsSkeleton count={12} />}>
+              <BrandGrid brands={marcas} columns={6} />
+            </Suspense>
+            
+            <div className="text-center mt-8">
+              <Link
+                href="/marcas"
+                className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors"
               >
-                Contratar mantenimiento
+                Ver todas las marcas
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>
           </div>
         </section>
         
-        {/* Marcas con diseño mejorado */}
-        <section className="py-14 bg-gradient-to-b from-white to-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-10">
-              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">Repuestos de Aire Acondicionado por Marca</h2>
-              <p className="text-gray-500 text-lg">Componentes originales y compatibles para las principales marcas</p>
-            </div>
-            
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-5">
-              {marcas.map((marca) => (
-                <BrandCard key={marca.slug} marca={marca} />
-              ))}
-            </div>
-          </div>
-        </section>
-        
-        {/* Tipos de equipos con diseño mejorado */}
-        <section className="py-14">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">Repuestos según Tipo de Aire Acondicionado</h2>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              <EquipmentTypeCard 
-                href="/c/aire-acondicionado?tipo=split" 
-                icon={Snowflake} 
-                title="Split" 
-                subtitle="Unidades de pared" 
-              />
-              <EquipmentTypeCard 
-                href="/c/aire-acondicionado?tipo=multisplit" 
-                icon={Snowflake} 
-                title="Multisplit" 
-                subtitle="Sistemas multi-unidad" 
-              />
-              <EquipmentTypeCard 
-                href="/c/aire-acondicionado?tipo=conductos" 
-                icon={Wind} 
-                title="Conductos" 
-                subtitle="Sistemas canalizados" 
-              />
-              <EquipmentTypeCard 
-                href="/c/aire-acondicionado?tipo=cassette" 
-                icon={Snowflake} 
-                title="Cassette" 
-                subtitle="Unidades de techo" 
-              />
-            </div>
-          </div>
-        </section>
-        
-        {/* Ayuda con diseño mejorado */}
-        <section className="py-14 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-3xl p-8 lg:p-10 border border-blue-100">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
-                <div className="text-center lg:text-left">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    ¿No encuentras lo que buscas?
-                  </h3>
-                  <p className="text-gray-600 text-lg max-w-xl">
-                    Nuestro equipo técnico te ayudará a encontrar el repuesto exacto para tu aire acondicionado.
-                  </p>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a 
-                    href="tel:+34912345678"
-                    className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105"
-                  >
-                    <Phone className="w-5 h-5" />
-                    912 345 678
-                  </a>
-                  <a 
-                    href="mailto:info@uniclima.es"
-                    className="flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 hover:border-blue-400 text-gray-700 hover:text-blue-600 font-bold rounded-2xl transition-all duration-300 shadow-sm hover:shadow-lg"
-                  >
-                    Enviar consulta
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        
-        {/* SEO Content con diseño mejorado */}
-        <section className="py-14">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
-              Guía de Compra: Repuestos de Aire Acondicionado
-            </h2>
-            
-            <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900">
-              <p>
-                En Uniclima Solutions somos especialistas en <strong>repuestos de aire acondicionado</strong> para todas las marcas 
-                y tipos de equipos. Disponemos de componentes originales y compatibles para splits, multisplits, 
-                sistemas de conductos y cassettes.
-              </p>
-              
-              <h3>Catálogo de Repuestos para Aire Acondicionado</h3>
-              <ul>
-                <li><strong>Placas electrónicas:</strong> Tanto de unidad interior como exterior para todas las marcas.</li>
-                <li><strong>Turbinas y motores:</strong> Componentes de ventilación para un flujo de aire óptimo.</li>
-                <li><strong>Hélices y motores de compresor:</strong> Para la unidad exterior.</li>
-                <li><strong>Bombas de condensados:</strong> Para conductos y cassettes.</li>
-                <li><strong>Mandos a distancia:</strong> Originales y universales compatibles.</li>
-              </ul>
-              
-              <h3>Mantenimiento de Aire Acondicionado</h3>
-              <p>
-                Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento" className="text-blue-600 hover:underline font-semibold">contratos de mantenimiento</Link> para 
-                mantener tu aire acondicionado en perfecto estado todo el año.
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* Contenido SEO */}
+        <SEOContent />
       </main>
       <Footer />
     </>
-  );
+  )
 }
