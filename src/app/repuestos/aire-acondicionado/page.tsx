@@ -23,18 +23,18 @@ import { useState } from "react";
 
 // Marcas de aire acondicionado con sus datos
 const marcasAire = [
-  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 412, logo: "/images/marcas/mitsubishi.png" },
-  { name: "Daikin", slug: "daikin", count: 378, logo: "/images/marcas/daikin.png" },
-  { name: "Fujitsu", slug: "fujitsu", count: 289, logo: "/images/marcas/fujitsu.png" },
-  { name: "LG", slug: "lg", count: 256, logo: "/images/marcas/lg.png" },
-  { name: "Samsung", slug: "samsung", count: 234, logo: "/images/marcas/samsung.png" },
-  { name: "Panasonic", slug: "panasonic", count: 198, logo: "/images/marcas/panasonic.png" },
-  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.png" },
-  { name: "Hisense", slug: "hisense", count: 145, logo: "/images/marcas/hisense.png" },
-  { name: "Toshiba", slug: "toshiba", count: 132, logo: "/images/marcas/toshiba.png" },
-  { name: "Carrier", slug: "carrier", count: 98, logo: "/images/marcas/carrier.png" },
-  { name: "Johnson Controls", slug: "johnson-controls", count: 87, logo: "/images/marcas/johnson.png" },
-  { name: "Gree", slug: "gree", count: 76, logo: "/images/marcas/gree.png" }
+  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 412, logo: "/images/marcas/mitsubishi.webp" },
+  { name: "Daikin", slug: "daikin", count: 378, logo: "/images/marcas/daikin.webp" },
+  { name: "Fujitsu", slug: "fujitsu", count: 289, logo: "/images/marcas/fujitsu.webp" },
+  { name: "LG", slug: "lg", count: 256, logo: "/images/marcas/lg.webp" },
+  { name: "Samsung", slug: "samsung", count: 234, logo: "/images/marcas/samsung.webp" },
+  { name: "Panasonic", slug: "panasonic", count: 198, logo: "/images/marcas/panasonic.webp" },
+  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.webp" },
+  { name: "Hisense", slug: "hisense", count: 145, logo: "/images/marcas/hisense.webp" },
+  { name: "Toshiba", slug: "toshiba", count: 132, logo: "/images/marcas/toshiba.webp" },
+  { name: "Carrier", slug: "carrier", count: 98, logo: "/images/marcas/carrier.webp" },
+  { name: "Johnson Controls", slug: "johnson-controls", count: 87, logo: "/images/marcas/johnson.webp" },
+  { name: "Gree", slug: "gree", count: 76, logo: "/images/marcas/gree.webp" }
 ];
 
 // Familias de piezas

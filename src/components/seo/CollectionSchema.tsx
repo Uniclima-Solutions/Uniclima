@@ -8,7 +8,7 @@
  *     name: 'Placas Electrónicas para Calderas',
  *     description: 'Encuentra placas electrónicas originales y compatibles...',
  *     url: '/c/calderas/placas-electronicas',
- *     image: '/images/categorias/placas.jpg',
+ *     image: '/images/categorias/placas.webp',
  *     itemCount: 245
  *   }}
  *   items={[

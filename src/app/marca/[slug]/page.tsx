@@ -48,7 +48,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         slug: `caldera-${brandSlug}-condensacion-24kw`,
         price: 1299.00,
         originalPrice: 1499.00,
-        image: `/images/productos/caldera-${brandSlug}.jpg`,
+        image: `/images/productos/caldera-${brandSlug}.webp`,
         category: 'caldera',
         inStock: true,
         isBestSeller: true,
@@ -58,7 +58,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Caldera ${brandName} Estanca 28kW`,
         slug: `caldera-${brandSlug}-estanca-28kw`,
         price: 899.00,
-        image: `/images/productos/caldera-${brandSlug}-2.jpg`,
+        image: `/images/productos/caldera-${brandSlug}-2.webp`,
         category: 'caldera',
         inStock: true,
       }
@@ -71,7 +71,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Placa Electrónica ${brandName}`,
         slug: `placa-electronica-${brandSlug}`,
         price: 189.00,
-        image: `/images/productos/placa-${brandSlug}.jpg`,
+        image: `/images/productos/placa-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: true,
         isNew: true,
@@ -82,7 +82,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         slug: `intercambiador-${brandSlug}`,
         price: 145.00,
         originalPrice: 175.00,
-        image: `/images/productos/intercambiador-${brandSlug}.jpg`,
+        image: `/images/productos/intercambiador-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: true,
       },
@@ -91,7 +91,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Válvula de Gas ${brandName}`,
         slug: `valvula-gas-${brandSlug}`,
         price: 125.00,
-        image: `/images/productos/valvula-${brandSlug}.jpg`,
+        image: `/images/productos/valvula-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: false,
       },
@@ -100,7 +100,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Bomba Circuladora ${brandName}`,
         slug: `bomba-circuladora-${brandSlug}`,
         price: 95.00,
-        image: `/images/productos/bomba-${brandSlug}.jpg`,
+        image: `/images/productos/bomba-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: true,
       },
@@ -109,7 +109,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Electrodo Encendido ${brandName}`,
         slug: `electrodo-encendido-${brandSlug}`,
         price: 28.00,
-        image: `/images/productos/electrodo-${brandSlug}.jpg`,
+        image: `/images/productos/electrodo-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: true,
       },
@@ -118,7 +118,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Presostato ${brandName}`,
         slug: `presostato-${brandSlug}`,
         price: 45.00,
-        image: `/images/productos/presostato-${brandSlug}.jpg`,
+        image: `/images/productos/presostato-${brandSlug}.webp`,
         category: 'repuesto-caldera',
         inStock: true,
       }
@@ -134,7 +134,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         slug: `split-${brandSlug}-inverter-3000`,
         price: 599.00,
         originalPrice: 749.00,
-        image: `/images/productos/split-${brandSlug}.jpg`,
+        image: `/images/productos/split-${brandSlug}.webp`,
         category: 'aire',
         inStock: true,
         isBestSeller: true,
@@ -144,7 +144,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Split ${brandName} Inverter 4500 Frigorías`,
         slug: `split-${brandSlug}-inverter-4500`,
         price: 799.00,
-        image: `/images/productos/split-${brandSlug}-2.jpg`,
+        image: `/images/productos/split-${brandSlug}-2.webp`,
         category: 'aire',
         inStock: true,
         isNew: true,
@@ -158,7 +158,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Placa Electrónica ${brandName} Split`,
         slug: `placa-electronica-${brandSlug}-split`,
         price: 165.00,
-        image: `/images/productos/placa-aire-${brandSlug}.jpg`,
+        image: `/images/productos/placa-aire-${brandSlug}.webp`,
         category: 'repuesto-aire',
         inStock: true,
       },
@@ -167,7 +167,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Motor Ventilador ${brandName}`,
         slug: `motor-ventilador-${brandSlug}`,
         price: 89.00,
-        image: `/images/productos/motor-${brandSlug}.jpg`,
+        image: `/images/productos/motor-${brandSlug}.webp`,
         category: 'repuesto-aire',
         inStock: true,
       },
@@ -176,7 +176,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Mando a Distancia ${brandName}`,
         slug: `mando-distancia-${brandSlug}`,
         price: 35.00,
-        image: `/images/productos/mando-${brandSlug}.jpg`,
+        image: `/images/productos/mando-${brandSlug}.webp`,
         category: 'repuesto-aire',
         inStock: true,
       },
@@ -185,7 +185,7 @@ function getProductsByBrand(brandSlug: string): Product[] {
         name: `Filtro Aire ${brandName}`,
         slug: `filtro-aire-${brandSlug}`,
         price: 18.00,
-        image: `/images/productos/filtro-${brandSlug}.jpg`,
+        image: `/images/productos/filtro-${brandSlug}.webp`,
         category: 'repuesto-aire',
         inStock: true,
       }
@@ -206,7 +206,7 @@ function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = '/images/placeholder-product.png';
+            (e.target as HTMLImageElement).src = '/images/placeholder-product.webp';
           }}
         />
         {/* Badges */}
@@ -372,7 +372,7 @@ export default function MarcaPage() {
                   alt={brand.name}
                   className="max-w-full max-h-full object-contain"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/images/placeholder-brand.png';
+                    (e.target as HTMLImageElement).src = '/images/placeholder-brand.webp';
                   }}
                 />
               </div>

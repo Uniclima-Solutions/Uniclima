@@ -108,11 +108,11 @@ function getProductData(marca: string, familia: string, productoSlug: string) {
     familySlug: familia,
     price: Math.round(priceBase * 100) / 100,
     originalPrice: originalPriceBase ? Math.round(originalPriceBase * 100) / 100 : undefined,
-    image: `/images/categorias/PlacasElectronicas.png`,
+    image: `/images/categorias/PlacasElectronicas.webp`,
     images: [
-      `/images/categorias/PlacasElectronicas.png`,
-      `/images/categorias/PlacasElectronicas.png`,
-      `/images/categorias/PlacasElectronicas.png`
+      `/images/categorias/PlacasElectronicas.webp`,
+      `/images/categorias/PlacasElectronicas.webp`,
+      `/images/categorias/PlacasElectronicas.webp`
     ],
     inStock: seededRandom(seed * 19) > 0.2,
     stockQuantity: Math.floor(seededRandom(seed * 37) * 20) + 1,
@@ -151,7 +151,7 @@ function getRelatedProducts(marca: string, familia: string, currentSlug: string)
       name: `${familiaInfo.name} ${marcaInfo.name} - Modelo ${modelNum}`,
       reference: `${refPrefix}-${refNum}`,
       price: Math.round(priceBase * 100) / 100,
-      image: `/images/categorias/PlacasElectronicas.png`,
+      image: `/images/categorias/PlacasElectronicas.webp`,
       slug: `${familia}-${marca}-modelo-${modelNum}-${refPrefix.toLowerCase()}-${refNum}`,
       inStock: seededRandom(seed * 19) > 0.2
     };

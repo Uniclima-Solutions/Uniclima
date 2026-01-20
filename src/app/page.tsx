@@ -48,133 +48,133 @@ const repuestosCalderas = [
     id: 1,
     name: "Placas",
     slug: "placas-electronicas",
-    image: "/images/categorias/PlacasElectronicas.png",
+    image: "/images/categorias/PlacasElectronicas.webp",
     count: 245
   },
   {
     id: 2,
     name: "Intercambiadores",
     slug: "intercambiadores-placas",
-    image: "/images/categorias/IntercambiadorDePlacas.png",
+    image: "/images/categorias/IntercambiadorDePlacas.webp",
     count: 189
   },
   {
     id: 3,
     name: "Bombas",
     slug: "bombas-circulacion",
-    image: "/images/categorias/Bombas.png",
+    image: "/images/categorias/Bombas.webp",
     count: 156
   },
   {
     id: 4,
     name: "Válvulas Gas",
     slug: "valvulas-gas",
-    image: "/images/categorias/ValvulaGasCondensacion.png",
+    image: "/images/categorias/ValvulaGasCondensacion.webp",
     count: 312
   },
   {
     id: 5,
     name: "Extractores",
     slug: "extractores",
-    image: "/images/categorias/Extractores.png",
+    image: "/images/categorias/Extractores.webp",
     count: 178
   },
   {
     id: 6,
     name: "Bitérmicos",
     slug: "intercambiadores-bitermicos",
-    image: "/images/categorias/IntercambiadorBitermico.png",
+    image: "/images/categorias/IntercambiadorBitermico.webp",
     count: 98
   },
   {
     id: 7,
     name: "Combustión",
     slug: "camaras-combustion",
-    image: "/images/categorias/CamarasDeCombustion.png",
+    image: "/images/categorias/CamarasDeCombustion.webp",
     count: 67
   },
   {
     id: 8,
     name: "Válvulas 3 Vías",
     slug: "valvulas-3-vias",
-    image: "/images/categorias/Valvulas3Vias.png",
+    image: "/images/categorias/Valvulas3Vias.webp",
     count: 234
   },
   {
     id: 9,
     name: "Hidráulicos",
     slug: "cuerpos-hidraulicos",
-    image: "/images/categorias/Hidraulicos.png",
+    image: "/images/categorias/Hidraulicos.webp",
     count: 145
   },
   {
     id: 10,
     name: "Modulantes",
     slug: "extractores-modulantes",
-    image: "/images/categorias/ExtractoresModulantes.png",
+    image: "/images/categorias/ExtractoresModulantes.webp",
     count: 89
   },
   {
     id: 11,
     name: "Vasos Expansión",
     slug: "vasos-expansion",
-    image: "/images/categorias/VasoExpansion.png",
+    image: "/images/categorias/VasoExpansion.webp",
     count: 167
   },
   {
     id: 12,
     name: "V. Seguridad",
     slug: "valvulas-seguridad",
-    image: "/images/categorias/ValvulasSeguridad.png",
+    image: "/images/categorias/ValvulasSeguridad.webp",
     count: 198
   },
   {
     id: 13,
     name: "Sensores",
     slug: "sensores",
-    image: "/images/categorias/Sensores.png",
+    image: "/images/categorias/Sensores.webp",
     count: 276
   },
   {
     id: 14,
     name: "Flujostatos",
     slug: "flujostatos",
-    image: "/images/categorias/Flujostato.png",
+    image: "/images/categorias/Flujostato.webp",
     count: 123
   },
   {
     id: 15,
     name: "Presostatos",
     slug: "presostatos",
-    image: "/images/categorias/Presostatos.png",
+    image: "/images/categorias/Presostatos.webp",
     count: 187
   },
   {
     id: 16,
     name: "Captadores",
     slug: "captadores-presion",
-    image: "/images/categorias/CaptadorPresion.png",
+    image: "/images/categorias/CaptadorPresion.webp",
     count: 156
   },
   {
     id: 17,
     name: "Transformadores",
     slug: "transformadores",
-    image: "/images/categorias/Transformadores.png",
+    image: "/images/categorias/Transformadores.webp",
     count: 134
   },
   {
     id: 18,
     name: "V. Llenado",
     slug: "valvulas-llenado",
-    image: "/images/categorias/ValvulaLLenado.png",
+    image: "/images/categorias/ValvulaLLenado.webp",
     count: 112
   },
   {
     id: 19,
     name: "Microacumuladores",
     slug: "microacumuladores",
-    image: "/images/categorias/Microacumuladores.png",
+    image: "/images/categorias/Microacumuladores.webp",
     count: 78
   }
 ];
@@ -185,63 +185,63 @@ const categoriasAireAcondicionado: CategoryPart[] = [
     id: 1,
     name: "Placas Interior",
     slug: "placas-interior",
-    image: "/images/categorias/PlacasInterior.png",
+    image: "/images/categorias/PlacasInterior.webp",
     count: 312
   },
   {
     id: 2,
     name: "Placas Exterior",
     slug: "placas-compresor",
-    image: "/images/categorias/PlacasCompresor.png",
+    image: "/images/categorias/PlacasCompresor.webp",
     count: 234
   },
   {
     id: 3,
     name: "Turbinas",
     slug: "turbinas",
-    image: "/images/categorias/Turbinas.png",
+    image: "/images/categorias/Turbinas.webp",
     count: 187
   },
   {
     id: 4,
     name: "Motores",
     slug: "motor-turbinas",
-    image: "/images/categorias/MotorTurbinas.png",
+    image: "/images/categorias/MotorTurbinas.webp",
     count: 156
   },
   {
     id: 5,
     name: "Hélices",
     slug: "helice-compresor",
-    image: "/images/categorias/HeliceCompresor.png",
+    image: "/images/categorias/HeliceCompresor.webp",
     count: 198
   },
   {
     id: 6,
     name: "Motor Hélice",
     slug: "motor-helice-compresor",
-    image: "/images/categorias/MotorHeliceCompresor.png",
+    image: "/images/categorias/MotorHeliceCompresor.webp",
     count: 276
   },
   {
     id: 7,
     name: "B. Conductos",
     slug: "bomba-condensado-conductos",
-    image: "/images/categorias/BombaCondensadoConductos.png",
+    image: "/images/categorias/BombaCondensadoConductos.webp",
     count: 145
   },
   {
     id: 8,
     name: "B. Cassette",
     slug: "bomba-condensados-cassette",
-    image: "/images/categorias/BombaCondensadosCassette.png",
+    image: "/images/categorias/BombaCondensadosCassette.webp",
     count: 89
   },
   {
     id: 9,
     name: "Mandos",
     slug: "mandos-distancia",
-    image: "/images/categorias/MandosDistanciaSplit.png",
+    image: "/images/categorias/MandosDistanciaSplit.webp",
     count: 167
   }
 ];
@@ -251,25 +251,25 @@ const categoriasPCC = [
   {
     id: 1,
     nombre: "Repuestos\nCalderas",
-    image: "/images/cat-ofertas-calderas.png",
+    image: "/images/cat-ofertas-calderas.webp",
     slug: "calderas"
   },
   {
     id: 2,
     nombre: "Aire\nAcondicionado",
-    image: "/images/cat-aire-acondicionado.png",
+    image: "/images/cat-aire-acondicionado.webp",
     slug: "aire-acondicionado"
   },
   {
     id: 3,
     nombre: "Calderas\nCompletas",
-    image: "/images/cat-calderas-completas.png",
+    image: "/images/cat-calderas-completas.webp",
     slug: "calderas-completas"
   },
   {
     id: 4,
     nombre: "Zona\nProfesionales",
-    image: "/images/cat-profesionales.png",
+    image: "/images/cat-profesionales.webp",
     slug: "profesionales"
   }
 ];
@@ -818,10 +818,10 @@ export default function Home() {
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full">
             <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet_final.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_ofertas_mobile_final.webp" />
+              <source media="(max-width: 1024px)" srcSet="/banner_ofertas_tablet_final.webp" />
               <img 
-                src="/banner_ofertas_final.png" 
+                src="/banner_ofertas_final.webp" 
                 alt="Ofertas en Repuestos para Calderas y Aire Acondicionado -50%" 
                 className="w-full h-auto block rounded-2xl shadow-lg"
               />
@@ -854,10 +854,10 @@ export default function Home() {
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/pieza-gratis" className="block w-full">
             <picture>
-              <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.png" />
-              <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet_final.png" />
+              <source media="(max-width: 640px)" srcSet="/banner_pieza_gratis_mobile_final.webp" />
+              <source media="(max-width: 1024px)" srcSet="/banner_pieza_gratis_tablet_final.webp" />
               <img 
-                src="/banner_pieza_gratis_final.png" 
+                src="/banner_pieza_gratis_final.webp" 
                 alt="Llévate tu pieza GRATIS - Envíanos un vídeo de la reparación y te regalamos la pieza"
                 className="w-full h-auto block rounded-2xl shadow-lg"
               />

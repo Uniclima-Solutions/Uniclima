@@ -138,7 +138,7 @@ export default function ProductPageTemplate({
                     </span>
                   )}
                   <Image
-                    src={product.images[selectedImage]?.url || '/placeholder.jpg'}
+                    src={product.images[selectedImage]?.url || '/placeholder.webp'}
                     alt={product.images[selectedImage]?.alt || product.name}
                     fill
                     className="object-contain p-8"

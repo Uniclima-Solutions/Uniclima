@@ -40,18 +40,18 @@ const marcasData: Record<string, { name: string; description: string }> = {
 
 // Familias de piezas
 const familiasPiezas = [
-  { name: "Placas Electrónicas", slug: "placas-electronicas", count: 38, image: "/images/categorias/PlacasElectronicas.png" },
-  { name: "Compresores", slug: "compresores", count: 24, image: "/images/categorias/Compresores.png" },
-  { name: "Motores Ventilador", slug: "motores-ventilador", count: 42, image: "/images/categorias/Motores.png" },
-  { name: "Turbinas", slug: "turbinas", count: 28, image: "/images/categorias/Turbinas.png" },
-  { name: "Sensores", slug: "sensores", count: 56, image: "/images/categorias/Sensores.png" },
-  { name: "Válvulas Expansión", slug: "valvulas-expansion", count: 18, image: "/images/categorias/Valvulas.png" },
-  { name: "Condensadores", slug: "condensadores", count: 22, image: "/images/categorias/Condensadores.png" },
-  { name: "Evaporadores", slug: "evaporadores", count: 16, image: "/images/categorias/Evaporadores.png" },
-  { name: "Mandos a Distancia", slug: "mandos-distancia", count: 48, image: "/images/categorias/Mandos.png" },
-  { name: "Filtros", slug: "filtros", count: 34, image: "/images/categorias/Filtros.png" },
-  { name: "Aspas y Deflectores", slug: "aspas-deflectores", count: 26, image: "/images/categorias/Aspas.png" },
-  { name: "Tarjetas Display", slug: "tarjetas-display", count: 14, image: "/images/categorias/Display.png" }
+  { name: "Placas Electrónicas", slug: "placas-electronicas", count: 38, image: "/images/categorias/PlacasElectronicas.webp" },
+  { name: "Compresores", slug: "compresores", count: 24, image: "/images/categorias/Compresores.webp" },
+  { name: "Motores Ventilador", slug: "motores-ventilador", count: 42, image: "/images/categorias/Motores.webp" },
+  { name: "Turbinas", slug: "turbinas", count: 28, image: "/images/categorias/Turbinas.webp" },
+  { name: "Sensores", slug: "sensores", count: 56, image: "/images/categorias/Sensores.webp" },
+  { name: "Válvulas Expansión", slug: "valvulas-expansion", count: 18, image: "/images/categorias/Valvulas.webp" },
+  { name: "Condensadores", slug: "condensadores", count: 22, image: "/images/categorias/Condensadores.webp" },
+  { name: "Evaporadores", slug: "evaporadores", count: 16, image: "/images/categorias/Evaporadores.webp" },
+  { name: "Mandos a Distancia", slug: "mandos-distancia", count: 48, image: "/images/categorias/Mandos.webp" },
+  { name: "Filtros", slug: "filtros", count: 34, image: "/images/categorias/Filtros.webp" },
+  { name: "Aspas y Deflectores", slug: "aspas-deflectores", count: 26, image: "/images/categorias/Aspas.webp" },
+  { name: "Tarjetas Display", slug: "tarjetas-display", count: 14, image: "/images/categorias/Display.webp" }
 ];
 
 // Formas de onda para las tarjetas

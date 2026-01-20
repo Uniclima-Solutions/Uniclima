@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     siteName: "Uniclima - Repuestos HVAC",
     images: [
       {
-        url: "/banner_pieza_gratis_final.png",
+        url: "/banner_pieza_gratis_final.webp",
         width: 1200,
         height: 630,
         alt: "Promoción Pieza Gratis Uniclima",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "¡Llévate tu Pieza GRATIS! | Uniclima",
     description: "Envíanos un vídeo de tu reparación y te regalamos el 100% del valor de la pieza.",
-    images: ["/banner_pieza_gratis_final.png"],
+    images: ["/banner_pieza_gratis_final.webp"],
   },
   alternates: {
     canonical: "https://uniclima.es/pieza-gratis",

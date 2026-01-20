@@ -40,18 +40,18 @@ const marcasData: Record<string, { name: string; description: string }> = {
 
 // Familias de piezas con conteo por marca (simulado)
 const familiasPiezas = [
-  { name: "Placas Electrónicas", slug: "placas-electronicas", count: 45, image: "/images/categorias/PlacasElectronicas.png" },
-  { name: "Intercambiadores", slug: "intercambiadores", count: 32, image: "/images/categorias/Intercambiadores.png" },
-  { name: "Bombas de Circulación", slug: "bombas-circulacion", count: 28, image: "/images/categorias/Bombas.png" },
-  { name: "Válvulas de Gas", slug: "valvulas-gas", count: 56, image: "/images/categorias/ValvulasGas.png" },
-  { name: "Válvulas 3 Vías", slug: "valvulas-3-vias", count: 34, image: "/images/categorias/Valvulas3Vias.png" },
-  { name: "Sensores", slug: "sensores", count: 48, image: "/images/categorias/Sensores.png" },
-  { name: "Ventiladores", slug: "ventiladores", count: 23, image: "/images/categorias/Ventiladores.png" },
-  { name: "Electrodos", slug: "electrodos", count: 15, image: "/images/categorias/Electrodos.png" },
-  { name: "Presostatos", slug: "presostatos", count: 12, image: "/images/categorias/Presostatos.png" },
-  { name: "Termostatos", slug: "termostatos", count: 21, image: "/images/categorias/Termostatos.png" },
-  { name: "Juntas", slug: "juntas", count: 18, image: "/images/categorias/Juntas.png" },
-  { name: "Membranas", slug: "membranas", count: 14, image: "/images/categorias/Membranas.png" }
+  { name: "Placas Electrónicas", slug: "placas-electronicas", count: 45, image: "/images/categorias/PlacasElectronicas.webp" },
+  { name: "Intercambiadores", slug: "intercambiadores", count: 32, image: "/images/categorias/Intercambiadores.webp" },
+  { name: "Bombas de Circulación", slug: "bombas-circulacion", count: 28, image: "/images/categorias/Bombas.webp" },
+  { name: "Válvulas de Gas", slug: "valvulas-gas", count: 56, image: "/images/categorias/ValvulasGas.webp" },
+  { name: "Válvulas 3 Vías", slug: "valvulas-3-vias", count: 34, image: "/images/categorias/Valvulas3Vias.webp" },
+  { name: "Sensores", slug: "sensores", count: 48, image: "/images/categorias/Sensores.webp" },
+  { name: "Ventiladores", slug: "ventiladores", count: 23, image: "/images/categorias/Ventiladores.webp" },
+  { name: "Electrodos", slug: "electrodos", count: 15, image: "/images/categorias/Electrodos.webp" },
+  { name: "Presostatos", slug: "presostatos", count: 12, image: "/images/categorias/Presostatos.webp" },
+  { name: "Termostatos", slug: "termostatos", count: 21, image: "/images/categorias/Termostatos.webp" },
+  { name: "Juntas", slug: "juntas", count: 18, image: "/images/categorias/Juntas.webp" },
+  { name: "Membranas", slug: "membranas", count: 14, image: "/images/categorias/Membranas.webp" }
 ];
 
 // Formas de onda para las tarjetas

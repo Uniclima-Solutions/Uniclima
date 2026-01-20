@@ -72,7 +72,7 @@ const generateProducts = (category: string, count: number = 36) => {
       brandSlug: marcas[i % marcas.length].slug,
       price: Math.round(priceBase * 100) / 100,
       originalPrice: originalPriceBase ? Math.round(originalPriceBase * 100) / 100 : undefined,
-      image: `/images/categorias/PlacasElectronicas.png`,
+      image: `/images/categorias/PlacasElectronicas.webp`,
       inStock: seededRandom(seed * 17) > 0.2,
       condition: seededRandom(seed * 19) > 0.3 ? 'reacondicionado' : 'nuevo' as 'nuevo' | 'reacondicionado',
       isTopSeller: seededRandom(seed * 23) > 0.8

@@ -186,7 +186,7 @@ export default function FavoritosPage() {
                         className="relative w-full sm:w-40 h-40 bg-gray-100 flex-shrink-0 group"
                       >
                         <Image
-                          src={item.image || '/images/products/placeholder-product.png'}
+                          src={item.image || '/images/products/placeholder-product.webp'}
                           alt={item.name}
                           fill
                           className="object-contain p-4 group-hover:scale-105 transition-transform"

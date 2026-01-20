@@ -41,22 +41,22 @@ export default function RepuestosHubPage() {
 
   // Marcas de calderas
   const marcasCalderas = [
-    { name: "Vaillant", logo: "/images/marcas/vaillant.png" },
-    { name: "Junkers", logo: "/images/marcas/junkers.png" },
-    { name: "Saunier Duval", logo: "/images/marcas/saunier-duval.png" },
-    { name: "Baxi", logo: "/images/marcas/baxi.png" },
-    { name: "Ferroli", logo: "/images/marcas/ferroli.png" },
-    { name: "Ariston", logo: "/images/marcas/ariston.png" },
+    { name: "Vaillant", logo: "/images/marcas/vaillant.webp" },
+    { name: "Junkers", logo: "/images/marcas/junkers.webp" },
+    { name: "Saunier Duval", logo: "/images/marcas/saunier-duval.webp" },
+    { name: "Baxi", logo: "/images/marcas/baxi.webp" },
+    { name: "Ferroli", logo: "/images/marcas/ferroli.webp" },
+    { name: "Ariston", logo: "/images/marcas/ariston.webp" },
   ];
 
   // Marcas de aire
   const marcasAire = [
-    { name: "Mitsubishi", logo: "/images/marcas/mitsubishi.png" },
-    { name: "Daikin", logo: "/images/marcas/daikin.png" },
-    { name: "Fujitsu", logo: "/images/marcas/fujitsu.png" },
-    { name: "LG", logo: "/images/marcas/lg.png" },
-    { name: "Samsung", logo: "/images/marcas/samsung.png" },
-    { name: "Panasonic", logo: "/images/marcas/panasonic.png" },
+    { name: "Mitsubishi", logo: "/images/marcas/mitsubishi.webp" },
+    { name: "Daikin", logo: "/images/marcas/daikin.webp" },
+    { name: "Fujitsu", logo: "/images/marcas/fujitsu.webp" },
+    { name: "LG", logo: "/images/marcas/lg.webp" },
+    { name: "Samsung", logo: "/images/marcas/samsung.webp" },
+    { name: "Panasonic", logo: "/images/marcas/panasonic.webp" },
   ];
 
   return (

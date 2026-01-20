@@ -89,7 +89,7 @@ const generateProducts = (marca: string, familia: string, count: number = 24) =>
       familySlug: familia,
       price: Math.round(priceBase * 100) / 100,
       originalPrice: originalPriceBase ? Math.round(originalPriceBase * 100) / 100 : undefined,
-      image: `/images/categorias/PlacasElectronicas.png`,
+      image: `/images/categorias/PlacasElectronicas.webp`,
       inStock: seededRandom(seed * 19) > 0.2,
       condition: seededRandom(seed * 23) > 0.4 ? 'reacondicionado' : 'nuevo' as 'nuevo' | 'reacondicionado',
       isTopSeller: seededRandom(seed * 29) > 0.85,

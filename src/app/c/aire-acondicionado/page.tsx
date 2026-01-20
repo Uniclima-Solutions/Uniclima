@@ -41,31 +41,31 @@ import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_OR
 
 // Categorías de Repuestos de Aire Acondicionado
 const repuestosAire = [
-  { id: 1, name: "Placas Interior", fullName: "Placas Electrónicas Interior", slug: "placas-interior", image: "/images/categorias/PlacasInterior.png", count: 312, popular: true },
-  { id: 2, name: "Placas Exterior", fullName: "Placas Electrónicas Exterior", slug: "placas-compresor", image: "/images/categorias/PlacasCompresor.png", count: 234, popular: true },
-  { id: 3, name: "Turbinas", fullName: "Turbinas de Ventilación", slug: "turbinas", image: "/images/categorias/Turbinas.png", count: 187, popular: true },
-  { id: 4, name: "Motores", fullName: "Motores de Turbina", slug: "motor-turbinas", image: "/images/categorias/MotorTurbinas.png", count: 156, popular: true },
-  { id: 5, name: "Hélices", fullName: "Hélices de Compresor", slug: "helice-compresor", image: "/images/categorias/HeliceCompresor.png", count: 198, popular: false },
-  { id: 6, name: "Motor Hélice", fullName: "Motor de Hélice Compresor", slug: "motor-helice-compresor", image: "/images/categorias/MotorHeliceCompresor.png", count: 276, popular: true },
-  { id: 7, name: "B. Conductos", fullName: "Bomba Condensados Conductos", slug: "bomba-condensado-conductos", image: "/images/categorias/BombaCondensadoConductos.png", count: 145, popular: false },
-  { id: 8, name: "B. Cassette", fullName: "Bomba Condensados Cassette", slug: "bomba-condensados-cassette", image: "/images/categorias/BombaCondensadosCassette.png", count: 89, popular: false },
-  { id: 9, name: "Mandos", fullName: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/categorias/MandosDistanciaSplit.png", count: 167, popular: true }
+  { id: 1, name: "Placas Interior", fullName: "Placas Electrónicas Interior", slug: "placas-interior", image: "/images/categorias/PlacasInterior.webp", count: 312, popular: true },
+  { id: 2, name: "Placas Exterior", fullName: "Placas Electrónicas Exterior", slug: "placas-compresor", image: "/images/categorias/PlacasCompresor.webp", count: 234, popular: true },
+  { id: 3, name: "Turbinas", fullName: "Turbinas de Ventilación", slug: "turbinas", image: "/images/categorias/Turbinas.webp", count: 187, popular: true },
+  { id: 4, name: "Motores", fullName: "Motores de Turbina", slug: "motor-turbinas", image: "/images/categorias/MotorTurbinas.webp", count: 156, popular: true },
+  { id: 5, name: "Hélices", fullName: "Hélices de Compresor", slug: "helice-compresor", image: "/images/categorias/HeliceCompresor.webp", count: 198, popular: false },
+  { id: 6, name: "Motor Hélice", fullName: "Motor de Hélice Compresor", slug: "motor-helice-compresor", image: "/images/categorias/MotorHeliceCompresor.webp", count: 276, popular: true },
+  { id: 7, name: "B. Conductos", fullName: "Bomba Condensados Conductos", slug: "bomba-condensado-conductos", image: "/images/categorias/BombaCondensadoConductos.webp", count: 145, popular: false },
+  { id: 8, name: "B. Cassette", fullName: "Bomba Condensados Cassette", slug: "bomba-condensados-cassette", image: "/images/categorias/BombaCondensadosCassette.webp", count: 89, popular: false },
+  { id: 9, name: "Mandos", fullName: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/categorias/MandosDistanciaSplit.webp", count: 167, popular: true }
 ];
 
 // Marcas de aire acondicionado con logos
 const marcas = [
-  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 523, logo: "/images/marcas/mitsubishi.png" },
-  { name: "Daikin", slug: "daikin", count: 467, logo: "/images/marcas/daikin.png" },
-  { name: "Fujitsu", slug: "fujitsu", count: 389, logo: "/images/marcas/fujitsu.png" },
-  { name: "LG", slug: "lg", count: 345, logo: "/images/marcas/lg.png" },
-  { name: "Samsung", slug: "samsung", count: 312, logo: "/images/marcas/samsung.png" },
-  { name: "Panasonic", slug: "panasonic", count: 278, logo: "/images/marcas/panasonic.png" },
-  { name: "Toshiba", slug: "toshiba", count: 234, logo: "/images/marcas/toshiba.png" },
-  { name: "Hisense", slug: "hisense", count: 198, logo: "/images/marcas/hisense.png" },
-  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.png" },
-  { name: "Carrier", slug: "carrier", count: 145, logo: "/images/marcas/carrier.png" },
-  { name: "Midea", slug: "midea", count: 123, logo: "/images/marcas/midea.png" },
-  { name: "Gree", slug: "gree", count: 98, logo: "/images/marcas/gree.png" }
+  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 523, logo: "/images/marcas/mitsubishi.webp" },
+  { name: "Daikin", slug: "daikin", count: 467, logo: "/images/marcas/daikin.webp" },
+  { name: "Fujitsu", slug: "fujitsu", count: 389, logo: "/images/marcas/fujitsu.webp" },
+  { name: "LG", slug: "lg", count: 345, logo: "/images/marcas/lg.webp" },
+  { name: "Samsung", slug: "samsung", count: 312, logo: "/images/marcas/samsung.webp" },
+  { name: "Panasonic", slug: "panasonic", count: 278, logo: "/images/marcas/panasonic.webp" },
+  { name: "Toshiba", slug: "toshiba", count: 234, logo: "/images/marcas/toshiba.webp" },
+  { name: "Hisense", slug: "hisense", count: 198, logo: "/images/marcas/hisense.webp" },
+  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.webp" },
+  { name: "Carrier", slug: "carrier", count: 145, logo: "/images/marcas/carrier.webp" },
+  { name: "Midea", slug: "midea", count: 123, logo: "/images/marcas/midea.webp" },
+  { name: "Gree", slug: "gree", count: 98, logo: "/images/marcas/gree.webp" }
 ];
 
 // Formas de onda para las tarjetas (azul)

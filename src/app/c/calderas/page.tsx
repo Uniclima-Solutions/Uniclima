@@ -42,25 +42,25 @@ import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_OR
 
 // Categorías de Repuestos de Calderas
 const repuestosCalderas = [
-  { id: 1, name: "Placas", fullName: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/categorias/PlacasElectronicas.png", count: 245, popular: true },
-  { id: 2, name: "Intercambiadores", fullName: "Intercambiadores de Placas", slug: "intercambiadores-placas", image: "/images/categorias/IntercambiadorDePlacas.png", count: 189, popular: true },
-  { id: 3, name: "Bombas", fullName: "Bombas de Circulación", slug: "bombas-circulacion", image: "/images/categorias/Bombas.png", count: 156, popular: true },
-  { id: 4, name: "Válvulas Gas", fullName: "Válvulas de Gas", slug: "valvulas-gas", image: "/images/categorias/ValvulaGasCondensacion.png", count: 312, popular: true },
-  { id: 5, name: "Extractores", fullName: "Extractores", slug: "extractores", image: "/images/categorias/Extractores.png", count: 178, popular: false },
-  { id: 6, name: "Bitérmicos", fullName: "Intercambiadores Bitérmicos", slug: "intercambiadores-bitermicos", image: "/images/categorias/IntercambiadorBitermico.png", count: 98, popular: false },
-  { id: 7, name: "Combustión", fullName: "Cámaras de Combustión", slug: "camaras-combustion", image: "/images/categorias/CamarasDeCombustion.png", count: 67, popular: false },
-  { id: 8, name: "Válvulas 3 Vías", fullName: "Válvulas de 3 Vías", slug: "valvulas-3-vias", image: "/images/categorias/Valvulas3Vias.png", count: 234, popular: true },
-  { id: 9, name: "Hidráulicos", fullName: "Cuerpos Hidráulicos", slug: "cuerpos-hidraulicos", image: "/images/categorias/Hidraulicos.png", count: 145, popular: false },
-  { id: 10, name: "Modulantes", fullName: "Extractores Modulantes", slug: "extractores-modulantes", image: "/images/categorias/ExtractoresModulantes.png", count: 89, popular: false },
-  { id: 11, name: "Vasos Expansión", fullName: "Vasos de Expansión", slug: "vasos-expansion", image: "/images/categorias/VasoExpansion.png", count: 167, popular: false },
-  { id: 12, name: "V. Seguridad", fullName: "Válvulas de Seguridad", slug: "valvulas-seguridad", image: "/images/categorias/ValvulasSeguridad.png", count: 198, popular: false },
-  { id: 13, name: "Sensores", fullName: "Sensores", slug: "sensores", image: "/images/categorias/Sensores.png", count: 276, popular: true },
-  { id: 14, name: "Flujostatos", fullName: "Flujostatos", slug: "flujostatos", image: "/images/categorias/Flujostato.png", count: 123, popular: false },
-  { id: 15, name: "Presostatos", fullName: "Presostatos", slug: "presostatos", image: "/images/categorias/Presostatos.png", count: 187, popular: false },
-  { id: 16, name: "Captadores", fullName: "Captadores de Presión", slug: "captadores-presion", image: "/images/categorias/CaptadorPresion.png", count: 156, popular: false },
-  { id: 17, name: "Transformadores", fullName: "Transformadores", slug: "transformadores", image: "/images/categorias/Transformadores.png", count: 134, popular: false },
-  { id: 18, name: "V. Llenado", fullName: "Válvulas de Llenado", slug: "valvulas-llenado", image: "/images/categorias/ValvulaLLenado.png", count: 112, popular: false },
-  { id: 19, name: "Microacumuladores", fullName: "Microacumuladores", slug: "microacumuladores", image: "/images/categorias/Microacumuladores.png", count: 78, popular: false }
+  { id: 1, name: "Placas", fullName: "Placas Electrónicas", slug: "placas-electronicas", image: "/images/categorias/PlacasElectronicas.webp", count: 245, popular: true },
+  { id: 2, name: "Intercambiadores", fullName: "Intercambiadores de Placas", slug: "intercambiadores-placas", image: "/images/categorias/IntercambiadorDePlacas.webp", count: 189, popular: true },
+  { id: 3, name: "Bombas", fullName: "Bombas de Circulación", slug: "bombas-circulacion", image: "/images/categorias/Bombas.webp", count: 156, popular: true },
+  { id: 4, name: "Válvulas Gas", fullName: "Válvulas de Gas", slug: "valvulas-gas", image: "/images/categorias/ValvulaGasCondensacion.webp", count: 312, popular: true },
+  { id: 5, name: "Extractores", fullName: "Extractores", slug: "extractores", image: "/images/categorias/Extractores.webp", count: 178, popular: false },
+  { id: 6, name: "Bitérmicos", fullName: "Intercambiadores Bitérmicos", slug: "intercambiadores-bitermicos", image: "/images/categorias/IntercambiadorBitermico.webp", count: 98, popular: false },
+  { id: 7, name: "Combustión", fullName: "Cámaras de Combustión", slug: "camaras-combustion", image: "/images/categorias/CamarasDeCombustion.webp", count: 67, popular: false },
+  { id: 8, name: "Válvulas 3 Vías", fullName: "Válvulas de 3 Vías", slug: "valvulas-3-vias", image: "/images/categorias/Valvulas3Vias.webp", count: 234, popular: true },
+  { id: 9, name: "Hidráulicos", fullName: "Cuerpos Hidráulicos", slug: "cuerpos-hidraulicos", image: "/images/categorias/Hidraulicos.webp", count: 145, popular: false },
+  { id: 10, name: "Modulantes", fullName: "Extractores Modulantes", slug: "extractores-modulantes", image: "/images/categorias/ExtractoresModulantes.webp", count: 89, popular: false },
+  { id: 11, name: "Vasos Expansión", fullName: "Vasos de Expansión", slug: "vasos-expansion", image: "/images/categorias/VasoExpansion.webp", count: 167, popular: false },
+  { id: 12, name: "V. Seguridad", fullName: "Válvulas de Seguridad", slug: "valvulas-seguridad", image: "/images/categorias/ValvulasSeguridad.webp", count: 198, popular: false },
+  { id: 13, name: "Sensores", fullName: "Sensores", slug: "sensores", image: "/images/categorias/Sensores.webp", count: 276, popular: true },
+  { id: 14, name: "Flujostatos", fullName: "Flujostatos", slug: "flujostatos", image: "/images/categorias/Flujostato.webp", count: 123, popular: false },
+  { id: 15, name: "Presostatos", fullName: "Presostatos", slug: "presostatos", image: "/images/categorias/Presostatos.webp", count: 187, popular: false },
+  { id: 16, name: "Captadores", fullName: "Captadores de Presión", slug: "captadores-presion", image: "/images/categorias/CaptadorPresion.webp", count: 156, popular: false },
+  { id: 17, name: "Transformadores", fullName: "Transformadores", slug: "transformadores", image: "/images/categorias/Transformadores.webp", count: 134, popular: false },
+  { id: 18, name: "V. Llenado", fullName: "Válvulas de Llenado", slug: "valvulas-llenado", image: "/images/categorias/ValvulaLLenado.webp", count: 112, popular: false },
+  { id: 19, name: "Microacumuladores", fullName: "Microacumuladores", slug: "microacumuladores", image: "/images/categorias/Microacumuladores.webp", count: 78, popular: false }
 ];
 
 // Marcas disponibles - usando constantes centralizadas

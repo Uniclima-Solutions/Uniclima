@@ -34,7 +34,7 @@ const tiposCalderas = [
     id: 1, 
     name: "Condensación", 
     slug: "condensacion", 
-    image: "/images/calderas/condensacion.png",
+    image: "/images/calderas/condensacion.webp",
     descripcion: "Máxima eficiencia energética A+",
     count: 45,
     destacado: true
@@ -43,7 +43,7 @@ const tiposCalderas = [
     id: 2, 
     name: "Estancas", 
     slug: "estancas", 
-    image: "/images/calderas/estanca.png",
+    image: "/images/calderas/estanca.webp",
     descripcion: "Seguridad y rendimiento",
     count: 32,
     destacado: false
@@ -52,7 +52,7 @@ const tiposCalderas = [
     id: 3, 
     name: "Atmosféricas", 
     slug: "atmosfericas", 
-    image: "/images/calderas/atmosferica.png",
+    image: "/images/calderas/atmosferica.webp",
     descripcion: "Solución económica",
     count: 18,
     destacado: false
@@ -61,7 +61,7 @@ const tiposCalderas = [
     id: 4, 
     name: "Biomasa", 
     slug: "biomasa", 
-    image: "/images/calderas/biomasa.png",
+    image: "/images/calderas/biomasa.webp",
     descripcion: "Energía renovable",
     count: 12,
     destacado: false
@@ -93,7 +93,7 @@ const calderasDestacadas = [
     eficiencia: "A+",
     precio: 1890,
     precioAnterior: 2190,
-    imagen: "/images/calderas/junkers-cerapur.png",
+    imagen: "/images/calderas/junkers-cerapur.webp",
     caracteristicas: ["WiFi integrado", "Bajo NOx", "Modulación 1:10"]
   },
   {
@@ -105,7 +105,7 @@ const calderasDestacadas = [
     eficiencia: "A+",
     precio: 2150,
     precioAnterior: 2450,
-    imagen: "/images/calderas/vaillant-ecotec.png",
+    imagen: "/images/calderas/vaillant-ecotec.webp",
     caracteristicas: ["Acumulador integrado", "Silenciosa", "Alta modulación"]
   },
   {
@@ -117,7 +117,7 @@ const calderasDestacadas = [
     eficiencia: "A+",
     precio: 1650,
     precioAnterior: 1890,
-    imagen: "/images/calderas/saunier-themafast.png",
+    imagen: "/images/calderas/saunier-themafast.webp",
     caracteristicas: ["Compacta", "Fácil instalación", "Bajo consumo"]
   }
 ];

@@ -304,7 +304,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Repuestos de Calderas | Uniclima Solutions',
     description: 'Especialistas en repuestos de calderas. Todas las marcas.',
-    images: ['/images/og/repuestos-calderas.jpg'],
+    images: ['/images/og/repuestos-calderas.webp'],
   },
 };
 */

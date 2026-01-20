@@ -33,7 +33,7 @@ export default function TiendaPage() {
     "name": "Uniclima Solutions - Tienda Online",
     "description": "Tienda online de calderas, aire acondicionado y repuestos. Productos nuevos y reacondicionados con garantía.",
     "url": "https://uniclima.es/tienda",
-    "image": "https://uniclima.es/images/tienda-og.jpg",
+    "image": "https://uniclima.es/images/tienda-og.webp",
     "priceRange": "€€",
     "address": {
       "@type": "PostalAddress",
@@ -103,14 +103,14 @@ export default function TiendaPage() {
 
   // Marcas destacadas
   const marcasDestacadas = [
-    { name: "Vaillant", logo: "/images/marcas/vaillant.png" },
-    { name: "Junkers", logo: "/images/marcas/junkers.png" },
-    { name: "Daikin", logo: "/images/marcas/daikin.png" },
-    { name: "Mitsubishi", logo: "/images/marcas/mitsubishi.png" },
-    { name: "Baxi", logo: "/images/marcas/baxi.png" },
-    { name: "Ferroli", logo: "/images/marcas/ferroli.png" },
-    { name: "Saunier Duval", logo: "/images/marcas/saunier-duval.png" },
-    { name: "Fujitsu", logo: "/images/marcas/fujitsu.png" },
+    { name: "Vaillant", logo: "/images/marcas/vaillant.webp" },
+    { name: "Junkers", logo: "/images/marcas/junkers.webp" },
+    { name: "Daikin", logo: "/images/marcas/daikin.webp" },
+    { name: "Mitsubishi", logo: "/images/marcas/mitsubishi.webp" },
+    { name: "Baxi", logo: "/images/marcas/baxi.webp" },
+    { name: "Ferroli", logo: "/images/marcas/ferroli.webp" },
+    { name: "Saunier Duval", logo: "/images/marcas/saunier-duval.webp" },
+    { name: "Fujitsu", logo: "/images/marcas/fujitsu.webp" },
   ];
 
   return (

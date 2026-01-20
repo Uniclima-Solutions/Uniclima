@@ -10,7 +10,7 @@
  *     sku: '87483002760',
  *     brand: 'Junkers',
  *     price: 189.90,
- *     image: '/images/productos/placa-junkers.jpg',
+ *     image: '/images/productos/placa-junkers.webp',
  *     inStock: true,
  *     rating: 4.5,
  *     reviewCount: 23

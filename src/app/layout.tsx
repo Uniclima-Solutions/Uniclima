@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     description: 'Tienda online especializada en repuestos de calderas y aire acondicionado. Más de 5.000 referencias. Envío 24-48h y garantía 1 año.',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/og-image.webp',
         width: 1200,
         height: 630,
         alt: 'Uniclima Solutions - Repuestos HVAC',
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Repuestos de Calderas y Aire Acondicionado Online | Uniclima',
     description: 'Tienda online de repuestos HVAC. Más de 5.000 referencias. Envío 24-48h y garantía 1 año.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.webp'],
   },
   alternates: {
     canonical: 'https://uniclima.es',
@@ -67,7 +67,7 @@ const organizationSchema = {
   "@type": "Organization",
   "name": "Uniclima Solutions",
   "url": "https://uniclima.es",
-  "logo": "https://uniclima.es/logo.png",
+  "logo": "https://uniclima.es/logo.webp",
   "description": "Especialistas en repuestos reacondicionados de climatización, probados y verificados antes del envío",
   "foundingDate": "2020",
   "contactPoint": {
@@ -93,7 +93,7 @@ const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
   "name": "Uniclima Solutions",
-  "image": "https://uniclima.es/logo.png",
+  "image": "https://uniclima.es/logo.webp",
   "description": "Tienda especializada en repuestos de calderas y aire acondicionado",
   "@id": "https://uniclima.es",
   "url": "https://uniclima.es",

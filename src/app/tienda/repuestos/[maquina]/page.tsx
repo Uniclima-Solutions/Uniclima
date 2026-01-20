@@ -44,20 +44,20 @@ const datosMaquinas: Record<string, {
     colorHover: "hover:border-orange-300 hover:bg-orange-50",
     colorText: "text-orange-600",
     icono: Flame,
-    imagen: "/images/productos/caldera-condensacion.png",
+    imagen: "/images/productos/caldera-condensacion.webp",
     marcas: [
-      { name: "Vaillant", slug: "vaillant", count: 245, logo: "/images/marcas/vaillant.png" },
-      { name: "Junkers", slug: "junkers", count: 198, logo: "/images/marcas/junkers.png" },
-      { name: "Saunier Duval", slug: "saunier-duval", count: 176, logo: "/images/marcas/saunier-duval.png" },
-      { name: "Ferroli", slug: "ferroli", count: 154, logo: "/images/marcas/ferroli.png" },
-      { name: "Baxi", slug: "baxi", count: 132, logo: "/images/marcas/baxi.png" },
-      { name: "Ariston", slug: "ariston", count: 121, logo: "/images/marcas/ariston.png" },
-      { name: "Beretta", slug: "beretta", count: 98, logo: "/images/marcas/beretta.png" },
-      { name: "Cointra", slug: "cointra", count: 87, logo: "/images/marcas/cointra.png" },
-      { name: "Roca", slug: "roca", count: 76, logo: "/images/marcas/roca.png" },
-      { name: "Hermann", slug: "hermann", count: 65, logo: "/images/marcas/hermann.png" },
-      { name: "Chaffoteaux", slug: "chaffoteaux", count: 54, logo: "/images/marcas/chaffoteaux.png" },
-      { name: "Immergas", slug: "immergas", count: 43, logo: "/images/marcas/immergas.png" }
+      { name: "Vaillant", slug: "vaillant", count: 245, logo: "/images/marcas/vaillant.webp" },
+      { name: "Junkers", slug: "junkers", count: 198, logo: "/images/marcas/junkers.webp" },
+      { name: "Saunier Duval", slug: "saunier-duval", count: 176, logo: "/images/marcas/saunier-duval.webp" },
+      { name: "Ferroli", slug: "ferroli", count: 154, logo: "/images/marcas/ferroli.webp" },
+      { name: "Baxi", slug: "baxi", count: 132, logo: "/images/marcas/baxi.webp" },
+      { name: "Ariston", slug: "ariston", count: 121, logo: "/images/marcas/ariston.webp" },
+      { name: "Beretta", slug: "beretta", count: 98, logo: "/images/marcas/beretta.webp" },
+      { name: "Cointra", slug: "cointra", count: 87, logo: "/images/marcas/cointra.webp" },
+      { name: "Roca", slug: "roca", count: 76, logo: "/images/marcas/roca.webp" },
+      { name: "Hermann", slug: "hermann", count: 65, logo: "/images/marcas/hermann.webp" },
+      { name: "Chaffoteaux", slug: "chaffoteaux", count: 54, logo: "/images/marcas/chaffoteaux.webp" },
+      { name: "Immergas", slug: "immergas", count: 43, logo: "/images/marcas/immergas.webp" }
     ]
   },
   "aire-acondicionado": {
@@ -69,16 +69,16 @@ const datosMaquinas: Record<string, {
     colorHover: "hover:border-blue-300 hover:bg-blue-50",
     colorText: "text-blue-600",
     icono: Wind,
-    imagen: "/images/productos/aire-split.png",
+    imagen: "/images/productos/aire-split.webp",
     marcas: [
-      { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 156, logo: "/images/marcas/mitsubishi.png" },
-      { name: "Daikin", slug: "daikin", count: 143, logo: "/images/marcas/daikin.png" },
-      { name: "Fujitsu", slug: "fujitsu", count: 121, logo: "/images/marcas/fujitsu.png" },
-      { name: "LG", slug: "lg", count: 98, logo: "/images/marcas/lg.png" },
-      { name: "Samsung", slug: "samsung", count: 87, logo: "/images/marcas/samsung.png" },
-      { name: "Panasonic", slug: "panasonic", count: 76, logo: "/images/marcas/panasonic.png" },
-      { name: "Haier", slug: "haier", count: 54, logo: "/images/marcas/haier.png" },
-      { name: "Hisense", slug: "hisense", count: 43, logo: "/images/marcas/hisense.png" }
+      { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 156, logo: "/images/marcas/mitsubishi.webp" },
+      { name: "Daikin", slug: "daikin", count: 143, logo: "/images/marcas/daikin.webp" },
+      { name: "Fujitsu", slug: "fujitsu", count: 121, logo: "/images/marcas/fujitsu.webp" },
+      { name: "LG", slug: "lg", count: 98, logo: "/images/marcas/lg.webp" },
+      { name: "Samsung", slug: "samsung", count: 87, logo: "/images/marcas/samsung.webp" },
+      { name: "Panasonic", slug: "panasonic", count: 76, logo: "/images/marcas/panasonic.webp" },
+      { name: "Haier", slug: "haier", count: 54, logo: "/images/marcas/haier.webp" },
+      { name: "Hisense", slug: "hisense", count: 43, logo: "/images/marcas/hisense.webp" }
     ]
   }
 };

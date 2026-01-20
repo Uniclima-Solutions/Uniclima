@@ -23,18 +23,18 @@ import { useState } from "react";
 
 // Marcas de calderas con sus datos
 const marcasCalderas = [
-  { name: "Junkers / Bosch", slug: "junkers-bosch", count: 456, logo: "/images/marcas/junkers.png" },
-  { name: "Vaillant", slug: "vaillant", count: 389, logo: "/images/marcas/vaillant.png" },
-  { name: "Saunier Duval", slug: "saunier-duval", count: 312, logo: "/images/marcas/saunier-duval.png" },
-  { name: "Baxi", slug: "baxi", count: 278, logo: "/images/marcas/baxi.png" },
-  { name: "Ferroli", slug: "ferroli", count: 234, logo: "/images/marcas/ferroli.png" },
-  { name: "Ariston", slug: "ariston", count: 198, logo: "/images/marcas/ariston.png" },
-  { name: "Roca", slug: "roca", count: 167, logo: "/images/marcas/roca.png" },
-  { name: "Cointra", slug: "cointra", count: 145, logo: "/images/marcas/cointra.png" },
-  { name: "Chaffoteaux", slug: "chaffoteaux", count: 123, logo: "/images/marcas/chaffoteaux.png" },
-  { name: "Beretta", slug: "beretta", count: 98, logo: "/images/marcas/beretta.png" },
-  { name: "Immergas", slug: "immergas", count: 87, logo: "/images/marcas/immergas.png" },
-  { name: "Hermann", slug: "hermann", count: 76, logo: "/images/marcas/hermann.png" }
+  { name: "Junkers / Bosch", slug: "junkers-bosch", count: 456, logo: "/images/marcas/junkers.webp" },
+  { name: "Vaillant", slug: "vaillant", count: 389, logo: "/images/marcas/vaillant.webp" },
+  { name: "Saunier Duval", slug: "saunier-duval", count: 312, logo: "/images/marcas/saunier-duval.webp" },
+  { name: "Baxi", slug: "baxi", count: 278, logo: "/images/marcas/baxi.webp" },
+  { name: "Ferroli", slug: "ferroli", count: 234, logo: "/images/marcas/ferroli.webp" },
+  { name: "Ariston", slug: "ariston", count: 198, logo: "/images/marcas/ariston.webp" },
+  { name: "Roca", slug: "roca", count: 167, logo: "/images/marcas/roca.webp" },
+  { name: "Cointra", slug: "cointra", count: 145, logo: "/images/marcas/cointra.webp" },
+  { name: "Chaffoteaux", slug: "chaffoteaux", count: 123, logo: "/images/marcas/chaffoteaux.webp" },
+  { name: "Beretta", slug: "beretta", count: 98, logo: "/images/marcas/beretta.webp" },
+  { name: "Immergas", slug: "immergas", count: 87, logo: "/images/marcas/immergas.webp" },
+  { name: "Hermann", slug: "hermann", count: 76, logo: "/images/marcas/hermann.webp" }
 ];
 
 // Familias de piezas
