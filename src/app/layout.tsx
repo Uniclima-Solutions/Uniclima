@@ -140,7 +140,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         {/* PWA Manifest y Meta Tags */}
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#f97316" />
@@ -190,29 +190,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         
-        {/* Critical CSS inline para LCP */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          /* Critical CSS - Renderizado inmediato del hero */
-          .bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}
-          .from-orange-500{--tw-gradient-from:#f97316;--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to,rgba(249,115,22,0))}
-          .via-orange-600{--tw-gradient-stops:var(--tw-gradient-from),#ea580c,var(--tw-gradient-to,rgba(234,88,12,0))}
-          .to-red-600{--tw-gradient-to:#dc2626}
-          .text-white{color:#fff}
-          .text-orange-100{color:#ffedd5}
-          .font-bold{font-weight:700}
-          .font-black{font-weight:900}
-          .text-3xl{font-size:1.875rem;line-height:2.25rem}
-          .text-lg{font-size:1.125rem;line-height:1.75rem}
-          .leading-relaxed{line-height:1.625}
-          .leading-tight{line-height:1.25}
-          .max-w-7xl{max-width:80rem}
-          .mx-auto{margin-left:auto;margin-right:auto}
-          .px-4{padding-left:1rem;padding-right:1rem}
-          .py-12{padding-top:3rem;padding-bottom:3rem}
-          .relative{position:relative}
-          .overflow-hidden{overflow:hidden}
-          @media(min-width:1024px){.lg\:text-5xl{font-size:3rem;line-height:1}.lg\:text-xl{font-size:1.25rem;line-height:1.75rem}.lg\:py-20{padding-top:5rem;padding-bottom:5rem}}
-        ` }} />
+
         
         {/* Schemas JSON-LD para SEO */}
         <Script
