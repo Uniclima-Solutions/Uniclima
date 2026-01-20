@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from '@/components/JsonLd';
 
 // Lista completa de todas las marcas
 const todasLasMarcas = [
@@ -59,8 +60,27 @@ export default function MarcasPage() {
   const marcasCalderas = todasLasMarcas.filter(m => m.tipo === "calderas");
   const marcasAire = todasLasMarcas.filter(m => m.tipo === "aire");
 
+  // Schemas para SEO
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Inicio", url: "https://uniclima.es" },
+    { name: "Marcas" }
+  ]);
+
+  const collectionSchema = createCollectionPageSchema(
+    "Marcas de Calderas y Aire Acondicionado",
+    "Todas las marcas de calderas y aire acondicionado disponibles en Uniclima. Repuestos originales y compatibles para Vaillant, Junkers, Daikin, Mitsubishi y más.",
+    "https://uniclima.es/marcas",
+    todasLasMarcas.map(marca => ({
+      name: marca.name,
+      url: `https://uniclima.es/marca/${marca.slug}`
+    }))
+  );
+
   return (
     <>
+      {/* Schema.org JSON-LD para SEO */}
+      <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, collectionSchema]} />
+      
       <Header />
       <main className="min-h-screen bg-gray-50">
         {/* Breadcrumbs */}
@@ -100,24 +120,19 @@ export default function MarcasPage() {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
               {marcasCalderas.map((marca) => (
                 <Link
                   key={marca.slug}
                   href={`/marca/${marca.slug}`}
-                  className="group bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 flex flex-col items-center justify-center"
+                  className="group bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-lg hover:border-orange-300 transition-all duration-300 flex items-center justify-center aspect-[4/3]"
                 >
-                  <div className="w-full h-20 flex items-center justify-center mb-3">
-                    <img
-                      src={marca.logo}
-                      alt={marca.name}
-                      className="max-w-full max-h-full object-contain"
-                      draggable={false}
-                    />
-                  </div>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-orange-600 transition-colors text-center">
-                    {marca.name}
-                  </span>
+                  <img
+                    src={marca.logo}
+                    alt={marca.name}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    draggable={false}
+                  />
                 </Link>
               ))}
             </div>
@@ -137,24 +152,19 @@ export default function MarcasPage() {
               </div>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
               {marcasAire.map((marca) => (
                 <Link
                   key={marca.slug}
                   href={`/marca/${marca.slug}`}
-                  className="group bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col items-center justify-center"
+                  className="group bg-white border border-gray-200 rounded-xl p-3 sm:p-4 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex items-center justify-center aspect-[4/3]"
                 >
-                  <div className="w-full h-20 flex items-center justify-center mb-3">
-                    <img
-                      src={marca.logo}
-                      alt={marca.name}
-                      className="max-w-full max-h-full object-contain"
-                      draggable={false}
-                    />
-                  </div>
-                  <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 transition-colors text-center">
-                    {marca.name}
-                  </span>
+                  <img
+                    src={marca.logo}
+                    alt={marca.name}
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                    draggable={false}
+                  />
                 </Link>
               ))}
             </div>

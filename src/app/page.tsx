@@ -39,6 +39,7 @@ import Footer from "@/components/Footer";
 import BrandScroller from "@/components/BrandScroller";
 import GoogleReviews from "@/components/GoogleReviews";
 import PricingCardFlip from "@/components/PricingCardFlip";
+import { JsonLd, UNICLIMA_ORGANIZATION, UNICLIMA_WEBSITE, UNICLIMA_LOCAL_BUSINESS } from "@/components/JsonLd";
 
 
 // Categorías de Repuestos de Calderas con imágenes reales
@@ -801,6 +802,13 @@ function MaintenanceSection() {
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
+      {/* Schema.org JSON-LD para SEO */}
+      <JsonLd data={[
+        UNICLIMA_ORGANIZATION,
+        UNICLIMA_WEBSITE,
+        UNICLIMA_LOCAL_BUSINESS
+      ]} />
+      
       <Header />
       {/* Espaciador para compensar el header fixed */}
       <div className="h-14 lg:h-[104px]" />
