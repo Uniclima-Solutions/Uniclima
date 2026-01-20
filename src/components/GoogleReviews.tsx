@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Review {
@@ -113,23 +113,64 @@ function ReviewCard({ review }: { review: Review }) {
 
 export default function GoogleReviews() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  // Easing function - easeOutCubic para scroll más natural y fluido
+  const easeOutCubic = (t: number): number => {
+    return 1 - Math.pow(1 - t, 3);
+  };
+
+  // Scroll fluido programático con animación
+  const smoothScrollTo = useCallback((targetPosition: number) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Cancelar animación anterior si existe
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+
+    const startPosition = container.scrollLeft;
+    const distance = targetPosition - startPosition;
+    const duration = 600; // 600ms para un scroll más suave
+    const startTime = performance.now();
+
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+
+      container.scrollLeft = startPosition + distance * easedProgress;
+
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      } else {
+        animationRef.current = null;
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
   }, []);
 
   // Scroll fluido con flechas
-  const scroll = (direction: "left" | "right") => {
+  const scroll = useCallback((direction: "left" | "right") => {
     const container = scrollContainerRef.current;
-    if (container) {
-      const scrollAmount = container.clientWidth * 0.8;
-      container.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
+    if (!container) return;
+
+    const scrollAmount = container.clientWidth * 0.8;
+    const targetPosition = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+    smoothScrollTo(targetPosition);
+  }, [smoothScrollTo]);
 
   if (!isMounted) return null;
 

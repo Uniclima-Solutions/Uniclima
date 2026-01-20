@@ -421,14 +421,53 @@ function CategoryCarousel({
     }
   }, []);
 
-  const scroll = (direction: 'left' | 'right') => {
-    if (scrollRef.current) {
-      const scrollAmount = scrollRef.current.clientWidth * 0.8;
-      scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
+  // Easing function - easeOutCubic para scroll más natural
+  const easeOutCubic = (t: number): number => {
+    return 1 - Math.pow(1 - t, 3);
+  };
+
+  // Ref para animación de scroll manual
+  const manualScrollRef = useRef<number | null>(null);
+
+  // Scroll manual programático con animación suave
+  const smoothScrollTo = (targetPosition: number) => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    // Cancelar animación anterior si existe
+    if (manualScrollRef.current) {
+      cancelAnimationFrame(manualScrollRef.current);
     }
+
+    const startPosition = container.scrollLeft;
+    const distance = targetPosition - startPosition;
+    const duration = 500; // 500ms
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+
+      container.scrollLeft = startPosition + distance * easedProgress;
+
+      if (progress < 1) {
+        manualScrollRef.current = requestAnimationFrame(animateScroll);
+      } else {
+        manualScrollRef.current = null;
+        checkScroll();
+      }
+    };
+
+    manualScrollRef.current = requestAnimationFrame(animateScroll);
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (!scrollRef.current) return;
+
+    const scrollAmount = scrollRef.current.clientWidth * 0.8;
+    const targetPosition = scrollRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
+    smoothScrollTo(targetPosition);
   };
 
   return (

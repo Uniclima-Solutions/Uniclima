@@ -74,17 +74,55 @@ export default function BrandScroller() {
     };
   }, [isMounted, isPaused]);
 
+  // Easing function - easeOutCubic para scroll más natural
+  const easeOutCubic = (t: number): number => {
+    return 1 - Math.pow(1 - t, 3);
+  };
+
+  // Ref para animación de scroll manual
+  const manualScrollRef = useRef<number | null>(null);
+
+  // Scroll manual programático con animación suave
+  const smoothScrollTo = useCallback((targetPosition: number) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Cancelar animación anterior si existe
+    if (manualScrollRef.current) {
+      cancelAnimationFrame(manualScrollRef.current);
+    }
+
+    const startPosition = container.scrollLeft;
+    const distance = targetPosition - startPosition;
+    const duration = 500; // 500ms
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+
+      container.scrollLeft = startPosition + distance * easedProgress;
+
+      if (progress < 1) {
+        manualScrollRef.current = requestAnimationFrame(animateScroll);
+      } else {
+        manualScrollRef.current = null;
+      }
+    };
+
+    manualScrollRef.current = requestAnimationFrame(animateScroll);
+  }, []);
+
   // Función de scroll manual
   const scroll = useCallback((direction: "left" | "right") => {
     const container = scrollContainerRef.current;
-    if (container) {
-      const scrollAmount = container.clientWidth * CONFIG.SCROLL_AMOUNT_PERCENT;
-      container.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  }, []);
+    if (!container) return;
+
+    const scrollAmount = container.clientWidth * CONFIG.SCROLL_AMOUNT_PERCENT;
+    const targetPosition = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+    smoothScrollTo(targetPosition);
+  }, [smoothScrollTo]);
 
   // Handlers de pausa
   const handleMouseEnter = useCallback(() => setIsPaused(true), []);
