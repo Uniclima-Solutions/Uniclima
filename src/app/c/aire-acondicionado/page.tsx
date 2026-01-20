@@ -22,6 +22,7 @@ import {
   CheckCircle,
   Thermometer
 } from "lucide-react";
+import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
 
 // Categorías de Repuestos de Aire Acondicionado
 const repuestosAire = [
@@ -113,18 +114,15 @@ function BrandCard({ marca }: { marca: typeof marcas[0] }) {
   return (
     <Link 
       href={`/c/aire-acondicionado?marca=${marca.slug}`}
-      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center gap-3"
+      className="group bg-white rounded-xl p-2 sm:p-3 md:p-4 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center aspect-[4/3]"
     >
       {/* Logo a todo color */}
-      <div className="w-full h-16 flex items-center justify-center">
-        <img 
-          src={marca.logo} 
-          alt={marca.name}
-          className="max-h-14 max-w-full object-contain"
-          loading="lazy"
-        />
-      </div>
-      <span className="text-xs text-gray-500 font-medium">{marca.count} productos</span>
+      <img 
+        src={marca.logo} 
+        alt={marca.name}
+        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+        loading="lazy"
+      />
     </Link>
   );
 }
@@ -137,8 +135,27 @@ export default function RepuestosAireAcondicionado() {
   const categoriasPopulares = repuestosAire.filter(c => c.popular);
   const categoriasAMostrar = mostrarTodas ? repuestosAire : categoriasPopulares;
 
+  // Schemas para SEO
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Inicio", url: "https://uniclima.es" },
+    { name: "Repuestos de Aire Acondicionado" }
+  ]);
+
+  const collectionSchema = createCollectionPageSchema(
+    "Repuestos de Aire Acondicionado",
+    `Más de ${totalProductos.toLocaleString()} repuestos originales y compatibles para splits, multisplits y sistemas de climatización. Envío 24-48h.`,
+    "https://uniclima.es/c/aire-acondicionado",
+    repuestosAire.map(cat => ({
+      name: cat.fullName,
+      url: `https://uniclima.es/c/aire-acondicionado/${cat.slug}`
+    }))
+  );
+
   return (
     <>
+      {/* Schema.org JSON-LD para SEO */}
+      <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, collectionSchema]} />
+      
       <Header />
       <main className="pt-20 lg:pt-28 bg-gray-50 min-h-screen">
         {/* Hero Section */}
@@ -288,7 +305,7 @@ export default function RepuestosAireAcondicionado() {
               <p className="text-gray-500">Repuestos para las principales marcas de climatización</p>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
               {marcas.map((marca) => (
                 <BrandCard key={marca.slug} marca={marca} />
               ))}

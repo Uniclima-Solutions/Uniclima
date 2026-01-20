@@ -65,6 +65,7 @@ import {
   obtenerProvinciaPorPoblacion,
   obtenerDetallesLugar
 } from "@/services/addressAutocompleteService";
+import { JsonLd, createBreadcrumbSchema, createServiceSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
 
 // Cargar Stripe dinámicamente
 const StripePaymentForm = dynamic(() => import('@/components/StripePaymentForm'), {
@@ -655,8 +656,24 @@ function ContratoMantenimientoContent() {
     }
   };
   
+  // Schemas para SEO
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Inicio", url: "https://uniclima.es" },
+    { name: "Contrato de Mantenimiento" }
+  ]);
+
+  const serviceSchema = createServiceSchema({
+    name: "Contrato de Mantenimiento de Calderas y Aire Acondicionado",
+    description: "Servicio de mantenimiento preventivo para calderas y aires acondicionados. Incluye revisiones anuales, asistencia técnica y garantía de funcionamiento.",
+    serviceType: "Mantenimiento HVAC",
+    price: 70
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
+      {/* Schema.org JSON-LD para SEO */}
+      <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, serviceSchema]} />
+      
       <Header />
       <Breadcrumbs items={breadcrumbsConfig.contratoMantenimiento} />
       

@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { CALDERAS_BRANDS } from "@/lib/brands";
+import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
 
 // Categorías de Repuestos de Calderas
 const repuestosCalderas = [
@@ -124,15 +125,15 @@ function BrandCard({ marca }: { marca: typeof marcas[0] }) {
   return (
     <Link 
       href={`/c/calderas?marca=${marca.slug}`}
-      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center"
+      className="group bg-white rounded-xl p-2 sm:p-3 md:p-4 border border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center aspect-[4/3]"
     >
-      <div className="w-full h-16 relative flex items-center justify-center">
+      <div className="w-full h-full relative flex items-center justify-center">
         <Image
           src={marca.logo}
           alt={marca.name}
           fill
           className="object-contain group-hover:scale-105 transition-transform duration-300"
-          sizes="(max-width: 640px) 40vw, (max-width: 768px) 30vw, 15vw"
+          sizes="(max-width: 640px) 30vw, (max-width: 768px) 25vw, (max-width: 1024px) 16vw, 12vw"
         />
       </div>
     </Link>
@@ -147,8 +148,27 @@ export default function RepuestosCalderas() {
   const categoriasPopulares = repuestosCalderas.filter(c => c.popular);
   const categoriasAMostrar = mostrarTodas ? repuestosCalderas : categoriasPopulares;
 
+  // Schemas para SEO
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Inicio", url: "https://uniclima.es" },
+    { name: "Repuestos de Calderas" }
+  ]);
+
+  const collectionSchema = createCollectionPageSchema(
+    "Repuestos de Calderas",
+    `Más de ${totalProductos.toLocaleString()} repuestos originales y compatibles para calderas de todas las marcas. Envío 24-48h y garantía 1 año.`,
+    "https://uniclima.es/c/calderas",
+    repuestosCalderas.map(cat => ({
+      name: cat.fullName,
+      url: `https://uniclima.es/c/calderas/${cat.slug}`
+    }))
+  );
+
   return (
     <>
+      {/* Schema.org JSON-LD para SEO */}
+      <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, collectionSchema]} />
+      
       <Header />
       <main className="pt-20 lg:pt-28 bg-gray-50 min-h-screen">
         {/* Hero Section */}
@@ -301,7 +321,7 @@ export default function RepuestosCalderas() {
               <p className="text-gray-500">Repuestos para las principales marcas del mercado</p>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
               {marcas.map((marca) => (
                 <BrandCard key={marca.slug} marca={marca} />
               ))}
