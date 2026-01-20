@@ -354,7 +354,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   );
 }
 
-// Componente Carrusel de Categorías con scroll automático lento
+// Componente Carrusel de Categorías con scroll infinito CSS
 function CategoryCarousel({ 
   title, 
   subtitle,
@@ -370,120 +370,8 @@ function CategoryCarousel({
   basePath?: string;
   colorType?: "orange" | "blue";
 }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
-
-  const checkScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
-    }
-  };
-
-  // Ref para el tiempo de la última animación
-  const lastTimeRef = useRef<number>(0);
-
-  // Scroll automático infinito de derecha a izquierda
-  useEffect(() => {
-    const scrollEl = scrollRef.current;
-    if (!scrollEl) return;
-
-    let animationId: number;
-    const SCROLL_SPEED = 0.5; // Píxeles por frame
-
-    const autoScroll = (currentTime: number) => {
-      if (!isPaused && scrollEl) {
-        if (!lastTimeRef.current) {
-          lastTimeRef.current = currentTime;
-        }
-
-        const deltaTime = currentTime - lastTimeRef.current;
-        lastTimeRef.current = currentTime;
-
-        // Scroll hacia la derecha (contenido se mueve a la izquierda)
-        scrollEl.scrollLeft += SCROLL_SPEED * (deltaTime / 16);
-
-        // Reset al inicio cuando llega al final (scroll infinito)
-        const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
-        if (scrollEl.scrollLeft >= maxScroll - 1) {
-          scrollEl.scrollLeft = 0;
-        }
-      } else {
-        lastTimeRef.current = 0;
-      }
-      animationId = requestAnimationFrame(autoScroll);
-    };
-
-    animationId = requestAnimationFrame(autoScroll);
-
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-    };
-  }, [isPaused]);
-
-  useEffect(() => {
-    checkScroll();
-    const scrollEl = scrollRef.current;
-    if (scrollEl) {
-      scrollEl.addEventListener('scroll', checkScroll);
-      return () => scrollEl.removeEventListener('scroll', checkScroll);
-    }
-  }, []);
-
-  // Easing function - easeOutCubic para scroll más natural
-  const easeOutCubic = (t: number): number => {
-    return 1 - Math.pow(1 - t, 3);
-  };
-
-  // Ref para animación de scroll manual
-  const manualScrollRef = useRef<number | null>(null);
-
-  // Scroll manual programático con animación suave
-  const smoothScrollTo = (targetPosition: number) => {
-    const container = scrollRef.current;
-    if (!container) return;
-
-    // Cancelar animación anterior si existe
-    if (manualScrollRef.current) {
-      cancelAnimationFrame(manualScrollRef.current);
-    }
-
-    const startPosition = container.scrollLeft;
-    const distance = targetPosition - startPosition;
-    const duration = 500; // 500ms
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-
-      container.scrollLeft = startPosition + distance * easedProgress;
-
-      if (progress < 1) {
-        manualScrollRef.current = requestAnimationFrame(animateScroll);
-      } else {
-        manualScrollRef.current = null;
-        checkScroll();
-      }
-    };
-
-    manualScrollRef.current = requestAnimationFrame(animateScroll);
-  };
-
-  const scroll = (direction: 'left' | 'right') => {
-    if (!scrollRef.current) return;
-
-    const scrollAmount = scrollRef.current.clientWidth * 0.8;
-    const targetPosition = scrollRef.current.scrollLeft + (direction === 'left' ? -scrollAmount : scrollAmount);
-    smoothScrollTo(targetPosition);
-  };
-
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-white">
+    <section className="py-4 sm:py-6 lg:py-8 bg-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
         {/* Header con título y botón ver todos */}
         <div className="flex items-center justify-between mb-2 sm:mb-4 lg:mb-6">
@@ -503,51 +391,29 @@ function CategoryCarousel({
             <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </Link>
         </div>
+      </div>
 
-        {/* Carrusel */}
-        <div className="relative">
-          {/* Botón izquierda */}
-          {canScrollLeft && (
-            <button
-              onClick={() => scroll('left')}
-              className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 z-30 w-8 h-8 lg:w-10 lg:h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+      {/* Carrusel con CSS animation - scroll infinito fluido */}
+      <div className="infinite-scroll-wrapper">
+        <div className="infinite-scroll-container infinite-scroll-fast py-2">
+          {/* Primera copia de categorías */}
+          {categories.map((category, idx) => (
+            <div 
+              key={`first-${category.id}-${idx}`} 
+              className="flex-shrink-0 w-32 sm:w-36 lg:w-40 mx-1 sm:mx-2"
             >
-              <ChevronLeft className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
-            </button>
-          )}
-
-          {/* Contenedor scroll infinito con pausa al hover */}
-          <div
-            ref={scrollRef}
-            className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide pb-2"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
-            }}
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            {/* Duplicar categorías para scroll infinito */}
-            {[...categories, ...categories].map((category, idx) => (
-              <div 
-                key={`${category.id}-${idx}`} 
-                className="flex-shrink-0 w-[calc(33.333%-8px)] sm:w-[calc(25%-10px)] lg:w-[calc(20%-14px)] transition-transform duration-300 hover:z-10"
-              >
-                <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
-              </div>
-            ))}
-          </div>
-
-          {/* Botón derecha */}
-          {canScrollRight && (
-            <button
-              onClick={() => scroll('right')}
-              className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 z-30 w-8 h-8 lg:w-10 lg:h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+              <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
+            </div>
+          ))}
+          {/* Segunda copia para el loop infinito */}
+          {categories.map((category, idx) => (
+            <div 
+              key={`second-${category.id}-${idx}`} 
+              className="flex-shrink-0 w-32 sm:w-36 lg:w-40 mx-1 sm:mx-2"
             >
-              <ChevronRight className="w-4 h-4 lg:w-5 lg:h-5 text-gray-600" />
-            </button>
-          )}
+              <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

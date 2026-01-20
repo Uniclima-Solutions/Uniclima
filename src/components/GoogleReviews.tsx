@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Review {
@@ -13,7 +13,7 @@ interface Review {
 
 const GOOGLE_MAPS_URL = "https://maps.app.goo.gl/BshwReF7eKuF7RaC6";
 
-// 50 reseñas de Google con valoraciones 4 y 5
+// 25 reseñas de Google con valoraciones 4 y 5
 const reviews: Review[] = [
   { author: "Cristina López", rating: 5, date: "hace 1 semana", text: "Excelente servicio. Encontraron el repuesto exacto para mi caldera Vaillant. Envío rapidísimo y muy bien embalado.", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
   { author: "Alberto Fernández", rating: 5, date: "hace 2 semanas", text: "Fantástica experiencia. El técnico fue muy profesional y dejó todo funcionando perfectamente. Muy recomendable.", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
@@ -55,7 +55,7 @@ function ReviewCard({ review }: { review: Review }) {
       href={GOOGLE_MAPS_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex-shrink-0 w-72 sm:w-80 bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-300 cursor-pointer group"
+      className="flex-shrink-0 w-72 sm:w-80 bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-300 cursor-pointer group mx-2"
     >
       {/* Header con avatar y nombre */}
       <div className="flex items-center gap-3 mb-3">
@@ -95,123 +95,16 @@ function ReviewCard({ review }: { review: Review }) {
 }
 
 export default function GoogleReviews() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const autoScrollRef = useRef<number | null>(null);
-  const manualScrollRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(0);
   const [isMounted, setIsMounted] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Duplicar reseñas para scroll infinito
-  const displayReviews = [...reviews, ...reviews];
 
   useEffect(() => {
     setIsMounted(true);
-    return () => {
-      if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
-      if (manualScrollRef.current) cancelAnimationFrame(manualScrollRef.current);
-    };
   }, []);
-
-  // Scroll automático infinito de derecha a izquierda
-  useEffect(() => {
-    if (!isMounted) return;
-
-    const SCROLL_SPEED = 0.5; // Píxeles por frame (ajustable)
-
-    const animate = (currentTime: number) => {
-      const container = scrollContainerRef.current;
-      if (!container || isPaused) {
-        autoScrollRef.current = requestAnimationFrame(animate);
-        return;
-      }
-
-      if (!lastTimeRef.current) {
-        lastTimeRef.current = currentTime;
-      }
-
-      const deltaTime = currentTime - lastTimeRef.current;
-      lastTimeRef.current = currentTime;
-
-      // Scroll hacia la derecha (contenido se mueve a la izquierda)
-      container.scrollLeft += SCROLL_SPEED * (deltaTime / 16);
-
-      // Reset al inicio cuando llega al final (scroll infinito)
-      const maxScroll = container.scrollWidth - container.clientWidth;
-      if (container.scrollLeft >= maxScroll - 1) {
-        container.scrollLeft = 0;
-      }
-
-      autoScrollRef.current = requestAnimationFrame(animate);
-    };
-
-    autoScrollRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
-    };
-  }, [isMounted, isPaused]);
-
-  // Easing function para scroll manual
-  const easeOutCubic = (t: number): number => {
-    return 1 - Math.pow(1 - t, 3);
-  };
-
-  // Scroll manual programático con animación suave
-  const smoothScrollTo = useCallback((targetPosition: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    if (manualScrollRef.current) {
-      cancelAnimationFrame(manualScrollRef.current);
-    }
-
-    const startPosition = container.scrollLeft;
-    const distance = targetPosition - startPosition;
-    const duration = 500;
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-
-      container.scrollLeft = startPosition + distance * easedProgress;
-
-      if (progress < 1) {
-        manualScrollRef.current = requestAnimationFrame(animateScroll);
-      } else {
-        manualScrollRef.current = null;
-      }
-    };
-
-    manualScrollRef.current = requestAnimationFrame(animateScroll);
-  }, []);
-
-  // Scroll manual con flechas
-  const scroll = useCallback((direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const scrollAmount = container.clientWidth * 0.8;
-    const targetPosition = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
-    smoothScrollTo(targetPosition);
-  }, [smoothScrollTo]);
-
-  // Handlers de pausa
-  const handleMouseEnter = () => {
-    setIsPaused(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-    lastTimeRef.current = 0;
-  };
 
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-8 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header con estadísticas */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
@@ -274,49 +167,19 @@ export default function GoogleReviews() {
             </div>
           </a>
         </div>
+      </div>
 
-        {/* Carrusel con scroll infinito */}
-        <div 
-          className="relative"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Flecha izquierda */}
-          <button
-            onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
-          </button>
-
-          {/* Contenedor de scroll infinito */}
-          <div
-            ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto py-2"
-            style={{ 
-              scrollbarWidth: "none", 
-              msOverflowStyle: "none", 
-              WebkitOverflowScrolling: "touch"
-            }}
-          >
-            {displayReviews.map((review, index) => (
-              <ReviewCard key={index} review={review} />
-            ))}
-          </div>
-
-          {/* Flecha derecha */}
-          <button
-            onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
-          </button>
-
-          {/* Gradientes de fade en los bordes */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-white to-transparent pointer-events-none" />
+      {/* Carrusel con CSS animation - scroll infinito fluido */}
+      <div className="infinite-scroll-wrapper bg-gray relative">
+        <div className="infinite-scroll-container infinite-scroll-slow py-4">
+          {/* Primera copia de reseñas */}
+          {reviews.map((review, index) => (
+            <ReviewCard key={`first-${index}`} review={review} />
+          ))}
+          {/* Segunda copia para el loop infinito */}
+          {reviews.map((review, index) => (
+            <ReviewCard key={`second-${index}`} review={review} />
+          ))}
         </div>
       </div>
     </section>

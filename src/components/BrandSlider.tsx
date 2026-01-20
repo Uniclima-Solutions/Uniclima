@@ -1,18 +1,15 @@
-'use client';
+"use client";
 
 /*
- * DESIGN: Slider de marcas con scroll automático infinito
- * - Flechas de navegación izquierda/derecha
- * - Movimiento automático de izquierda a derecha
- * - Pausa al hacer hover sobre cualquier logo
+ * DESIGN: Slider de marcas con scroll infinito CSS
+ * - Movimiento automático fluido con CSS animation
+ * - Pausa al hacer hover
  * - Logos en color con fondo blanco
  * - Enlaces a páginas de marca (/marca/{slug})
- * - Tarjetas con bordes redondeados estilo mockup
  */
 
 import Link from "next/link";
-import { useRef, useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface Brand {
   name: string;
@@ -72,199 +69,60 @@ export default function BrandSlider({
   subtitle = "Repuestos originales y compatibles de los principales fabricantes",
   brands = allBrands,
 }: BrandSliderProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const animationRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(0);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  // Scroll automático suave de izquierda a derecha
-  const animate = useCallback((currentTime: number) => {
-    if (!scrollContainerRef.current || isPaused) {
-      animationRef.current = requestAnimationFrame(animate);
-      return;
-    }
-
-    if (!lastTimeRef.current) {
-      lastTimeRef.current = currentTime;
-    }
-
-    const deltaTime = currentTime - lastTimeRef.current;
-    lastTimeRef.current = currentTime;
-
-    const container = scrollContainerRef.current;
-    const scrollSpeed = 0.5; // píxeles por milisegundo (ajustable)
-    
-    container.scrollLeft += scrollSpeed * (deltaTime / 16); // normalizado a ~60fps
-
-    // Reset al inicio cuando llega al final (scroll infinito)
-    const maxScroll = container.scrollWidth - container.clientWidth;
-    if (container.scrollLeft >= maxScroll - 1) {
-      container.scrollLeft = 0;
-    }
-
-    animationRef.current = requestAnimationFrame(animate);
-  }, [isPaused]);
-
-  useEffect(() => {
-    if (isMounted) {
-      animationRef.current = requestAnimationFrame(animate);
-    }
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isMounted, animate]);
-
-  // Easing function - easeOutCubic para scroll más natural
-  const easeOutCubic = (t: number): number => {
-    return 1 - Math.pow(1 - t, 3);
-  };
-
-  // Ref para animación de scroll manual
-  const manualScrollRef = useRef<number | null>(null);
-
-  // Scroll manual programático con animación suave
-  const smoothScrollTo = useCallback((targetPosition: number) => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    // Cancelar animación anterior si existe
-    if (manualScrollRef.current) {
-      cancelAnimationFrame(manualScrollRef.current);
-    }
-
-    const startPosition = container.scrollLeft;
-    const distance = targetPosition - startPosition;
-    const duration = 500; // 500ms
-    const startTime = performance.now();
-
-    const animateScroll = (currentTime: number) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-
-      container.scrollLeft = startPosition + distance * easedProgress;
-
-      if (progress < 1) {
-        manualScrollRef.current = requestAnimationFrame(animateScroll);
-      } else {
-        manualScrollRef.current = null;
-      }
-    };
-
-    manualScrollRef.current = requestAnimationFrame(animateScroll);
-  }, []);
-
-  // Scroll manual con flechas
-  const scroll = useCallback((direction: "left" | "right") => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const scrollAmount = container.clientWidth * 0.6;
-    const targetPosition = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
-    smoothScrollTo(targetPosition);
-  }, [smoothScrollTo]);
-
-  // Pausar al hacer hover
-  const handleMouseEnter = () => setIsPaused(true);
-  const handleMouseLeave = () => {
-    setIsPaused(false);
-    lastTimeRef.current = 0;
-  };
-
   if (!isMounted) return null;
 
   return (
-    <section className="py-12 sm:py-16 bg-gray-50">
-      <div className="container mx-auto px-4 mb-10 sm:mb-12">
-        <div className="text-center max-w-2xl mx-auto">
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-            {title}
-          </h2>
-          <p className="text-gray-500 text-sm sm:text-base">
+    <section className="py-8 sm:py-10 md:py-12 bg-gray-50 overflow-hidden">
+      {/* Header */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-sm sm:text-base text-gray-500 text-center mt-2">
             {subtitle}
           </p>
-        </div>
+        )}
       </div>
 
-      {/* Slider container */}
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div 
-          className="relative group"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Flecha izquierda */}
-          <button
-            onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl -translate-x-1/2 opacity-90 hover:opacity-100"
-            aria-label="Anterior"
-          >
-            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
-          </button>
-
-          {/* Contenedor de scroll */}
-          <div
-            ref={scrollContainerRef}
-            className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth px-2 py-2 snap-x"
-            style={{ 
-              scrollbarWidth: "none", 
-              msOverflowStyle: "none", 
-              WebkitOverflowScrolling: "touch",
-              scrollBehavior: "smooth",
-              overscrollBehavior: "contain"
-            }}
-          >
-            {/* Duplicamos las marcas para efecto infinito */}
-            {[...brands, ...brands].map((brand, idx) => (
-              <Link
-                key={`${brand.slug}-${idx}`}
-                href={`/marca/${brand.slug}`}
-                className="flex-shrink-0 w-32 sm:w-40 lg:w-44 flex items-center justify-center p-4 sm:p-5 bg-white rounded-2xl border border-gray-200 shadow-sm hover:border-orange-400 hover:shadow-xl hover:bg-orange-50/50 transition-all duration-300 cursor-pointer group/brand"
-                title={`Ver repuestos de ${brand.name}`}
-              >
-                <img
-                  src={brand.logo}
-                  alt={brand.name}
-                  className="max-h-10 sm:max-h-12 lg:max-h-14 w-auto object-contain opacity-100 group-hover/brand:opacity-100 group-hover/brand:scale-110 transition-all duration-300"
-                  draggable={false}
-                  loading="lazy"
-                />
-              </Link>
-            ))}
-          </div>
-
-          {/* Flecha derecha */}
-          <button
-            onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 sm:w-12 sm:h-12 bg-white rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:bg-orange-50 hover:shadow-xl translate-x-1/2 opacity-90 hover:opacity-100"
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
-          </button>
-
-          {/* Gradientes de fade en los bordes */}
-          <div className="absolute left-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-r from-gray-50 to-transparent pointer-events-none" />
-          <div className="absolute right-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-l from-gray-50 to-transparent pointer-events-none" />
+      {/* Carrusel con CSS animation - scroll infinito fluido */}
+      <div className="infinite-scroll-wrapper bg-gray">
+        <div className="infinite-scroll-container infinite-scroll-medium py-4">
+          {/* Primera copia de marcas */}
+          {brands.map((brand, idx) => (
+            <BrandCard key={`first-${brand.slug}-${idx}`} brand={brand} />
+          ))}
+          {/* Segunda copia para el loop infinito */}
+          {brands.map((brand, idx) => (
+            <BrandCard key={`second-${brand.slug}-${idx}`} brand={brand} />
+          ))}
         </div>
       </div>
-
-      {/* Hide scrollbar CSS */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar,
-        div[style*="scrollbarWidth"]::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </section>
   );
 }
 
-export { boilerBrands, acBrands, allBrands };
-export type { Brand };
+// Componente de tarjeta de marca
+function BrandCard({ brand }: { brand: Brand }) {
+  return (
+    <Link
+      href={`/marca/${brand.slug}`}
+      className="group flex-shrink-0 flex items-center justify-center bg-white rounded-xl p-3 sm:p-4 mx-2 shadow-sm hover:shadow-md transition-all duration-300"
+      title={`Ver repuestos de ${brand.name}`}
+    >
+      <img
+        src={brand.logo}
+        alt={brand.name}
+        className="object-contain w-20 h-10 sm:w-24 sm:h-12 md:w-28 md:h-14 group-hover:scale-110 transition-transform duration-300"
+        draggable={false}
+        loading="lazy"
+      />
+    </Link>
+  );
+}

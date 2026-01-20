@@ -430,3 +430,81 @@ main {
     padding-top: 100px; /* Altura del header en desktop */
   }
 }
+
+/* ============================================
+ * ANIMACIONES CSS PARA SCROLL INFINITO FLUIDO
+ * ============================================ */
+
+/* Animación de scroll infinito hacia la izquierda */
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Contenedor de scroll infinito */
+.infinite-scroll-container {
+  display: flex;
+  width: max-content;
+  animation: scroll-left 30s linear infinite;
+  will-change: transform;
+}
+
+/* Velocidades de scroll */
+.infinite-scroll-slow {
+  animation-duration: 60s;
+}
+
+.infinite-scroll-medium {
+  animation-duration: 40s;
+}
+
+.infinite-scroll-fast {
+  animation-duration: 25s;
+}
+
+/* Pausa al hover */
+.infinite-scroll-container:hover,
+.infinite-scroll-wrapper:hover .infinite-scroll-container {
+  animation-play-state: paused;
+}
+
+/* Wrapper para el scroll infinito */
+.infinite-scroll-wrapper {
+  overflow: hidden;
+  position: relative;
+}
+
+/* Gradientes de fade en los bordes */
+.infinite-scroll-wrapper::before,
+.infinite-scroll-wrapper::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.infinite-scroll-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.infinite-scroll-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+}
+
+/* Sin gradientes para fondos grises */
+.infinite-scroll-wrapper.bg-gray::before {
+  background: linear-gradient(to right, rgb(249 250 251), transparent);
+}
+
+.infinite-scroll-wrapper.bg-gray::after {
+  background: linear-gradient(to left, rgb(249 250 251), transparent);
+}
