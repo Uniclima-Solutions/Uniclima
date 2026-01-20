@@ -712,7 +712,7 @@ function ContratoMantenimientoContent() {
       <main className="flex-1 py-6 lg:py-10">
         <div className="max-w-6xl mx-auto px-4">
           
-          {//* Paso Completado */
+          {/* Paso Completado */}
           {paso === 'completado' && (
             <div className="max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
               <div className="bg-white rounded-3xl shadow-xl p-8 lg:p-10 text-center border border-gray-100">
@@ -785,8 +785,8 @@ function ContratoMantenimientoContent() {
               {/* Columna Principal */}
               <div className="lg:col-span-2 space-y-6">
                 
-                {/* Selección de Plan */
-                <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">>
+                {/* Selección de Plan */}
+                <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                   <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
                       <FileText className="w-5 h-5 text-orange-600" />
@@ -912,7 +912,7 @@ function ContratoMantenimientoContent() {
                   )}
                 </div>
                 
-                {//* Datos del Cliente */
+                {/* Datos del Cliente */}
                 <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                   <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
