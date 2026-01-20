@@ -254,11 +254,11 @@ const InputField = ({
   id: string; label: string; value: string; onChange: (v: string) => void; onBlur?: () => void;
   error?: string; placeholder?: string; type?: string; required?: boolean; hasError?: boolean; sublabel?: string;
 }) => (
-  <div id={`field-${id}`}>
-    <Label htmlFor={id} className="text-sm font-medium text-gray-700">
+  <div id={`field-${id}`} className="group">
+    <Label htmlFor={id} className="text-sm font-medium text-gray-700 transition-colors group-focus-within:text-orange-600">
       {label} {required && <span className="text-orange-500">*</span>}
     </Label>
-    <div className="relative mt-1">
+    <div className="relative mt-1.5">
       <input
         id={id}
         type={type}
@@ -267,20 +267,25 @@ const InputField = ({
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
         className={cn(
-          "flex h-10 w-full rounded-lg border bg-white px-3 py-2 text-sm shadow-sm transition-all",
-          "placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500",
-          error || hasError ? "border-red-500 ring-2 ring-red-200" : "border-gray-300",
-          value && !error && !hasError && "border-green-500"
+          "flex h-12 w-full rounded-xl border bg-white px-4 py-3 text-sm shadow-sm transition-all duration-300",
+          "placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-500",
+          "hover:border-gray-400",
+          error || hasError ? "border-red-500 ring-4 ring-red-100" : "border-gray-200",
+          value && !error && !hasError && "border-green-500 ring-4 ring-green-100"
         )}
       />
       {value && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          {error || hasError ? <AlertCircle className="w-4 h-4 text-red-500" /> : <CheckCircle2 className="w-4 h-4 text-green-500" />}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 transition-transform duration-300">
+          {error || hasError ? (
+            <AlertCircle className="w-5 h-5 text-red-500 animate-pulse" />
+          ) : (
+            <CheckCircle2 className="w-5 h-5 text-green-500" />
+          )}
         </div>
       )}
     </div>
-    {sublabel && <p className="text-xs text-gray-500 mt-1">{sublabel}</p>}
-    {error && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{error}</p>}
+    {sublabel && <p className="text-xs text-gray-500 mt-1.5">{sublabel}</p>}
+    {error && <p className="text-red-500 text-xs mt-1.5 flex items-center gap-1 animate-in slide-in-from-top-1"><AlertCircle className="w-3 h-3" />{error}</p>}
   </div>
 );
 
@@ -675,7 +680,7 @@ function ContratoMantenimientoContent() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex flex-col">
       {/* Schema.org JSON-LD para SEO */}
       <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, serviceSchema]} />
       
@@ -704,23 +709,23 @@ function ContratoMantenimientoContent() {
         </div>
       )}
       
-      <main className="flex-1 py-4">
+      <main className="flex-1 py-6 lg:py-10">
         <div className="max-w-6xl mx-auto px-4">
           
-          {/* Paso Completado */}
+          {//* Paso Completado */
           {paso === 'completado' && (
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle2 className="w-10 h-10 text-green-600" />
+            <div className="max-w-2xl mx-auto animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+              <div className="bg-white rounded-3xl shadow-xl p-8 lg:p-10 text-center border border-gray-100">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg shadow-green-200/50 animate-bounce">
+                  <CheckCircle2 className="w-12 h-12 text-green-600" />
                 </div>
                 
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">¡Contrato Completado!</h2>
+                <h2 className="text-3xl font-black text-gray-900 mb-3">¡Contrato Completado!</h2>
                 <p className="text-gray-600 mb-6">Tu contrato de mantenimiento ha sido procesado correctamente.</p>
                 
                 <div className="bg-gray-50 rounded-lg p-4 mb-6">
                   <p className="text-sm text-gray-600 mb-1">Número de Contrato</p>
-                  <p className="text-xl font-mono font-bold text-orange-600">{numeroContrato}</p>
+                  <p className="text-2xl font-mono font-black text-orange-600">{numeroContrato}</p>
                 </div>
                 
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6 text-left">
@@ -734,14 +739,14 @@ function ContratoMantenimientoContent() {
                   <button
                     onClick={descargarPDF}
                     disabled={isLoading}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors"
+                    className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl font-bold hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:scale-105"
                   >
                     {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                     Descargar Contrato PDF
                   </button>
                   <button
                     onClick={() => window.print()}
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
+                    className="flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 text-gray-700 rounded-2xl font-bold hover:border-gray-300 hover:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-lg"
                   >
                     <Printer className="w-4 h-4" />
                     Imprimir
@@ -780,24 +785,26 @@ function ContratoMantenimientoContent() {
               {/* Columna Principal */}
               <div className="lg:col-span-2 space-y-6">
                 
-                {/* Selección de Plan */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-orange-500" />
+                {/* Selección de Plan */
+                <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">>
+                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-orange-600" />
+                    </div>
                     Selecciona tu Plan
                   </h2>
                   
-                  <div className="grid grid-cols-3 gap-3 mb-4">
+                  <div className="grid grid-cols-3 gap-4 mb-6">
                     {['Esencial', 'Confort', 'Premium'].map((plan) => (
                       <button
                         key={plan}
                         type="button"
                         onClick={() => setPlanSeleccionado(plan)}
                         className={cn(
-                          "p-4 rounded-xl border-2 transition-all duration-200 text-center cursor-pointer hover:scale-[1.02] active:scale-[0.98]",
+                          "p-5 rounded-2xl border-2 transition-all duration-300 text-center cursor-pointer hover:scale-[1.03] active:scale-[0.97]",
                           planSeleccionado === plan
-                            ? "border-orange-500 bg-orange-50 shadow-md"
-                            : "border-gray-200 hover:border-orange-300 hover:shadow-sm"
+                            ? "border-orange-500 bg-gradient-to-br from-orange-50 to-orange-100 shadow-lg shadow-orange-200/50"
+                            : "border-gray-200 hover:border-orange-300 hover:shadow-md hover:bg-gray-50"
                         )}
                       >
                         <div className="mb-2">
@@ -905,10 +912,12 @@ function ContratoMantenimientoContent() {
                   )}
                 </div>
                 
-                {/* Datos del Cliente */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                  <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-orange-500" />
+                {//* Datos del Cliente */
+                <div className="bg-white rounded-3xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                  <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-orange-600" />
+                    </div>
                     Datos del Cliente
                   </h2>
                   
@@ -1365,7 +1374,7 @@ function ContratoMantenimientoContent() {
                       <div className="mt-4 pt-4 border-t border-orange-200">
                         <button
                           onClick={mostrarFormularioPago}
-                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-xl font-bold hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                          className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-4 rounded-2xl font-bold hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:shadow-orange-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-3 cursor-pointer"
                         >
                           <CreditCard className="w-5 h-5" />
                           Proceder al Pago
