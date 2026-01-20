@@ -7,6 +7,7 @@
  * - 2 pestañas principales: Servicios y Tienda
  * - Iconografía profesional con Lucide React
  * - Miniaturas de marcas en lugar de nombres
+ * - Desplegable de zonas de cobertura en Servicios
  * - Animaciones suaves con Framer Motion
  * - Totalmente responsive
  * - Colores corporativos (Naranja #F97316, Azul oscuro)
@@ -22,7 +23,7 @@ import {
   ShoppingBag, Package, Shield, Tag, Heart, Truck,
   Search, Star, ArrowRight, Sparkles,
   ThermometerSun, Wind, CircuitBoard, Droplets, Fan,
-  Home, Building2, CheckCircle2, Award
+  Home, Building2, CheckCircle2, Award, MapPin, ChevronDown
 } from "lucide-react";
 
 interface MegaMenuProps {
@@ -83,6 +84,60 @@ const servicios = [
     features: ["Reparación", "Instalación", "Mantenimiento"]
   }
 ];
+
+// Zonas de cobertura
+const zonasCobertura = {
+  barriosMadrid: {
+    title: "Barrios de Madrid",
+    icon: Building2,
+    zonas: [
+      { name: "Salamanca", slug: "salamanca" },
+      { name: "Chamberí", slug: "chamberi" },
+      { name: "Retiro", slug: "retiro" },
+      { name: "Chamartín", slug: "chamartin" },
+      { name: "Moncloa-Aravaca", slug: "moncloa-aravaca" },
+      { name: "Centro", slug: "centro" },
+      { name: "Arganzuela", slug: "arganzuela" },
+      { name: "Tetuán", slug: "tetuan" },
+      { name: "Fuencarral-El Pardo", slug: "fuencarral" },
+      { name: "Hortaleza", slug: "hortaleza" },
+      { name: "Ciudad Lineal", slug: "ciudad-lineal" },
+      { name: "Barajas", slug: "barajas" }
+    ]
+  },
+  municipiosPremium: {
+    title: "Municipios Premium",
+    icon: Star,
+    zonas: [
+      { name: "Pozuelo de Alarcón", slug: "pozuelo" },
+      { name: "Las Rozas", slug: "las-rozas" },
+      { name: "Majadahonda", slug: "majadahonda" },
+      { name: "Boadilla del Monte", slug: "boadilla" },
+      { name: "Villanueva de la Cañada", slug: "villanueva-canada" },
+      { name: "Torrelodones", slug: "torrelodones" },
+      { name: "Alcobendas", slug: "alcobendas" },
+      { name: "San Sebastián de los Reyes", slug: "san-sebastian-reyes" },
+      { name: "Tres Cantos", slug: "tres-cantos" },
+      { name: "La Moraleja", slug: "la-moraleja" }
+    ]
+  },
+  zonaTorrejon: {
+    title: "Zona Torrejón de Ardoz",
+    icon: MapPin,
+    zonas: [
+      { name: "Torrejón de Ardoz", slug: "torrejon" },
+      { name: "Alcalá de Henares", slug: "alcala-henares" },
+      { name: "San Fernando de Henares", slug: "san-fernando" },
+      { name: "Coslada", slug: "coslada" },
+      { name: "Paracuellos de Jarama", slug: "paracuellos" },
+      { name: "Mejorada del Campo", slug: "mejorada" },
+      { name: "Velilla de San Antonio", slug: "velilla" },
+      { name: "Loeches", slug: "loeches" },
+      { name: "Ajalvir", slug: "ajalvir" },
+      { name: "Daganzo de Arriba", slug: "daganzo" }
+    ]
+  }
+};
 
 // Categorías de tienda
 const categoriasRepuestos = {
@@ -164,6 +219,7 @@ const enlacesRapidos = [
 export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
   const [activeTab, setActiveTab] = useState<TabType>("tienda");
   const [searchQuery, setSearchQuery] = useState("");
+  const [zonasExpanded, setZonasExpanded] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Bloquear scroll cuando está abierto
@@ -184,6 +240,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       setTimeout(() => {
         setActiveTab("tienda");
         setSearchQuery("");
+        setZonasExpanded(null);
       }, 300);
     }
   }, [isOpen]);
@@ -197,6 +254,11 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
     return () => window.removeEventListener("keydown", handleEscape);
   }, [onClose]);
 
+  // Toggle zonas desplegable
+  const toggleZonas = (key: string) => {
+    setZonasExpanded(zonasExpanded === key ? null : key);
+  };
+
   // ============================================
   // RENDER PESTAÑA SERVICIOS
   // ============================================
@@ -208,8 +270,8 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       transition={{ duration: 0.2 }}
       className="p-4 md:p-6"
     >
-      {/* Grid de servicios */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {/* Grid de servicios principales - siempre visibles */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
         {servicios.map((servicio) => {
           const Icon = servicio.icon;
           return (
@@ -217,60 +279,119 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
               key={servicio.id}
               href={servicio.href}
               onClick={onClose}
-              className="group relative overflow-hidden rounded-2xl bg-white border border-gray-100 p-5 hover:border-transparent hover:shadow-xl transition-all duration-300"
+              className="group relative overflow-hidden rounded-xl bg-white border border-gray-100 p-3 md:p-4 hover:border-transparent hover:shadow-xl transition-all duration-300"
             >
               {/* Fondo con gradiente al hover */}
               <div className={`absolute inset-0 bg-gradient-to-br ${servicio.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
               
               {/* Icono */}
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${servicio.color} flex items-center justify-center mb-4 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className="w-7 h-7 text-white" />
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${servicio.color} flex items-center justify-center mb-2 md:mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
               </div>
               
               {/* Contenido */}
-              <h3 className="font-bold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">
+              <h3 className="font-bold text-gray-900 text-sm md:text-base mb-1 group-hover:text-orange-600 transition-colors">
                 {servicio.name}
               </h3>
-              <p className="text-sm text-gray-500 mb-3 line-clamp-2">
+              <p className="text-xs text-gray-500 mb-2 line-clamp-2 hidden sm:block">
                 {servicio.description}
               </p>
               
-              {/* Features */}
-              <div className="flex flex-wrap gap-1.5">
+              {/* Features - solo en desktop */}
+              <div className="hidden md:flex flex-wrap gap-1">
                 {servicio.features.map((feature) => (
                   <span
                     key={feature}
-                    className={`text-xs px-2 py-0.5 rounded-full ${servicio.bgLight} ${servicio.textColor} font-medium`}
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${servicio.bgLight} ${servicio.textColor} font-medium`}
                   >
                     {feature}
                   </span>
                 ))}
-              </div>
-              
-              {/* Flecha */}
-              <div className="absolute top-5 right-5 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:bg-orange-500">
-                <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-white" />
               </div>
             </Link>
           );
         })}
       </div>
 
+      {/* Desplegable de Zonas de Cobertura */}
+      <div className="bg-gray-50 rounded-2xl p-4 mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <MapPin className="w-5 h-5 text-orange-500" />
+          <h4 className="font-bold text-gray-900">Zonas de Cobertura</h4>
+        </div>
+        
+        <div className="space-y-2">
+          {Object.entries(zonasCobertura).map(([key, zona]) => {
+            const Icon = zona.icon;
+            const isExpanded = zonasExpanded === key;
+            
+            return (
+              <div key={key} className="bg-white rounded-xl overflow-hidden border border-gray-100">
+                {/* Header del desplegable */}
+                <button
+                  onClick={() => toggleZonas(key)}
+                  className="w-full flex items-center justify-between p-3 hover:bg-gray-50 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-orange-100 flex items-center justify-center">
+                      <Icon className="w-4 h-4 text-orange-600" />
+                    </div>
+                    <span className="font-medium text-gray-900 text-sm">{zona.title}</span>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                      {zona.zonas.length} zonas
+                    </span>
+                  </div>
+                  <ChevronDown 
+                    className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} 
+                  />
+                </button>
+                
+                {/* Contenido del desplegable */}
+                <AnimatePresence>
+                  {isExpanded && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="p-3 pt-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                        {zona.zonas.map((z) => (
+                          <Link
+                            key={z.slug}
+                            href={`/servicios/zona/${z.slug}`}
+                            onClick={onClose}
+                            className="text-xs text-gray-600 hover:text-orange-600 hover:bg-orange-50 px-2 py-1.5 rounded-lg transition-colors truncate"
+                          >
+                            {z.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* Banner de garantía */}
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-5 flex flex-col sm:flex-row items-center gap-4">
-        <div className="flex items-center gap-4 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
-            <Award className="w-6 h-6 text-white" />
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-4 flex flex-col sm:flex-row items-center gap-3">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center flex-shrink-0">
+            <Award className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h4 className="font-bold text-white">Técnicos Certificados</h4>
-            <p className="text-sm text-gray-400">1 año de garantía en todas las reparaciones</p>
+            <h4 className="font-bold text-white text-sm">Técnicos Certificados</h4>
+            <p className="text-xs text-gray-400">1 año de garantía en todas las reparaciones</p>
           </div>
         </div>
         <Link
           href="/contacto"
           onClick={onClose}
-          className="px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap"
+          className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap text-sm"
         >
           <Phone className="w-4 h-4" />
           Solicitar Presupuesto
@@ -301,50 +422,48 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
                 <Link
                   href={categoria.href}
                   onClick={onClose}
-                  className="flex items-center gap-3 mb-4 group"
+                  className="flex items-center gap-2 mb-3 group"
                 >
-                  <div className={`w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center group-hover:bg-orange-100 transition-colors`}>
-                    <Icon className={`w-5 h-5 ${categoria.color}`} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
+                  <Icon className={`w-5 h-5 ${categoria.color}`} />
+                  <span className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
                     {categoria.name}
-                  </h3>
+                  </span>
                 </Link>
                 
-                {/* Lista de subcategorías */}
-                <ul className="space-y-1">
+                {/* Items */}
+                <div className="space-y-1">
                   {categoria.items.map((item) => {
                     const ItemIcon = item.icon;
                     const href = item.isLink 
                       ? categoria.href 
                       : `${categoria.href}/${item.slug}`;
+                    
                     return (
-                      <li key={item.slug || 'all'}>
-                        <Link
-                          href={href}
-                          onClick={onClose}
-                          className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-all ${
-                            item.isLink 
-                              ? 'text-orange-600 font-semibold hover:bg-orange-50' 
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                          }`}
-                        >
-                          <ItemIcon className={`w-4 h-4 ${item.isLink ? 'text-orange-500' : 'text-gray-400'}`} />
-                          {item.name}
-                        </Link>
-                      </li>
+                      <Link
+                        key={item.slug || 'all'}
+                        href={href}
+                        onClick={onClose}
+                        className={`flex items-center gap-2 py-1.5 px-2 rounded-lg text-sm transition-colors ${
+                          item.isLink 
+                            ? 'text-orange-600 hover:bg-orange-50 font-medium' 
+                            : 'text-gray-600 hover:text-orange-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        <ItemIcon className="w-4 h-4 opacity-50" />
+                        {item.name}
+                      </Link>
                     );
                   })}
-                </ul>
+                </div>
               </div>
             );
           })}
         </div>
 
         {/* Columna de marcas */}
-        <div className="bg-gray-50 rounded-2xl p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-gray-900">Marcas</h3>
+        <div className="bg-white rounded-2xl border border-gray-100 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <span className="font-bold text-gray-900">Marcas</span>
             <Link
               href="/marcas"
               onClick={onClose}
@@ -354,25 +473,23 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             </Link>
           </div>
           
-          {/* Grid de logos de marcas */}
+          {/* Grid de miniaturas de marcas */}
           <div className="grid grid-cols-4 gap-2">
-            {marcas.slice(0, 16).map((marca) => (
+            {marcas.map((marca) => (
               <Link
                 key={marca.slug}
                 href={`/marca/${marca.slug}`}
                 onClick={onClose}
-                className="group relative aspect-square bg-white rounded-xl border border-gray-200 p-2 hover:border-orange-300 hover:shadow-md transition-all overflow-hidden"
+                className="relative aspect-square rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-100 hover:border-orange-200 transition-all duration-200 flex items-center justify-center p-1.5 group"
                 title={marca.name}
               >
-                <div className="w-full h-full relative grayscale group-hover:grayscale-0 transition-all duration-300">
-                  <Image
-                    src={marca.logo}
-                    alt={marca.name}
-                    fill
-                    className="object-contain p-1"
-                    sizes="48px"
-                  />
-                </div>
+                <Image
+                  src={marca.logo}
+                  alt={marca.name}
+                  width={40}
+                  height={40}
+                  className="object-contain grayscale group-hover:grayscale-0 transition-all duration-200"
+                />
               </Link>
             ))}
           </div>
@@ -380,18 +497,18 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       </div>
 
       {/* Enlaces rápidos */}
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-100">
         {enlacesRapidos.map((enlace) => {
           const Icon = enlace.icon;
           return (
             <Link
-              key={enlace.name}
+              key={enlace.href}
               href={enlace.href}
               onClick={onClose}
-              className={`flex items-center gap-2 px-4 py-2 ${enlace.bg} rounded-full hover:shadow-md transition-all`}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${enlace.bg} ${enlace.color} text-sm font-medium hover:opacity-80 transition-opacity`}
             >
-              <Icon className={`w-4 h-4 ${enlace.color}`} />
-              <span className="text-sm font-medium text-gray-700">{enlace.name}</span>
+              <Icon className="w-4 h-4" />
+              {enlace.name}
             </Link>
           );
         })}
@@ -399,9 +516,6 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
     </motion.div>
   );
 
-  // ============================================
-  // RENDER PRINCIPAL
-  // ============================================
   return (
     <AnimatePresence>
       {isOpen && (
@@ -412,126 +526,119 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
             onClick={onClose}
           />
 
-          {/* Menú */}
+          {/* Panel del menú */}
           <motion.div
             ref={menuRef}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed top-0 left-0 right-0 z-50 bg-white shadow-2xl max-h-[90vh] overflow-hidden flex flex-col"
+            initial={{ opacity: 0, x: "-100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="fixed inset-y-0 left-0 w-full max-w-4xl bg-gray-50 shadow-2xl z-[101] overflow-hidden flex flex-col"
           >
             {/* Header del menú */}
-            <div className="bg-gradient-to-r from-gray-900 to-gray-800 px-4 md:px-6 py-4">
-              <div className="max-w-7xl mx-auto flex items-center justify-between">
-                {/* Logo y título */}
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
-                    <span className="text-white font-black text-lg">U</span>
+            <div className="bg-white border-b border-gray-100 p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Link href="/" onClick={onClose} className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">U</span>
                   </div>
-                  <span className="text-xl font-bold text-white">Uniclima</span>
-                </div>
+                  <span className="font-bold text-xl text-gray-900">Uniclima</span>
+                </Link>
+              </div>
+              
+              <button
+                onClick={onClose}
+                className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-600" />
+              </button>
+            </div>
 
-                {/* Pestañas */}
-                <div className="flex items-center gap-1 bg-gray-800/50 rounded-xl p-1">
+            {/* Tabs */}
+            <div className="bg-white border-b border-gray-100 px-4 flex gap-1">
+              <button
+                onClick={() => setActiveTab("tienda")}
+                className={`px-4 py-3 font-semibold text-sm rounded-t-lg transition-colors relative ${
+                  activeTab === "tienda"
+                    ? "text-orange-600 bg-gray-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Tienda
+                {activeTab === "tienda" && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
+                  />
+                )}
+              </button>
+              <button
+                onClick={() => setActiveTab("servicios")}
+                className={`px-4 py-3 font-semibold text-sm rounded-t-lg transition-colors relative ${
+                  activeTab === "servicios"
+                    ? "text-orange-600 bg-gray-50"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Servicios
+                {activeTab === "servicios" && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
+                  />
+                )}
+              </button>
+            </div>
+
+            {/* Buscador */}
+            <div className="bg-white border-b border-gray-100 p-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Buscar productos, marcas..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all"
+                />
+                {searchQuery && (
                   <button
-                    onClick={() => setActiveTab("tienda")}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                      activeTab === "tienda"
-                        ? "bg-orange-500 text-white shadow-lg"
-                        : "text-gray-400 hover:text-white"
-                    }`}
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center transition-colors"
                   >
-                    <span className="flex items-center gap-2">
-                      <ShoppingBag className="w-4 h-4" />
-                      Tienda
-                    </span>
+                    <X className="w-3 h-3 text-white" />
                   </button>
-                  <button
-                    onClick={() => setActiveTab("servicios")}
-                    className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                      activeTab === "servicios"
-                        ? "bg-orange-500 text-white shadow-lg"
-                        : "text-gray-400 hover:text-white"
-                    }`}
-                  >
-                    <span className="flex items-center gap-2">
-                      <Wrench className="w-4 h-4" />
-                      Servicios
-                    </span>
-                  </button>
-                </div>
-
-                {/* Buscador */}
-                <div className="hidden md:flex items-center gap-3 flex-1 max-w-md mx-6">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Buscar productos, marcas..."
-                      className="w-full h-10 pl-10 pr-4 bg-gray-800 border border-gray-700 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
-                    />
-                  </div>
-                </div>
-
-                {/* Botón cerrar */}
-                <button
-                  onClick={onClose}
-                  className="w-10 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+                )}
               </div>
             </div>
 
-            {/* Contenido del menú */}
-            <div className="flex-1 overflow-y-auto bg-gray-50">
-              <div className="max-w-7xl mx-auto">
-                <AnimatePresence mode="wait">
-                  {activeTab === "servicios" ? renderServicios() : renderTienda()}
-                </AnimatePresence>
-              </div>
+            {/* Contenido */}
+            <div className="flex-1 overflow-y-auto">
+              <AnimatePresence mode="wait">
+                {activeTab === "servicios" ? renderServicios() : renderTienda()}
+              </AnimatePresence>
             </div>
 
             {/* Footer del menú */}
-            <div className="bg-white border-t border-gray-200 px-4 md:px-6 py-3">
-              <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-                {/* Contacto */}
-                <div className="flex items-center gap-6 text-sm text-gray-600">
-                  <a href="tel:+34912345678" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
+            <div className="bg-white border-t border-gray-100 p-4">
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <a href="tel:912345678" className="flex items-center gap-1.5 hover:text-orange-600 transition-colors">
                     <Phone className="w-4 h-4" />
-                    <span>912 345 678</span>
+                    912 345 678
                   </a>
-                  <a href="mailto:info@uniclima.es" className="flex items-center gap-2 hover:text-orange-500 transition-colors">
+                  <a href="mailto:info@uniclima.es" className="flex items-center gap-1.5 hover:text-orange-600 transition-colors">
                     <Mail className="w-4 h-4" />
-                    <span>info@uniclima.es</span>
+                    info@uniclima.es
                   </a>
-                  <span className="flex items-center gap-2 text-gray-400">
-                    <Clock className="w-4 h-4" />
-                    <span>L-V: 9:00-18:00</span>
-                  </span>
                 </div>
-
-                {/* Beneficios */}
-                <div className="flex items-center gap-4 text-xs text-gray-500">
-                  <span className="flex items-center gap-1.5">
-                    <Truck className="w-4 h-4 text-green-500" />
-                    Envío gratis +120€
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Shield className="w-4 h-4 text-blue-500" />
-                    Garantía 2 años
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-4 h-4 text-orange-500" />
-                    Pago seguro
-                  </span>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <Clock className="w-3.5 h-3.5" />
+                  L-V: 9:00-18:00
                 </div>
               </div>
             </div>
