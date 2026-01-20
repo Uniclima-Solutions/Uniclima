@@ -25,6 +25,8 @@ import {
   Wrench,
   BadgePercent
 } from "lucide-react";
+import Image from "next/image";
+import { CALDERAS_BRANDS } from "@/lib/brands";
 
 // Categorías de Repuestos de Calderas
 const repuestosCalderas = [
@@ -49,21 +51,8 @@ const repuestosCalderas = [
   { id: 19, name: "Microacumuladores", fullName: "Microacumuladores", slug: "microacumuladores", image: "/images/categorias/Microacumuladores.png", count: 78, popular: false }
 ];
 
-// Marcas disponibles
-const marcas = [
-  { name: "Junkers / Bosch", slug: "junkers-bosch", count: 456, logo: "/images/marcas/junkers.png" },
-  { name: "Vaillant", slug: "vaillant", count: 389, logo: "/images/marcas/vaillant.png" },
-  { name: "Saunier Duval", slug: "saunier-duval", count: 312, logo: "/images/marcas/saunier-duval.png" },
-  { name: "Baxi", slug: "baxi", count: 278, logo: "/images/marcas/baxi.png" },
-  { name: "Ferroli", slug: "ferroli", count: 234, logo: "/images/marcas/ferroli.png" },
-  { name: "Ariston", slug: "ariston", count: 198, logo: "/images/marcas/ariston.png" },
-  { name: "Roca", slug: "roca", count: 167, logo: "/images/marcas/roca.png" },
-  { name: "Cointra", slug: "cointra", count: 145, logo: "/images/marcas/cointra.png" },
-  { name: "Chaffoteaux", slug: "chaffoteaux", count: 123, logo: "/images/marcas/chaffoteaux.png" },
-  { name: "Beretta", slug: "beretta", count: 98, logo: "/images/marcas/beretta.png" },
-  { name: "Immergas", slug: "immergas", count: 87, logo: "/images/marcas/immergas.png" },
-  { name: "Hermann", slug: "hermann", count: 76, logo: "/images/marcas/hermann.png" }
-];
+// Marcas disponibles - usando constantes centralizadas
+const marcas = CALDERAS_BRANDS;
 
 // Formas de onda para las tarjetas
 const waveShapes = [
@@ -130,19 +119,22 @@ function CategoryCard({ category, index }: { category: typeof repuestosCalderas[
   );
 }
 
-// Componente de tarjeta de marca
+// Componente de tarjeta de marca con logo a color
 function BrandCard({ marca }: { marca: typeof marcas[0] }) {
   return (
     <Link 
       href={`/c/calderas?marca=${marca.slug}`}
-      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center gap-2"
+      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-orange-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center"
     >
-      <div className="w-16 h-12 flex items-center justify-center">
-        <span className="text-sm font-semibold text-gray-700 group-hover:text-orange-600 transition-colors text-center">
-          {marca.name}
-        </span>
+      <div className="w-full h-16 relative flex items-center justify-center">
+        <Image
+          src={marca.logo}
+          alt={marca.name}
+          fill
+          className="object-contain group-hover:scale-105 transition-transform duration-300"
+          sizes="(max-width: 640px) 40vw, (max-width: 768px) 30vw, 15vw"
+        />
       </div>
-      <span className="text-xs text-gray-400">{marca.count} productos</span>
     </Link>
   );
 }
