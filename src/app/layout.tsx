@@ -7,9 +7,9 @@ import Script from 'next/script'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Uniclima Solutions - Repuestos de Calderas y Aire Acondicionado',
-  description: 'Especialistas en repuestos reacondicionados de climatización. Placas electrónicas, válvulas de gas, intercambiadores para Junkers, Vaillant, Baxi, Ferroli. Envío gratis +120€.',
-  keywords: 'repuestos calderas, repuestos aire acondicionado, placas electrónicas calderas, válvulas de gas, intercambiadores, HVAC, Vaillant, Junkers, Baxi, Ferroli, Saunier Duval',
+  title: 'Repuestos de Calderas y Aire Acondicionado Online | Envío 24-48h | Uniclima',
+  description: 'Tienda online de repuestos de calderas y aire acondicionado. Más de 5.000 referencias originales y compatibles para Junkers, Vaillant, Baxi, Daikin. Envío 24-48h. Garantía 1 año.',
+  keywords: 'repuestos calderas, repuestos aire acondicionado, placas electrónicas calderas, válvulas de gas, intercambiadores, comprar repuestos calderas online, recambios climatización, HVAC España',
   authors: [{ name: 'Uniclima Solutions' }],
   creator: 'Uniclima Solutions',
   publisher: 'Uniclima Solutions',
@@ -29,8 +29,8 @@ export const metadata: Metadata = {
     locale: 'es_ES',
     url: 'https://uniclima.es',
     siteName: 'Uniclima Solutions',
-    title: 'Uniclima Solutions - Repuestos de Calderas y Aire Acondicionado',
-    description: 'Especialistas en repuestos reacondicionados de climatización. Placas electrónicas, válvulas de gas, intercambiadores. Envío gratis +120€.',
+    title: 'Repuestos de Calderas y Aire Acondicionado Online | Uniclima',
+    description: 'Tienda online especializada en repuestos de calderas y aire acondicionado. Más de 5.000 referencias. Envío 24-48h y garantía 1 año.',
     images: [
       {
         url: '/og-image.jpg',
@@ -42,8 +42,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Uniclima Solutions - Repuestos de Calderas y Aire Acondicionado',
-    description: 'Especialistas en repuestos reacondicionados de climatización. Envío gratis +120€.',
+    title: 'Repuestos de Calderas y Aire Acondicionado Online | Uniclima',
+    description: 'Tienda online de repuestos HVAC. Más de 5.000 referencias. Envío 24-48h y garantía 1 año.',
     images: ['/og-image.jpg'],
   },
   alternates: {

@@ -1,9 +1,14 @@
-"use client";
+'use client';
 
 /**
  * PÁGINA PREMIUM: Repuestos de Aire Acondicionado
  * Diseño UI/UX cuidado con experiencia de usuario optimizada
  * Incluye enlace a contratos de mantenimiento
+ * 
+ * SEO Optimizado:
+ * - Title: "Repuestos Aire Acondicionado | Splits y Climatización | Uniclima"
+ * - H1: "Repuestos de Aire Acondicionado: Splits, Multisplits y Climatización"
+ * - Intención: Transaccional + Comercial
  */
 
 import { useState } from "react";
@@ -174,12 +179,12 @@ export default function RepuestosAireAcondicionado() {
                     <Snowflake className="w-7 h-7 text-white" />
                   </div>
                   <h1 className="text-3xl lg:text-4xl font-black">
-                    Repuestos de Aire Acondicionado
+                    Repuestos de Aire Acondicionado: Splits y Climatización
                   </h1>
                 </div>
                 <p className="text-blue-100 text-lg max-w-2xl">
-                  Componentes originales y compatibles para splits, multisplits y sistemas de climatización. 
-                  Más de {totalProductos.toLocaleString()} productos con envío en 24-48h.
+                  Más de {totalProductos.toLocaleString()} referencias de repuestos para Daikin, Mitsubishi, Fujitsu, LG y más marcas. 
+                  Placas, turbinas, motores y componentes con envío 24-48h y garantía 1 año.
                 </p>
               </div>
               
@@ -248,10 +253,10 @@ export default function RepuestosAireAcondicionado() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {mostrarTodas ? "Todas las categorías" : "Categorías populares"}
+                  {mostrarTodas ? "Categorías de Repuestos de Aire Acondicionado" : "Repuestos de Aire Acondicionado Más Buscados"}
                 </h2>
                 <p className="text-gray-500 text-sm mt-1">
-                  {mostrarTodas ? `${repuestosAire.length} categorías` : `${categoriasPopulares.length} categorías más buscadas`}
+                  {mostrarTodas ? `${repuestosAire.length} tipos de componentes disponibles` : `${categoriasPopulares.length} categorías con mayor demanda`}
                 </p>
               </div>
               <button
@@ -301,8 +306,8 @@ export default function RepuestosAireAcondicionado() {
         <section className="py-10 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Buscar por marca</h2>
-              <p className="text-gray-500">Repuestos para las principales marcas de climatización</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Repuestos de Aire Acondicionado por Marca</h2>
+              <p className="text-gray-500">Componentes originales y compatibles para Daikin, Mitsubishi, Fujitsu, LG y más</p>
             </div>
             
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
@@ -316,7 +321,7 @@ export default function RepuestosAireAcondicionado() {
         {/* Tipos de equipos */}
         <section className="py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Repuestos por tipo de equipo</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Repuestos según Tipo de Aire Acondicionado</h2>
             
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <Link href="/c/aire-acondicionado?tipo=split" className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all">
@@ -391,7 +396,7 @@ export default function RepuestosAireAcondicionado() {
         <section className="py-10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Repuestos de aire acondicionado: Guía completa
+              Guía de Compra: Repuestos de Aire Acondicionado
             </h2>
             
             <div className="prose prose-gray max-w-none">
@@ -401,7 +406,7 @@ export default function RepuestosAireAcondicionado() {
                 sistemas de conductos y cassettes.
               </p>
               
-              <h3>¿Qué repuestos de aire acondicionado ofrecemos?</h3>
+              <h3>Catálogo de Repuestos para Aire Acondicionado</h3>
               <ul>
                 <li><strong>Placas electrónicas:</strong> Tanto de unidad interior como exterior para todas las marcas.</li>
                 <li><strong>Turbinas y motores:</strong> Componentes de ventilación para un flujo de aire óptimo.</li>
@@ -410,7 +415,7 @@ export default function RepuestosAireAcondicionado() {
                 <li><strong>Mandos a distancia:</strong> Originales y universales compatibles.</li>
               </ul>
               
-              <h3>Servicio técnico especializado</h3>
+              <h3>Mantenimiento de Aire Acondicionado</h3>
               <p>
                 Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento" className="text-blue-600 hover:underline">contratos de mantenimiento</Link> para 
                 mantener tu aire acondicionado en perfecto estado todo el año.

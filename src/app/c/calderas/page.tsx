@@ -1,9 +1,14 @@
-"use client";
+'use client';
 
 /**
  * PÁGINA PREMIUM: Repuestos de Calderas
  * Diseño UI/UX cuidado con experiencia de usuario optimizada
  * Incluye enlace a contratos de mantenimiento
+ * 
+ * SEO Optimizado:
+ * - Title: "Repuestos de Calderas | +3.000 Referencias Originales | Uniclima"
+ * - H1: "Repuestos de Calderas: Originales y Compatibles para Todas las Marcas"
+ * - Intención: Transaccional + Comercial
  */
 
 import { useState } from "react";
@@ -188,12 +193,12 @@ export default function RepuestosCalderas() {
                     <Flame className="w-7 h-7 text-white" />
                   </div>
                   <h1 className="text-3xl lg:text-4xl font-black">
-                    Repuestos de Calderas
+                    Repuestos de Calderas: Originales y Compatibles
                   </h1>
                 </div>
                 <p className="text-orange-100 text-lg max-w-2xl">
-                  Encuentra repuestos originales y compatibles para calderas de todas las marcas. 
-                  Más de {totalProductos.toLocaleString()} productos disponibles con envío en 24-48h.
+                  Más de {totalProductos.toLocaleString()} referencias de repuestos para calderas Junkers, Vaillant, Baxi, Ferroli y más marcas. 
+                  Envío en 24-48h y garantía de 1 año en todos los productos.
                 </p>
               </div>
               
@@ -264,10 +269,10 @@ export default function RepuestosCalderas() {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  {mostrarTodas ? "Todas las categorías" : "Categorías populares"}
+                  {mostrarTodas ? "Categorías de Repuestos de Calderas" : "Repuestos de Calderas Más Buscados"}
                 </h2>
                 <p className="text-gray-500 text-sm mt-1">
-                  {mostrarTodas ? `${repuestosCalderas.length} categorías` : `${categoriasPopulares.length} categorías más buscadas`}
+                  {mostrarTodas ? `${repuestosCalderas.length} tipos de componentes disponibles` : `${categoriasPopulares.length} categorías con mayor demanda`}
                 </p>
               </div>
               <button
@@ -317,8 +322,8 @@ export default function RepuestosCalderas() {
         <section className="py-10 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Buscar por marca</h2>
-              <p className="text-gray-500">Repuestos para las principales marcas del mercado</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Repuestos de Calderas por Marca</h2>
+              <p className="text-gray-500">Componentes originales y compatibles para Junkers, Vaillant, Baxi, Ferroli y más</p>
             </div>
             
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
@@ -367,7 +372,7 @@ export default function RepuestosCalderas() {
         <section className="py-10 bg-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Repuestos de calderas: Todo lo que necesitas saber
+              Guía de Compra: Repuestos de Calderas
             </h2>
             
             <div className="prose prose-gray max-w-none">
@@ -377,7 +382,7 @@ export default function RepuestosCalderas() {
                 desde placas electrónicas hasta válvulas de gas, intercambiadores y bombas de circulación.
               </p>
               
-              <h3>¿Qué repuestos de caldera ofrecemos?</h3>
+              <h3>Catálogo de Repuestos para Calderas</h3>
               <p>
                 Nuestro catálogo incluye más de {totalProductos.toLocaleString()} referencias de repuestos para calderas:
               </p>
@@ -389,13 +394,13 @@ export default function RepuestosCalderas() {
                 <li><strong>Sensores y termostatos:</strong> Para el control preciso de la temperatura.</li>
               </ul>
               
-              <h3>Marcas compatibles</h3>
+              <h3>Marcas de Calderas Disponibles</h3>
               <p>
                 Trabajamos con las principales marcas del sector: Junkers/Bosch, Vaillant, Saunier Duval, Baxi, 
                 Ferroli, Ariston, Roca, Cointra, Chaffoteaux, Beretta, Immergas y Hermann.
               </p>
               
-              <h3>Envío rápido y garantía</h3>
+              <h3>Envío 24-48h y Garantía de 1 Año</h3>
               <p>
                 Todos nuestros repuestos incluyen <strong>1 año de garantía</strong> y envío en 24-48 horas. 
                 Para pedidos superiores a 120€, el envío es gratuito en toda la península.

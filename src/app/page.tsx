@@ -720,13 +720,13 @@ function MaintenanceSection() {
   return (
     <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header principal */}
+        {/* Header principal - H2 optimizado para SEO */}
         <div className="text-center mb-6">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-            Contratos de <span className="text-orange-500">Mantenimiento</span>
+            Contratos de <span className="text-orange-500">Mantenimiento</span> Preventivo
           </h2>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            Protege tu inversión con nuestros planes de mantenimiento preventivo
+            Revisión anual de calderas y aire acondicionado desde 70€/año con garantía
           </p>
         </div>
         
@@ -830,19 +830,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Sección: Repuestos de Calderas */}
+      {/* Sección: Repuestos de Calderas - H2 optimizado para SEO */}
       <CategoryCarousel
         title="Repuestos de Calderas"
-        subtitle="Componentes originales y compatibles de las mejores marcas"
+        subtitle="Placas electrónicas, válvulas, intercambiadores y más componentes originales"
         categories={repuestosCalderas}
         viewAllLink="/c/calderas"
         basePath="/c/calderas"
       />
 
-      {/* Sección: Repuestos de Aire Acondicionado */}
+      {/* Sección: Repuestos de Aire Acondicionado - H2 optimizado para SEO */}
       <CategoryCarousel
         title="Repuestos de Aire Acondicionado"
-        subtitle="Componentes para splits, multisplits y sistemas de climatización"
+        subtitle="Placas, turbinas, motores y recambios para splits y climatización"
         categories={categoriasAireAcondicionado}
         viewAllLink="/c/aire-acondicionado"
         basePath="/c/aire-acondicionado"
@@ -893,18 +893,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Zona Profesionales */}
+      {/* Zona Profesionales - H2 optimizado para SEO */}
       <section className="py-8 bg-gradient-to-r from-orange-500 to-orange-600">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="text-white text-center lg:text-left">
               <div className="inline-flex items-center gap-2 bg-white/20 rounded-full px-4 py-1.5 mb-4">
                 <Shield className="w-4 h-4" />
-                <span className="text-sm font-medium">Exclusivo para profesionales</span>
+                <span className="text-sm font-medium">Exclusivo para instaladores y técnicos HVAC</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold mb-2">¿Eres profesional del sector?</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold mb-2">Zona Profesionales: Descuentos hasta 25%</h2>
               <p className="text-white/90 max-w-xl">
-                Únete a más de 500 instaladores que ya disfrutan de descuentos exclusivos, envío prioritario y soporte técnico dedicado.
+                Más de 500 instaladores de calderas y aire acondicionado ya disfrutan de precios especiales, envío prioritario y soporte técnico dedicado.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
