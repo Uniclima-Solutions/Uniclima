@@ -36,20 +36,20 @@ const repuestosAire = [
   { id: 9, name: "Mandos", fullName: "Mandos a Distancia", slug: "mandos-distancia", image: "/images/categorias/MandosDistanciaSplit.png", count: 167, popular: true }
 ];
 
-// Marcas de aire acondicionado
+// Marcas de aire acondicionado con logos
 const marcas = [
-  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 523 },
-  { name: "Daikin", slug: "daikin", count: 467 },
-  { name: "Fujitsu", slug: "fujitsu", count: 389 },
-  { name: "LG", slug: "lg", count: 345 },
-  { name: "Samsung", slug: "samsung", count: 312 },
-  { name: "Panasonic", slug: "panasonic", count: 278 },
-  { name: "Toshiba", slug: "toshiba", count: 234 },
-  { name: "Hisense", slug: "hisense", count: 198 },
-  { name: "Haier", slug: "haier", count: 167 },
-  { name: "Carrier", slug: "carrier", count: 145 },
-  { name: "Midea", slug: "midea", count: 123 },
-  { name: "Gree", slug: "gree", count: 98 }
+  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 523, logo: "/images/marcas/mitsubishi.png" },
+  { name: "Daikin", slug: "daikin", count: 467, logo: "/images/marcas/daikin.png" },
+  { name: "Fujitsu", slug: "fujitsu", count: 389, logo: "/images/marcas/fujitsu.png" },
+  { name: "LG", slug: "lg", count: 345, logo: "/images/marcas/lg.png" },
+  { name: "Samsung", slug: "samsung", count: 312, logo: "/images/marcas/samsung.png" },
+  { name: "Panasonic", slug: "panasonic", count: 278, logo: "/images/marcas/panasonic.png" },
+  { name: "Toshiba", slug: "toshiba", count: 234, logo: "/images/marcas/toshiba.png" },
+  { name: "Hisense", slug: "hisense", count: 198, logo: "/images/marcas/hisense.png" },
+  { name: "Haier", slug: "haier", count: 167, logo: "/images/marcas/haier.png" },
+  { name: "Carrier", slug: "carrier", count: 145, logo: "/images/marcas/carrier.png" },
+  { name: "Midea", slug: "midea", count: 123, logo: "/images/marcas/midea.png" },
+  { name: "Gree", slug: "gree", count: 98, logo: "/images/marcas/gree.png" }
 ];
 
 // Formas de onda para las tarjetas (azul)
@@ -113,12 +113,18 @@ function BrandCard({ marca }: { marca: typeof marcas[0] }) {
   return (
     <Link 
       href={`/c/aire-acondicionado?marca=${marca.slug}`}
-      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center gap-2"
+      className="group bg-white rounded-xl p-4 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 flex flex-col items-center justify-center gap-3"
     >
-      <span className="text-sm font-semibold text-gray-700 group-hover:text-blue-600 transition-colors text-center">
-        {marca.name}
-      </span>
-      <span className="text-xs text-gray-400">{marca.count} productos</span>
+      {/* Logo a todo color */}
+      <div className="w-full h-16 flex items-center justify-center">
+        <img 
+          src={marca.logo} 
+          alt={marca.name}
+          className="max-h-14 max-w-full object-contain"
+          loading="lazy"
+        />
+      </div>
+      <span className="text-xs text-gray-500 font-medium">{marca.count} productos</span>
     </Link>
   );
 }
