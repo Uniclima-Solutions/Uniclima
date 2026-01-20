@@ -383,24 +383,36 @@ function CategoryCarousel({
     }
   };
 
-  // Scroll automático lento
+  // Ref para el tiempo de la última animación
+  const lastTimeRef = useRef<number>(0);
+
+  // Scroll automático infinito de derecha a izquierda
   useEffect(() => {
     const scrollEl = scrollRef.current;
     if (!scrollEl) return;
 
     let animationId: number;
-    let scrollSpeed = 0.5; // Píxeles por frame (muy lento)
+    const SCROLL_SPEED = 0.5; // Píxeles por frame
 
-    const autoScroll = () => {
+    const autoScroll = (currentTime: number) => {
       if (!isPaused && scrollEl) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollEl;
-        
-        // Si llegamos al final, volver al inicio suavemente
-        if (scrollLeft >= scrollWidth - clientWidth - 1) {
-          scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scrollEl.scrollLeft += scrollSpeed;
+        if (!lastTimeRef.current) {
+          lastTimeRef.current = currentTime;
         }
+
+        const deltaTime = currentTime - lastTimeRef.current;
+        lastTimeRef.current = currentTime;
+
+        // Scroll hacia la derecha (contenido se mueve a la izquierda)
+        scrollEl.scrollLeft += SCROLL_SPEED * (deltaTime / 16);
+
+        // Reset al inicio cuando llega al final (scroll infinito)
+        const maxScroll = scrollEl.scrollWidth - scrollEl.clientWidth;
+        if (scrollEl.scrollLeft >= maxScroll - 1) {
+          scrollEl.scrollLeft = 0;
+        }
+      } else {
+        lastTimeRef.current = 0;
       }
       animationId = requestAnimationFrame(autoScroll);
     };
@@ -504,23 +516,22 @@ function CategoryCarousel({
             </button>
           )}
 
-          {/* Contenedor scroll con pausa al hover */}
+          {/* Contenedor scroll infinito con pausa al hover */}
           <div
             ref={scrollRef}
-            className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2 snap-x"
+            className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide pb-2"
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch',
-              scrollBehavior: 'smooth',
-              overscrollBehavior: 'contain'
+              WebkitOverflowScrolling: 'touch'
             }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
           >
-            {categories.map((category) => (
+            {/* Duplicar categorías para scroll infinito */}
+            {[...categories, ...categories].map((category, idx) => (
               <div 
-                key={category.id} 
+                key={`${category.id}-${idx}`} 
                 className="flex-shrink-0 w-[calc(33.333%-8px)] sm:w-[calc(25%-10px)] lg:w-[calc(20%-14px)] transition-transform duration-300 hover:z-10"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />

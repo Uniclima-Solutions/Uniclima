@@ -40,31 +40,6 @@ const reviews: Review[] = [
   { author: "Andrés Molina", rating: 4, date: "hace 6 meses", text: "Buen servicio y buenos precios. El envío tardó un poco más de lo esperado pero todo correcto.", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" },
   { author: "Carmen Ortiz", rating: 5, date: "hace 7 meses", text: "Excelente empresa. Me asesoraron muy bien sobre qué repuesto necesitaba. Totalmente recomendable.", photoUrl: "https://images.unsplash.com/photo-1517746915202-e2341056e981?w=100&h=100&fit=crop" },
   { author: "David Moreno", rating: 5, date: "hace 7 meses", text: "Instalación de aire acondicionado impecable. Técnicos muy profesionales y limpios.", photoUrl: "https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=100&h=100&fit=crop" },
-  { author: "Ana Belén Torres", rating: 5, date: "hace 7 meses", text: "Muy contenta con el servicio. Encontraron un repuesto difícil de conseguir. Gracias!", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
-  { author: "Manuel Vega", rating: 5, date: "hace 8 meses", text: "Profesionales de verdad. Arreglaron mi caldera cuando otros decían que no tenía solución.", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
-  { author: "Lucía Fernández", rating: 5, date: "hace 8 meses", text: "Servicio excelente. Muy rápidos y eficientes. El técnico explicó todo perfectamente.", photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" },
-  { author: "Roberto Castillo", rating: 4, date: "hace 8 meses", text: "Buen producto y buen precio. La entrega fue rápida. Repetiré seguro.", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" },
-  { author: "Patricia Ramos", rating: 5, date: "hace 9 meses", text: "Increíble atención al cliente. Me ayudaron a identificar el problema y la solución fue perfecta.", photoUrl: "https://images.unsplash.com/photo-1517746915202-e2341056e981?w=100&h=100&fit=crop" },
-  { author: "Óscar Delgado", rating: 5, date: "hace 9 meses", text: "Muy profesionales. Instalaron el aire acondicionado en menos de 3 horas. Trabajo impecable.", photoUrl: "https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=100&h=100&fit=crop" },
-  { author: "Silvia Méndez", rating: 5, date: "hace 9 meses", text: "Excelente experiencia. El repuesto era exactamente el que necesitaba. Muy recomendable.", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
-  { author: "Alejandro Prieto", rating: 5, date: "hace 10 meses", text: "Gran servicio postventa. Tuve un problema y lo resolvieron inmediatamente. 10/10.", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
-  { author: "Natalia Blanco", rating: 5, date: "hace 10 meses", text: "Muy contenta. El técnico fue muy amable y profesional. Caldera funcionando perfectamente.", photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" },
-  { author: "Fernando Iglesias", rating: 4, date: "hace 10 meses", text: "Buen servicio. Precios competitivos y buena calidad. Recomendable.", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" },
-  { author: "Mónica Suárez", rating: 5, date: "hace 11 meses", text: "Servicio excepcional. Encontraron la pieza que necesitaba cuando nadie más la tenía.", photoUrl: "https://images.unsplash.com/photo-1517746915202-e2341056e981?w=100&h=100&fit=crop" },
-  { author: "Enrique Romero", rating: 5, date: "hace 11 meses", text: "Profesionales de primera. Instalación perfecta y muy limpios. Totalmente recomendable.", photoUrl: "https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=100&h=100&fit=crop" },
-  { author: "Teresa Vargas", rating: 5, date: "hace 11 meses", text: "Excelente atención. Me asesoraron muy bien y el producto llegó antes de lo esperado.", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
-  { author: "Guillermo Peña", rating: 5, date: "hace 1 año", text: "Muy satisfecho. Repararon mi aire acondicionado y quedó como nuevo. Precio justo.", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
-  { author: "Raquel Herrero", rating: 5, date: "hace 1 año", text: "Servicio rápido y eficiente. El técnico llegó puntual y resolvió el problema enseguida.", photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" },
-  { author: "Iván Campos", rating: 4, date: "hace 1 año", text: "Buena experiencia. El producto es de calidad y el envío fue rápido. Volveré a comprar.", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" },
-  { author: "Cristina Vidal", rating: 5, date: "hace 1 año", text: "Increíble servicio. Me ayudaron a encontrar un repuesto descatalogado. Muy agradecida.", photoUrl: "https://images.unsplash.com/photo-1517746915202-e2341056e981?w=100&h=100&fit=crop" },
-  { author: "Pablo Serrano", rating: 5, date: "hace 1 año", text: "Profesionales de confianza. Instalación de caldera perfecta. Muy recomendable.", photoUrl: "https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=100&h=100&fit=crop" },
-  { author: "Eva Domínguez", rating: 5, date: "hace 1 año", text: "Excelente empresa. Atención personalizada y productos de primera calidad.", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" },
-  { author: "Adrián Cano", rating: 5, date: "hace 1 año", text: "Muy contento con el servicio. El técnico fue muy profesional y explicó todo claramente.", photoUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" },
-  { author: "Alicia Guerrero", rating: 5, date: "hace 1 año", text: "Servicio impecable. Encontraron el repuesto exacto y llegó en 24 horas. Perfecto.", photoUrl: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop" },
-  { author: "Marcos Nieto", rating: 4, date: "hace 1 año", text: "Buen servicio y buenos precios. El producto funciona perfectamente. Recomendable.", photoUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop" },
-  { author: "Diana Pascual", rating: 5, date: "hace 1 año", text: "Excelente experiencia de compra. Muy profesionales y atentos. Sin duda repetiré.", photoUrl: "https://images.unsplash.com/photo-1517746915202-e2341056e981?w=100&h=100&fit=crop" },
-  { author: "Hugo Santana", rating: 5, date: "hace 1 año", text: "Gran empresa. Servicio técnico de primera y precios muy competitivos. 100% recomendable.", photoUrl: "https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=100&h=100&fit=crop" },
-  { author: "Nuria Esteban", rating: 5, date: "hace 1 año", text: "Muy satisfecha. El aire acondicionado funciona perfectamente. Instalación rápida y limpia.", photoUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop" }
 ];
 
 // Estadísticas reales de Google Maps
@@ -80,31 +55,39 @@ function ReviewCard({ review }: { review: Review }) {
       href={GOOGLE_MAPS_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-300 transition-all duration-300 flex flex-col h-full select-none min-w-[280px] max-w-[280px]"
-      draggable={false}
+      className="flex-shrink-0 w-72 sm:w-80 bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-300 cursor-pointer group"
     >
-      {/* Header con foto y estrellas */}
+      {/* Header con avatar y nombre */}
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center flex-shrink-0 overflow-hidden text-white font-bold text-lg shadow-md">
-          {review.photoUrl ? (
-            <img src={review.photoUrl} alt={review.author} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          ) : (
-            <span>{review.author.charAt(0).toUpperCase()}</span>
-          )}
-        </div>
+        {review.photoUrl ? (
+          <img
+            src={review.photoUrl}
+            alt={review.author}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm">
+            {review.author.charAt(0)}
+          </div>
+        )}
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-gray-900 text-sm truncate">{review.author}</h3>
+          <h4 className="font-semibold text-gray-900 text-sm truncate">{review.author}</h4>
           <div className="flex items-center gap-1">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className={`w-4 h-4 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`} />
+              <Star
+                key={i}
+                className={`w-3 h-3 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`}
+              />
             ))}
           </div>
         </div>
       </div>
 
       {/* Texto de la reseña */}
-      <p className="text-gray-600 text-sm leading-relaxed line-clamp-4 flex-1 mb-3">{review.text}</p>
-      
+      <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 mb-2">
+        {review.text}
+      </p>
+
       {/* Fecha */}
       <p className="text-gray-400 text-xs">{review.date}</p>
     </a>
@@ -113,39 +96,82 @@ function ReviewCard({ review }: { review: Review }) {
 
 export default function GoogleReviews() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number | null>(null);
+  const autoScrollRef = useRef<number | null>(null);
+  const manualScrollRef = useRef<number | null>(null);
+  const lastTimeRef = useRef<number>(0);
   const [isMounted, setIsMounted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  // Duplicar reseñas para scroll infinito
+  const displayReviews = [...reviews, ...reviews];
 
   useEffect(() => {
     setIsMounted(true);
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
+      if (manualScrollRef.current) cancelAnimationFrame(manualScrollRef.current);
     };
   }, []);
 
-  // Easing function - easeOutCubic para scroll más natural y fluido
+  // Scroll automático infinito de derecha a izquierda
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const SCROLL_SPEED = 0.5; // Píxeles por frame (ajustable)
+
+    const animate = (currentTime: number) => {
+      const container = scrollContainerRef.current;
+      if (!container || isPaused) {
+        autoScrollRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = currentTime;
+      }
+
+      const deltaTime = currentTime - lastTimeRef.current;
+      lastTimeRef.current = currentTime;
+
+      // Scroll hacia la derecha (contenido se mueve a la izquierda)
+      container.scrollLeft += SCROLL_SPEED * (deltaTime / 16);
+
+      // Reset al inicio cuando llega al final (scroll infinito)
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (container.scrollLeft >= maxScroll - 1) {
+        container.scrollLeft = 0;
+      }
+
+      autoScrollRef.current = requestAnimationFrame(animate);
+    };
+
+    autoScrollRef.current = requestAnimationFrame(animate);
+
+    return () => {
+      if (autoScrollRef.current) cancelAnimationFrame(autoScrollRef.current);
+    };
+  }, [isMounted, isPaused]);
+
+  // Easing function para scroll manual
   const easeOutCubic = (t: number): number => {
     return 1 - Math.pow(1 - t, 3);
   };
 
-  // Scroll fluido programático con animación
+  // Scroll manual programático con animación suave
   const smoothScrollTo = useCallback((targetPosition: number) => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    // Cancelar animación anterior si existe
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
+    if (manualScrollRef.current) {
+      cancelAnimationFrame(manualScrollRef.current);
     }
 
     const startPosition = container.scrollLeft;
     const distance = targetPosition - startPosition;
-    const duration = 600; // 600ms para un scroll más suave
+    const duration = 500;
     const startTime = performance.now();
 
-    const animate = (currentTime: number) => {
+    const animateScroll = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const easedProgress = easeOutCubic(progress);
@@ -153,16 +179,16 @@ export default function GoogleReviews() {
       container.scrollLeft = startPosition + distance * easedProgress;
 
       if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
+        manualScrollRef.current = requestAnimationFrame(animateScroll);
       } else {
-        animationRef.current = null;
+        manualScrollRef.current = null;
       }
     };
 
-    animationRef.current = requestAnimationFrame(animate);
+    manualScrollRef.current = requestAnimationFrame(animateScroll);
   }, []);
 
-  // Scroll fluido con flechas
+  // Scroll manual con flechas
   const scroll = useCallback((direction: "left" | "right") => {
     const container = scrollContainerRef.current;
     if (!container) return;
@@ -171,6 +197,16 @@ export default function GoogleReviews() {
     const targetPosition = container.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
     smoothScrollTo(targetPosition);
   }, [smoothScrollTo]);
+
+  // Handlers de pausa
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+    lastTimeRef.current = 0;
+  };
 
   if (!isMounted) return null;
 
@@ -239,8 +275,12 @@ export default function GoogleReviews() {
           </a>
         </div>
 
-        {/* Carrusel con scroll fluido bidireccional */}
-        <div className="relative">
+        {/* Carrusel con scroll infinito */}
+        <div 
+          className="relative"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           {/* Flecha izquierda */}
           <button
             onClick={() => scroll("left")}
@@ -250,19 +290,17 @@ export default function GoogleReviews() {
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 text-orange-600" />
           </button>
 
-          {/* Contenedor de scroll fluido */}
+          {/* Contenedor de scroll infinito */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth py-2 snap-x snap-mandatory"
+            className="flex gap-4 overflow-x-auto py-2"
             style={{ 
               scrollbarWidth: "none", 
               msOverflowStyle: "none", 
-              WebkitOverflowScrolling: "touch",
-              scrollBehavior: "smooth",
-              overscrollBehavior: "contain"
+              WebkitOverflowScrolling: "touch"
             }}
           >
-            {reviews.map((review, index) => (
+            {displayReviews.map((review, index) => (
               <ReviewCard key={index} review={review} />
             ))}
           </div>
