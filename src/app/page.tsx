@@ -764,7 +764,7 @@ export default function Home() {
       <div className="h-14 lg:h-[104px]" />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
-      <section className="w-full flex justify-center py-8">
+      <section className="w-full flex justify-center pt-4 sm:pt-6 lg:pt-8 pb-8">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full">
             <picture>
