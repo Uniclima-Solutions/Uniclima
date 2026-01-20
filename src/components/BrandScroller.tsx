@@ -16,7 +16,7 @@ const marcasLogos = [
   { name: "Cointra", slug: "cointra", logo: "/images/marcas/cointra.png" },
   { name: "Bosch", slug: "bosch", logo: "/images/marcas/bosch.png" },
   { name: "Wolf", slug: "wolf", logo: "/images/marcas/wolf.png" },
-  { name: "Roca", slug: "roca", logo: "/images/marcas/roca.png" },
+  { name: "Baxi Roca", slug: "baxi-roca", logo: "/images/marcas/baxi-roca.png" },
   { name: "Saunier Duval", slug: "saunier-duval", logo: "/images/marcas/saunier-duval.png" },
   { name: "Immergas", slug: "immergas", logo: "/images/marcas/immergas.png" },
   { name: "Daikin", slug: "daikin", logo: "/images/marcas/daikin.png" },
@@ -100,26 +100,26 @@ export default function BrandScroller() {
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-white">
-      <div className="w-full px-4">
+    <section className="py-4 sm:py-6 md:py-8 bg-white">
+      <div className="w-full px-2 sm:px-4">
         <div 
           className="relative"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
-          {/* Flecha izquierda */}
+          {/* Flecha izquierda - más pequeña en móvil */}
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-7 h-7 text-white" />
+            <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
           </button>
 
-          {/* Contenedor de logos - TAMAÑOS MUY GRANDES */}
+          {/* Contenedor de logos - RESPONSIVO para mostrar 3+ en móvil */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-6 overflow-x-auto mx-14 py-6"
+            className="flex items-center gap-2 sm:gap-3 md:gap-4 overflow-x-auto mx-9 sm:mx-11 md:mx-14 py-3 sm:py-4 md:py-6"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {[...marcasLogos, ...marcasLogos].map((brand, idx) => (
@@ -127,22 +127,12 @@ export default function BrandScroller() {
                 key={`${brand.slug}-${idx}`}
                 href={`/marca/${brand.slug}`}
                 className="group flex-shrink-0 flex items-center justify-center transition-all duration-300"
-                style={{
-                  width: '200px',
-                  height: '100px',
-                }}
                 title={`Ver repuestos de ${brand.name}`}
               >
                 <img
                   src={brand.logo}
                   alt={brand.name}
-                  className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300"
-                  style={{
-                    maxWidth: '180px',
-                    maxHeight: '90px',
-                    width: 'auto',
-                    height: 'auto',
-                  }}
+                  className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-24 h-12 sm:w-32 sm:h-16 md:w-40 md:h-20 lg:w-48 lg:h-24"
                   draggable={false}
                   loading="lazy"
                 />
@@ -150,13 +140,13 @@ export default function BrandScroller() {
             ))}
           </div>
 
-          {/* Flecha derecha */}
+          {/* Flecha derecha - más pequeña en móvil */}
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-orange-500 hover:bg-orange-600 rounded-full shadow-lg flex items-center justify-center transition-all"
             aria-label="Siguiente"
           >
-            <ChevronRight className="w-7 h-7 text-white" />
+            <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
           </button>
         </div>
       </div>
