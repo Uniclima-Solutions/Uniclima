@@ -160,18 +160,9 @@ function BrandCard({ brand }: BrandCardProps) {
       <img
         src={brand.logo}
         alt={brand.name}
-        className="object-contain w-28 h-14 sm:w-36 sm:h-18 md:w-44 md:h-22 lg:w-52 lg:h-26 filter grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-300 ease-in-out"
+        className="object-contain w-28 h-14 sm:w-36 sm:h-18 md:w-44 md:h-22 lg:w-52 lg:h-26 hover:scale-105 transition-transform duration-300 ease-in-out"
         draggable={false}
         loading="lazy"
-        style={{
-          filter: 'grayscale(100%) brightness(0.75)',
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.filter = 'grayscale(0%) brightness(1)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.filter = 'grayscale(100%) brightness(0.75)';
-        }}
       />
     </Link>
   );
