@@ -154,13 +154,13 @@ function BrandCard({ brand }: BrandCardProps) {
   return (
     <Link
       href={`/marca/${brand.slug}`}
-      className="group flex-shrink-0 flex items-center justify-center bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md hover:border-orange-300 transition-all duration-300 p-2 sm:p-3 md:p-4"
+      className="group flex-shrink-0 flex items-center justify-center transition-all duration-300 p-2 sm:p-3 md:p-4"
       title={`Ver repuestos de ${brand.name}`}
     >
       <img
         src={brand.logo}
         alt={brand.name}
-        className="object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-20 h-10 sm:w-28 sm:h-14 md:w-36 md:h-18 lg:w-44 lg:h-22"
+        className="object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-20 h-10 sm:w-28 sm:h-14 md:w-36 md:h-18 lg:w-44 lg:h-22"
         draggable={false}
         loading="lazy"
       />
