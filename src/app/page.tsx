@@ -308,12 +308,12 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   return (
     <Link href={`${basePath}/${category.slug}`}>
       <div 
-        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-500 ease-out rounded-lg sm:rounded-xl lg:rounded-2xl relative aspect-square group transform hover:scale-105"
+        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-300 ease-out rounded-lg sm:rounded-xl lg:rounded-2xl relative aspect-square group transform hover:scale-110 hover:-translate-y-2"
       >
         {/* Banner con forma de onda - posicionado detrás */}
         <div className="absolute bottom-0 left-0 right-0 h-[40%]">
           <svg 
-            className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105" 
+            className="absolute inset-0 w-full h-full transition-transform duration-300 group-hover:scale-110" 
             viewBox="0 0 400 100" 
             preserveAspectRatio="none"
           >
@@ -334,11 +334,11 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         </div>
         
         {/* Contenedor de imagen - ocupa todo el espacio disponible */}
-        <div className="absolute inset-0 flex items-center justify-center p-1 z-10 transition-transform duration-500 group-hover:scale-110">
+        <div className="absolute inset-0 flex items-center justify-center p-1 z-10 transition-transform duration-300 group-hover:scale-115">
           <img
             src={category.image}
             alt={category.name}
-            className="w-full h-full object-contain drop-shadow-2xl max-w-[92%] max-h-[80%]"
+            className="w-full h-full object-contain drop-shadow-2xl max-w-[92%] max-h-[80%] transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
         </div>
@@ -476,7 +476,7 @@ function CategoryCarousel({
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="flex-shrink-0 w-[calc(25%-6px)] sm:w-[calc(20%-10px)] lg:w-[calc(16.666%-14px)] transition-transform duration-300 hover:z-10"
+                className="flex-shrink-0 w-[calc(33.333%-8px)] sm:w-[calc(25%-10px)] lg:w-[calc(20%-14px)] transition-transform duration-300 hover:z-10"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
