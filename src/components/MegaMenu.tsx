@@ -683,7 +683,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             </div>
 
             {/* Contenido scrolleable */}
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto mega-menu-scroll">
               <AnimatePresence mode="wait">
                 {activeTab === "servicios" ? renderServicios() : renderTienda()}
               </AnimatePresence>

@@ -212,8 +212,14 @@ export default function GoogleReviews() {
           {/* Contenedor de scroll fluido */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth py-2"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none", WebkitOverflowScrolling: "touch" }}
+            className="flex gap-4 overflow-x-auto scroll-smooth py-2 snap-x snap-mandatory"
+            style={{ 
+              scrollbarWidth: "none", 
+              msOverflowStyle: "none", 
+              WebkitOverflowScrolling: "touch",
+              scrollBehavior: "smooth",
+              overscrollBehavior: "contain"
+            }}
           >
             {reviews.map((review, index) => (
               <ReviewCard key={index} review={review} />

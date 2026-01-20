@@ -139,6 +139,13 @@
 html {
   overflow-x: hidden;
   overscroll-behavior-x: none;
+  scroll-behavior: smooth;
+}
+
+/* Scroll suave y fluido para toda la web */
+* {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -313,6 +320,67 @@ body {
   will-change: scroll-position;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+}
+
+/* Scroll suave para contenedores con overflow */
+.overflow-x-auto,
+.overflow-y-auto,
+.overflow-auto {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* Scroll snap para carruseles horizontales */
+.snap-x {
+  scroll-snap-type: x mandatory;
+  scroll-padding: 1rem;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+/* Momentum scroll para iOS */
+.momentum-scroll {
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+
+/* Scroll suave para mega menu y modales */
+.mega-menu-scroll,
+.modal-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c1c1 transparent;
+}
+
+.mega-menu-scroll::-webkit-scrollbar,
+.modal-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.mega-menu-scroll::-webkit-scrollbar-track,
+.modal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mega-menu-scroll::-webkit-scrollbar-thumb,
+.modal-scroll::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.mega-menu-scroll::-webkit-scrollbar-thumb:hover,
+.modal-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
 }
 
 /* 

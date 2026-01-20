@@ -116,8 +116,14 @@ export default function BrandScroller() {
           {/* Contenedor de logos */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-1 sm:gap-2 md:gap-3 overflow-x-auto mx-10 sm:mx-12 md:mx-14 py-4"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex items-center gap-1 sm:gap-2 md:gap-3 overflow-x-auto mx-10 sm:mx-12 md:mx-14 py-4 snap-x"
+            style={{ 
+              scrollbarWidth: "none", 
+              msOverflowStyle: "none",
+              WebkitOverflowScrolling: "touch",
+              scrollBehavior: "smooth",
+              overscrollBehavior: "contain"
+            }}
           >
             {displayBrands.map((brand, idx) => (
               <BrandCard 

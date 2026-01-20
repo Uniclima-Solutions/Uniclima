@@ -159,7 +159,14 @@ export default function SideCart() {
         )}
 
         {/* Productos - con scroll interno */}
-        <div className="flex-1 overflow-y-auto bg-gray-50">
+        <div 
+          className="flex-1 overflow-y-auto bg-gray-50 mega-menu-scroll"
+          style={{ 
+            WebkitOverflowScrolling: 'touch',
+            scrollBehavior: 'smooth',
+            overscrollBehavior: 'contain'
+          }}
+        >
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full py-12 px-6">
               <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4">

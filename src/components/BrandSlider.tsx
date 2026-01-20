@@ -174,11 +174,13 @@ export default function BrandSlider({
           {/* Contenedor de scroll */}
           <div
             ref={scrollContainerRef}
-            className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth px-2 py-2"
+            className="flex gap-4 sm:gap-6 overflow-x-auto scroll-smooth px-2 py-2 snap-x"
             style={{ 
               scrollbarWidth: "none", 
               msOverflowStyle: "none", 
-              WebkitOverflowScrolling: "touch" 
+              WebkitOverflowScrolling: "touch",
+              scrollBehavior: "smooth",
+              overscrollBehavior: "contain"
             }}
           >
             {/* Duplicamos las marcas para efecto infinito */}

@@ -370,7 +370,14 @@ export default function ImageLightbox({ images, initialIndex, onClose }: ImageLi
 
       {/* Miniaturas */}
       {images.length > 1 && (
-        <div className="flex justify-center gap-2 p-4 bg-black/50 overflow-x-auto">
+        <div 
+          className="flex justify-center gap-2 p-4 bg-black/50 overflow-x-auto snap-x"
+          style={{ 
+            WebkitOverflowScrolling: 'touch',
+            scrollBehavior: 'smooth',
+            overscrollBehavior: 'contain'
+          }}
+        >
           {images.map((img, index) => (
             <button
               key={index}
