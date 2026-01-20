@@ -354,7 +354,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   );
 }
 
-// Componente Carrusel de Categorías con scroll infinito CSS
+// Componente Carrusel de Categorías con scroll táctil fluido
 function CategoryCarousel({ 
   title, 
   subtitle,
@@ -371,7 +371,7 @@ function CategoryCarousel({
   colorType?: "orange" | "blue";
 }) {
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-white overflow-hidden">
+    <section className="py-4 sm:py-6 lg:py-8 bg-white">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
         {/* Header con título y botón ver todos */}
         <div className="flex items-center justify-between mb-2 sm:mb-4 lg:mb-6">
@@ -391,29 +391,19 @@ function CategoryCarousel({
             <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
           </Link>
         </div>
-      </div>
 
-      {/* Carrusel con CSS animation - scroll infinito fluido */}
-      <div className="infinite-scroll-wrapper">
-        <div className="infinite-scroll-container infinite-scroll-fast py-2">
-          {/* Primera copia de categorías */}
-          {categories.map((category, idx) => (
-            <div 
-              key={`first-${category.id}-${idx}`} 
-              className="flex-shrink-0 w-32 sm:w-36 lg:w-40 mx-1 sm:mx-2"
-            >
-              <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
-            </div>
-          ))}
-          {/* Segunda copia para el loop infinito */}
-          {categories.map((category, idx) => (
-            <div 
-              key={`second-${category.id}-${idx}`} 
-              className="flex-shrink-0 w-32 sm:w-36 lg:w-40 mx-1 sm:mx-2"
-            >
-              <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
-            </div>
-          ))}
+        {/* Carrusel con scroll táctil nativo */}
+        <div className="carousel-wrapper">
+          <div className="touch-carousel gap-2 sm:gap-3 lg:gap-4 px-1">
+            {categories.map((category) => (
+              <div 
+                key={category.id} 
+                className="w-28 sm:w-32 lg:w-36"
+              >
+                <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

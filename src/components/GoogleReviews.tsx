@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Review {
@@ -55,7 +55,7 @@ function ReviewCard({ review }: { review: Review }) {
       href={GOOGLE_MAPS_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex-shrink-0 w-72 sm:w-80 bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-300 cursor-pointer group mx-2"
+      className="w-72 sm:w-80 bg-white rounded-2xl p-5 shadow-md border border-gray-100 hover:shadow-xl hover:border-orange-200 transition-all duration-300 cursor-pointer group"
     >
       {/* Header con avatar y nombre */}
       <div className="flex items-center gap-3 mb-3">
@@ -96,15 +96,45 @@ function ReviewCard({ review }: { review: Review }) {
 
 export default function GoogleReviews() {
   const [isMounted, setIsMounted] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  const checkScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 5);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 5);
+    }
+  };
+
+  useEffect(() => {
+    checkScroll();
+    const el = scrollRef.current;
+    if (el) {
+      el.addEventListener('scroll', checkScroll);
+      return () => el.removeEventListener('scroll', checkScroll);
+    }
+  }, [isMounted]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   if (!isMounted) return null;
 
   return (
-    <section className="py-8 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
+    <section className="py-8 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header con estadísticas */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
@@ -167,19 +197,38 @@ export default function GoogleReviews() {
             </div>
           </a>
         </div>
-      </div>
 
-      {/* Carrusel con CSS animation - scroll infinito fluido */}
-      <div className="infinite-scroll-wrapper bg-gray relative">
-        <div className="infinite-scroll-container infinite-scroll-slow py-4">
-          {/* Primera copia de reseñas */}
-          {reviews.map((review, index) => (
-            <ReviewCard key={`first-${index}`} review={review} />
-          ))}
-          {/* Segunda copia para el loop infinito */}
-          {reviews.map((review, index) => (
-            <ReviewCard key={`second-${index}`} review={review} />
-          ))}
+        {/* Carrusel con scroll táctil nativo */}
+        <div className="relative">
+          {/* Botón izquierda */}
+          {canScrollLeft && (
+            <button
+              onClick={() => scroll('left')}
+              className="hidden sm:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-20 w-10 h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronLeft className="w-5 h-5 text-gray-600" />
+            </button>
+          )}
+
+          {/* Contenedor de reseñas con scroll táctil */}
+          <div
+            ref={scrollRef}
+            className="touch-carousel gap-4 py-4 px-1"
+          >
+            {reviews.map((review, index) => (
+              <ReviewCard key={index} review={review} />
+            ))}
+          </div>
+
+          {/* Botón derecha */}
+          {canScrollRight && (
+            <button
+              onClick={() => scroll('right')}
+              className="hidden sm:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-20 w-10 h-10 bg-white rounded-full shadow-lg items-center justify-center hover:bg-gray-50 transition-all border border-gray-200"
+            >
+              <ChevronRight className="w-5 h-5 text-gray-600" />
+            </button>
+          )}
         </div>
       </div>
     </section>

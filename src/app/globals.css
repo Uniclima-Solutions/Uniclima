@@ -432,79 +432,66 @@ main {
 }
 
 /* ============================================
- * ANIMACIONES CSS PARA SCROLL INFINITO FLUIDO
+ * CARRUSELES CON SCROLL TÁCTIL FLUIDO
  * ============================================ */
 
-/* Animación de scroll infinito hacia la izquierda */
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-/* Contenedor de scroll infinito */
-.infinite-scroll-container {
+/* Contenedor de carrusel con scroll nativo táctil */
+.touch-carousel {
   display: flex;
-  width: max-content;
-  animation: scroll-left 30s linear infinite;
-  will-change: transform;
+  gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Momentum scroll en iOS */
+  overscroll-behavior-x: contain; /* Evita scroll encadenado */
+  scroll-snap-type: x proximity; /* Snap suave a elementos */
+  padding: 0.5rem 0;
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-/* Velocidades de scroll */
-.infinite-scroll-slow {
-  animation-duration: 60s;
+.touch-carousel::-webkit-scrollbar {
+  display: none;
 }
 
-.infinite-scroll-medium {
-  animation-duration: 40s;
+/* Elementos del carrusel con snap */
+.touch-carousel > * {
+  scroll-snap-align: start;
+  flex-shrink: 0;
 }
 
-.infinite-scroll-fast {
-  animation-duration: 25s;
-}
-
-/* Pausa al hover */
-.infinite-scroll-container:hover,
-.infinite-scroll-wrapper:hover .infinite-scroll-container {
-  animation-play-state: paused;
-}
-
-/* Wrapper para el scroll infinito */
-.infinite-scroll-wrapper {
-  overflow: hidden;
+/* Wrapper con gradientes de fade */
+.carousel-wrapper {
   position: relative;
 }
 
-/* Gradientes de fade en los bordes */
-.infinite-scroll-wrapper::before,
-.infinite-scroll-wrapper::after {
+.carousel-wrapper::before,
+.carousel-wrapper::after {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 40px;
+  width: 20px;
   z-index: 10;
   pointer-events: none;
 }
 
-.infinite-scroll-wrapper::before {
+.carousel-wrapper::before {
   left: 0;
   background: linear-gradient(to right, white, transparent);
 }
 
-.infinite-scroll-wrapper::after {
+.carousel-wrapper::after {
   right: 0;
   background: linear-gradient(to left, white, transparent);
 }
 
-/* Sin gradientes para fondos grises */
-.infinite-scroll-wrapper.bg-gray::before {
+/* Variante para fondos grises */
+.carousel-wrapper.bg-gray::before {
   background: linear-gradient(to right, rgb(249 250 251), transparent);
 }
 
-.infinite-scroll-wrapper.bg-gray::after {
+.carousel-wrapper.bg-gray::after {
   background: linear-gradient(to left, rgb(249 250 251), transparent);
 }
