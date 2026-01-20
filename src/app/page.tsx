@@ -345,7 +345,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         
         {/* Texto blanco en la parte inferior - más abajo y letra más pequeña */}
         <div className="absolute bottom-0 left-0 right-0 z-20 pb-2 sm:pb-2.5 px-1 sm:px-2">
-          <h3 className="text-white font-semibold text-[8px] sm:text-[10px] lg:text-xs leading-tight text-center drop-shadow-lg uppercase tracking-wider">
+          <h3 className="text-white font-semibold text-[10px] sm:text-xs lg:text-sm leading-tight text-center drop-shadow-lg uppercase tracking-wider">
             {category.name}
           </h3>
         </div>
@@ -398,7 +398,7 @@ function CategoryCarousel({
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="w-28 sm:w-32 lg:w-36"
+                className="w-[134px] sm:w-[154px] lg:w-[173px]"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
