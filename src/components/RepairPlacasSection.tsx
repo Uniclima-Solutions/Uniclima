@@ -1,14 +1,15 @@
 /**
  * RepairPlacasSection - Banner de reparación de placas
  * Usa la imagen del banner original como fondo
+ * Tamaño ajustado para coincidir con el banner de Mantenimiento Profesional
  */
 
 import Link from "next/link";
 
 export default function RepairPlacasSection() {
   return (
-    <section className="w-full my-8 md:my-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link href="/diagnostico-placas" className="block">
           <div className="relative w-full overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer group">
             {/* Imagen del banner */}
