@@ -1,10 +1,12 @@
 'use client'
 
 /*
- * DESIGN: Compact Responsive Side Cart
- * - Más compacto y eficiente
- * - Mejor aprovechamiento del espacio
- * - Totalmente responsive
+ * DESIGN: Premium Side Cart - Versión Mejorada
+ * - Más grande y visible en móvil
+ * - Estilo moderno y atractivo
+ * - Artículos más grandes y legibles
+ * - Gradientes y sombras premium
+ * - Ancho ajustado (no 100% en móvil)
  */
 
 import { useState, useEffect } from "react";
@@ -18,6 +20,8 @@ import {
   Trash2,
   Truck,
   X,
+  Gift,
+  Shield,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -36,14 +40,18 @@ export default function SideCart() {
   const [isVisible, setIsVisible] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Bloquear scroll del body cuando el carrito está abierto
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '0px';
     } else {
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
     };
   }, [isOpen]);
 
@@ -57,7 +65,9 @@ export default function SideCart() {
       });
     } else {
       setIsAnimating(false);
-      const timer = setTimeout(() => setIsVisible(false), 300);
+      const timer = setTimeout(() => {
+        setIsVisible(false);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -73,138 +83,158 @@ export default function SideCart() {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Overlay con blur */}
       <div
         onClick={closeCart}
-        className={`fixed inset-0 bg-black/40 z-50 transition-opacity duration-300 ${
+        className={`fixed inset-0 bg-black/50 backdrop-blur-sm z-50 transition-all duration-300 overflow-hidden ${
           isAnimating ? "opacity-100" : "opacity-0"
         }`}
       />
 
-      {/* Side Cart Panel - Responsive */}
+      {/* Side Cart Panel - Ancho ajustado (no 100% en móvil) */}
       <div
-        className={`fixed right-0 top-0 bottom-0 w-[85vw] sm:w-[380px] max-w-[400px] bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out ${
-          isAnimating ? "translate-x-0" : "translate-x-full"
+        className={`fixed right-0 top-0 bottom-0 w-[92vw] sm:w-[400px] md:w-[420px] max-w-[420px] bg-white shadow-2xl z-50 flex flex-col transition-transform duration-300 ease-out overflow-hidden ${
+          isAnimating ? "translate-x-0" : "translate-x-[120%]"
         }`}
       >
-        {/* Header compacto con gradiente */}
-        <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-3 py-3 text-white flex-shrink-0">
+        {/* Header con gradiente */}
+        <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-4 py-4 text-white">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-5 h-5" />
-              <span className="font-bold text-base">Mi Carrito</span>
-              <span className="text-white/70 text-sm">({totalItems})</span>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <ShoppingBag className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h2 className="font-bold text-lg">Mi Carrito</h2>
+                <p className="text-white/80 text-sm">{totalItems} {totalItems === 1 ? 'artículo' : 'artículos'}</p>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               {items.length > 0 && (
                 <button
                   onClick={clearCart}
-                  className="text-xs text-white/80 hover:text-white flex items-center gap-1"
+                  className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-full"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  Vaciar
+                  <Trash2 className="w-4 h-4" />
+                  <span>Vaciar</span>
                 </button>
               )}
               <button
                 onClick={closeCart}
-                className="w-8 h-8 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5 text-white" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Barra envío gratis compacta */}
+        {/* Barra de progreso envío gratis */}
         {totalItems > 0 && (
-          <div className="px-3 py-2 bg-green-50 border-b border-green-100 flex-shrink-0">
-            <div className="flex items-center gap-2 text-xs">
-              <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
+          <div className="px-4 py-4 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-100">
+            <div className="flex items-center gap-2 mb-2">
+              <Truck className="w-5 h-5 text-green-600" />
               {hasFreeShipping ? (
-                <span className="text-green-700 font-medium">🎉 ¡Envío gratis!</span>
+                <span className="text-green-700 font-semibold text-sm">
+                  🎉 ¡Envío gratis en tu pedido!
+                </span>
               ) : (
-                <span className="text-gray-600">
-                  Añade <b className="text-green-600">{remainingForFreeShipping.toFixed(0)}€</b> para envío gratis
+                <span className="text-gray-700 text-sm">
+                  Añade <span className="font-bold text-green-600">{remainingForFreeShipping.toFixed(0)}€</span> más para envío gratis
                 </span>
               )}
             </div>
-            <div className="w-full h-1.5 bg-gray-200 rounded-full mt-1.5 overflow-hidden">
+            {/* Barra de progreso */}
+            <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
               <div 
-                className="h-full bg-green-500 rounded-full transition-all duration-300"
+                className="h-full bg-gradient-to-r from-green-400 to-green-600 rounded-full transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
               />
+            </div>
+            <div className="flex justify-between mt-1 text-xs text-gray-500">
+              <span>0€</span>
+              <span>120€</span>
             </div>
           </div>
         )}
 
-        {/* Productos - scroll */}
-        <div className="flex-1 overflow-y-auto">
+        {/* Productos - con scroll interno */}
+        <div className="flex-1 overflow-y-auto bg-gray-50">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full py-8 px-4">
-              <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-3">
-                <ShoppingBag className="w-8 h-8 text-orange-400" />
+            <div className="flex flex-col items-center justify-center h-full py-12 px-6">
+              <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mb-4">
+                <ShoppingBag className="w-12 h-12 text-orange-400" />
               </div>
-              <p className="text-sm font-medium text-gray-700 mb-1">Tu carrito está vacío</p>
-              <p className="text-xs text-gray-400 mb-4 text-center">Explora nuestros productos</p>
-              <Button onClick={closeCart} size="sm" className="bg-orange-500 hover:bg-orange-600 text-xs px-4">
+              <h3 className="text-lg font-semibold text-gray-800 mb-2">Tu carrito está vacío</h3>
+              <p className="text-sm text-gray-500 text-center mb-6">
+                Explora nuestros productos y añade lo que necesites
+              </p>
+              <Button onClick={closeCart} className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full">
                 Ver productos
               </Button>
             </div>
           ) : (
-            <div className="p-3 space-y-2">
+            <div className="p-4 space-y-3">
               {items.map((item) => (
                 <div
                   key={item.product.id}
-                  className="flex gap-3 p-2.5 bg-gray-50 rounded-xl border border-gray-100"
+                  className="flex gap-4 p-4 bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
                 >
-                  {/* Imagen */}
-                  <Link href={`/producto/${item.product.id}`} onClick={closeCart} className="flex-shrink-0">
-                    <div className="w-16 h-16 bg-white rounded-lg overflow-hidden border border-gray-200">
+                  {/* Imagen más grande */}
+                  <Link href={`/producto/${item.product.id}`} onClick={closeCart}>
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gray-100 rounded-xl overflow-hidden border border-gray-200 shrink-0">
                       <img
                         src={item.product.image}
                         alt={item.product.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover hover:scale-105 transition-transform"
                       />
                     </div>
                   </Link>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                  {/* Info del producto */}
+                  <div className="flex-1 min-w-0 flex flex-col justify-between">
                     <div>
                       <Link href={`/producto/${item.product.id}`} onClick={closeCart}>
-                        <p className="text-sm font-medium text-gray-800 line-clamp-2 leading-tight hover:text-orange-600">
+                        <p className="text-sm sm:text-base font-semibold text-gray-800 line-clamp-2 hover:text-orange-600 cursor-pointer leading-tight">
                           {item.product.name}
                         </p>
                       </Link>
-                      <p className="text-[10px] text-gray-400 mt-0.5">{item.product.reference}</p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        REF: {item.product.reference}
+                      </p>
                     </div>
 
-                    {/* Controles y precio en línea */}
-                    <div className="flex items-center justify-between mt-1.5">
-                      <div className="flex items-center bg-white rounded-full border border-gray-200 overflow-hidden">
+                    {/* Controles y precio */}
+                    <div className="flex items-center justify-between mt-3">
+                      {/* Selector de cantidad mejorado */}
+                      <div className="flex items-center bg-gray-100 rounded-full overflow-hidden">
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100"
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 transition-colors"
                         >
-                          <Minus className="w-3 h-3 text-gray-500" />
+                          <Minus className="w-4 h-4 text-gray-600" />
                         </button>
-                        <span className="w-6 text-center text-xs font-semibold">{item.quantity}</span>
+                        <span className="w-8 text-center text-sm font-bold text-gray-800">
+                          {item.quantity}
+                        </span>
                         <button
                           onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          className="w-6 h-6 flex items-center justify-center hover:bg-gray-100"
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-200 transition-colors"
                         >
-                          <Plus className="w-3 h-3 text-gray-500" />
+                          <Plus className="w-4 h-4 text-gray-600" />
                         </button>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-gray-900">
+                      
+                      {/* Precio y eliminar */}
+                      <div className="flex items-center gap-3">
+                        <span className="text-base sm:text-lg font-bold text-gray-900">
                           {(item.product.price * item.quantity).toFixed(2)}€
                         </span>
                         <button
                           onClick={() => removeItem(item.product.id)}
-                          className="w-6 h-6 flex items-center justify-center rounded-full text-gray-300 hover:text-red-500 hover:bg-red-50"
+                          className="w-8 h-8 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
                         >
-                          <Trash2 className="w-3.5 h-3.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -215,40 +245,60 @@ export default function SideCart() {
           )}
         </div>
 
-        {/* Footer compacto */}
+        {/* Footer mejorado */}
         {items.length > 0 && (
-          <div className="border-t border-gray-200 bg-white flex-shrink-0">
-            {/* Resumen */}
-            <div className="px-3 py-2.5 space-y-1 text-sm">
-              <div className="flex justify-between text-gray-500">
-                <span>Subtotal</span>
-                <span>{totalPrice.toFixed(2)}€</span>
-              </div>
-              <div className="flex justify-between text-gray-500">
-                <span>Envío</span>
-                <span className={hasFreeShipping ? "text-green-600 font-medium" : ""}>
-                  {hasFreeShipping ? "Gratis" : "8,50€"}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t border-gray-100">
-                <span className="font-bold text-gray-900">Total</span>
-                <span className="text-xl font-bold text-orange-600">{finalTotal.toFixed(2)}€</span>
+          <div className="border-t border-gray-200 bg-white">
+            {/* Beneficios */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+              <div className="flex justify-around text-xs text-gray-600">
+                <div className="flex items-center gap-1.5">
+                  <Shield className="w-4 h-4 text-green-600" />
+                  <span>Pago seguro</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Gift className="w-4 h-4 text-orange-500" />
+                  <span>Garantía 1 año</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Truck className="w-4 h-4 text-blue-500" />
+                  <span>24-48h</span>
+                </div>
               </div>
             </div>
 
-            {/* Botones */}
-            <div className="px-3 pb-3 space-y-2">
+            {/* Resumen de precios */}
+            <div className="p-4 space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Subtotal</span>
+                <span className="text-gray-700 font-medium">{totalPrice.toFixed(2)}€</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Envío</span>
+                <span className={hasFreeShipping ? "text-green-600 font-semibold" : "text-gray-700"}>
+                  {hasFreeShipping ? "¡Gratis!" : "8,50€"}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-3 border-t border-gray-200">
+                <span className="text-base font-bold text-gray-900">Total</span>
+                <span className="text-2xl font-bold text-orange-600">
+                  {finalTotal.toFixed(2)}€
+                </span>
+              </div>
+            </div>
+
+            {/* Botones de acción */}
+            <div className="px-4 pb-4 space-y-2">
               <Link href="/checkout" onClick={closeCart} className="block">
-                <Button className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg h-10 text-sm">
+                <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-xl h-12 text-base shadow-lg shadow-orange-500/30">
                   Finalizar compra
-                  <ArrowRight className="w-4 h-4 ml-1.5" />
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
               <button
                 onClick={closeCart}
-                className="w-full flex items-center justify-center gap-1.5 border border-gray-200 text-gray-600 font-medium rounded-lg h-10 text-sm hover:border-orange-300 hover:text-orange-600 transition-colors"
+                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-gray-200 text-gray-700 font-semibold rounded-xl h-12 text-base hover:border-orange-300 hover:text-orange-600 transition-colors"
               >
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className="w-5 h-5" />
                 Seguir comprando
               </button>
             </div>
