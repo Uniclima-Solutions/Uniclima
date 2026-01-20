@@ -8,8 +8,8 @@
  * - Pausa al hover
  * - Flechas de navegación
  * - Logos con efecto grayscale → color al hover
- * - Recuadros individuales con sombra
  * - Totalmente responsive
+ * - Ajustado a márgenes del contenedor principal
  */
 
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -100,8 +100,8 @@ export default function BrandScroller() {
   const displayBrands = [...CAROUSEL_BRANDS, ...CAROUSEL_BRANDS];
 
   return (
-    <section className="py-4 sm:py-6 md:py-8 bg-white">
-      <div className="w-full px-2 sm:px-4">
+    <section className="py-6 sm:py-8 md:py-10 bg-[#1a1a1a]">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div 
           className="relative"
           onMouseEnter={handleMouseEnter}
@@ -113,10 +113,10 @@ export default function BrandScroller() {
             onClick={() => scroll("left")} 
           />
 
-          {/* Contenedor de logos con recuadros */}
+          {/* Contenedor de logos */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-3 sm:gap-4 md:gap-5 overflow-x-auto mx-9 sm:mx-11 md:mx-14 py-3 sm:py-4 md:py-6"
+            className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 overflow-x-auto mx-10 sm:mx-12 md:mx-14 py-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {displayBrands.map((brand, idx) => (
@@ -154,15 +154,24 @@ function BrandCard({ brand }: BrandCardProps) {
   return (
     <Link
       href={`/marca/${brand.slug}`}
-      className="group flex-shrink-0 flex items-center justify-center transition-all duration-300 p-2 sm:p-3 md:p-4"
+      className="group flex-shrink-0 flex items-center justify-center p-2 sm:p-3"
       title={`Ver repuestos de ${brand.name}`}
     >
       <img
         src={brand.logo}
         alt={brand.name}
-        className="object-contain grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300 w-20 h-10 sm:w-28 sm:h-14 md:w-36 md:h-18 lg:w-44 lg:h-22"
+        className="object-contain w-20 h-10 sm:w-26 sm:h-13 md:w-32 md:h-16 lg:w-36 lg:h-18 filter grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-300 ease-in-out"
         draggable={false}
         loading="lazy"
+        style={{
+          filter: 'grayscale(100%) brightness(0.75)',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.filter = 'grayscale(0%) brightness(1)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.filter = 'grayscale(100%) brightness(0.75)';
+        }}
       />
     </Link>
   );
