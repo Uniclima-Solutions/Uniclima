@@ -295,7 +295,12 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       className="p-4 md:p-6"
     >
       {/* Grid de servicios principales con desplegables */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-6">
+      <div className="bg-gray-50 rounded-2xl p-4 mb-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Wrench className="w-5 h-5 text-orange-500" />
+          <h4 className="font-bold text-gray-900">Nuestros Servicios</h4>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
         {servicios.map((servicio) => {
           const Icon = servicio.icon;
           const isExpanded = servicioExpanded === servicio.id;
@@ -380,6 +385,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             </div>
           );
         })}
+        </div>
       </div>
 
       {/* Desplegable de Zonas de Cobertura */}
