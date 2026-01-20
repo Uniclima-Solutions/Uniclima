@@ -33,7 +33,7 @@ export default function RepairPlacasSection() {
             </p>
             
             {/* Botón MÁS INFORMACIÓN */}
-            <Link href="/servicios/reparacion-placas">
+            <Link href="/diagnostico-placas">
               <button className="inline-flex items-center gap-2 bg-white text-gray-900 px-5 py-2.5 sm:px-6 sm:py-3 rounded-full font-bold text-sm sm:text-base shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 MÁS INFORMACIÓN
                 <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -75,14 +75,14 @@ export default function RepairPlacasSection() {
             <div className="relative w-[280px] sm:w-[340px] md:w-[380px] lg:w-[420px] h-[160px] sm:h-[200px] md:h-[220px] lg:h-[240px] mx-auto md:mx-0">
               {/* Placa pequeña (arriba izquierda) */}
               <img 
-                src="/images/placas/placa-transparent-1.webp" 
+                src="/images/placas/placa-1.webp" 
                 alt="Placa electrónica"
                 className="absolute top-0 left-0 w-[35%] h-auto object-contain transform -rotate-6 z-10"
                 style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))' }}
               />
               {/* Placa grande (abajo derecha) */}
               <img 
-                src="/images/placas/placa-transparent-2.webp" 
+                src="/images/placas/placa-2.webp" 
                 alt="Placa electrónica caldera"
                 className="absolute bottom-0 right-0 w-[70%] h-auto object-contain transform rotate-3"
                 style={{ filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.25))' }}

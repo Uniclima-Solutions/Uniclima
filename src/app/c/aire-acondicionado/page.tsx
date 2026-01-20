@@ -20,6 +20,7 @@ import Footer from "@/components/Footer"
 import { CategoryGrid } from "@/components/CategoryGrid"
 import { BrandGrid } from "@/components/BrandGrid"
 import { CategoriesSkeleton, BrandsSkeleton } from "@/components/Skeletons"
+import RepairPlacasSection from "@/components/RepairPlacasSection"
 import { 
   ChevronRight, 
   Wind,
@@ -316,6 +317,9 @@ export default function AireAcondicionadoPage() {
         
         {/* CTA Mantenimiento */}
         <MaintenanceCTA />
+        
+        {/* Banner Reparación de Placas */}
+        <RepairPlacasSection />
         
         {/* Marcas con Suspense streaming */}
         <section className="py-12 lg:py-16 bg-gray-50">

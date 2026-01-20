@@ -22,6 +22,7 @@ import { HeroSection } from "@/components/HeroSection"
 import { CategoryGrid } from "@/components/CategoryGrid"
 import { BrandGrid } from "@/components/BrandGrid"
 import { CategoriesSkeleton, BrandsSkeleton } from "@/components/Skeletons"
+import RepairPlacasSection from "@/components/RepairPlacasSection"
 import { 
   ChevronRight, 
   Flame,
@@ -286,6 +287,9 @@ export default function CalderasPage() {
         
         {/* CTA Mantenimiento */}
         <MaintenanceCTA />
+        
+        {/* Banner Reparación de Placas */}
+        <RepairPlacasSection />
         
         {/* Marcas con Suspense streaming */}
         <section className="py-12 lg:py-16 bg-gray-50">
