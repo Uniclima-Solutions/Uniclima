@@ -8,6 +8,7 @@
  * - Iconografía profesional con Lucide React
  * - Miniaturas de marcas en lugar de nombres
  * - Desplegable de zonas de cobertura en Servicios
+ * - Desplegable para cada servicio (Mantenimiento, Reparación, Instalación)
  * - Animaciones suaves con Framer Motion
  * - Totalmente responsive
  * - Colores corporativos (Naranja #F97316, Azul oscuro)
@@ -37,7 +38,7 @@ type TabType = "servicios" | "tienda";
 // DATOS DEL MENÚ
 // ============================================
 
-// Servicios de reparación
+// Servicios de reparación con sub-servicios desplegables
 const servicios = [
   {
     id: "aerotermia",
@@ -48,7 +49,11 @@ const servicios = [
     bgLight: "bg-emerald-50",
     textColor: "text-emerald-600",
     href: "/servicios/aerotermia",
-    features: ["Instalación", "Reparación", "Mantenimiento"]
+    subServicios: [
+      { name: "Instalación", slug: "instalacion", icon: Settings },
+      { name: "Reparación", slug: "reparacion", icon: Wrench },
+      { name: "Mantenimiento", slug: "mantenimiento", icon: CheckCircle2 }
+    ]
   },
   {
     id: "fotovoltaica",
@@ -59,7 +64,11 @@ const servicios = [
     bgLight: "bg-amber-50",
     textColor: "text-amber-600",
     href: "/servicios/fotovoltaica",
-    features: ["Instalación", "Mantenimiento", "Monitorización"]
+    subServicios: [
+      { name: "Instalación", slug: "instalacion", icon: Settings },
+      { name: "Reparación", slug: "reparacion", icon: Wrench },
+      { name: "Mantenimiento", slug: "mantenimiento", icon: CheckCircle2 }
+    ]
   },
   {
     id: "aire-acondicionado",
@@ -70,7 +79,11 @@ const servicios = [
     bgLight: "bg-blue-50",
     textColor: "text-blue-600",
     href: "/servicios/aire-acondicionado",
-    features: ["Reparación", "Instalación", "Mantenimiento"]
+    subServicios: [
+      { name: "Instalación", slug: "instalacion", icon: Settings },
+      { name: "Reparación", slug: "reparacion", icon: Wrench },
+      { name: "Mantenimiento", slug: "mantenimiento", icon: CheckCircle2 }
+    ]
   },
   {
     id: "calderas",
@@ -81,7 +94,11 @@ const servicios = [
     bgLight: "bg-orange-50",
     textColor: "text-orange-600",
     href: "/servicios/calderas",
-    features: ["Reparación", "Instalación", "Mantenimiento"]
+    subServicios: [
+      { name: "Instalación", slug: "instalacion", icon: Settings },
+      { name: "Reparación", slug: "reparacion", icon: Wrench },
+      { name: "Mantenimiento", slug: "mantenimiento", icon: CheckCircle2 }
+    ]
   }
 ];
 
@@ -220,6 +237,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
   const [activeTab, setActiveTab] = useState<TabType>("tienda");
   const [searchQuery, setSearchQuery] = useState("");
   const [zonasExpanded, setZonasExpanded] = useState<string | null>(null);
+  const [servicioExpanded, setServicioExpanded] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Bloquear scroll cuando está abierto
@@ -241,6 +259,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
         setActiveTab("tienda");
         setSearchQuery("");
         setZonasExpanded(null);
+        setServicioExpanded(null);
       }, 300);
     }
   }, [isOpen]);
@@ -259,6 +278,11 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
     setZonasExpanded(zonasExpanded === key ? null : key);
   };
 
+  // Toggle servicio desplegable
+  const toggleServicio = (id: string) => {
+    setServicioExpanded(servicioExpanded === id ? null : id);
+  };
+
   // ============================================
   // RENDER PESTAÑA SERVICIOS
   // ============================================
@@ -270,45 +294,90 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       transition={{ duration: 0.2 }}
       className="p-4 md:p-6"
     >
-      {/* Grid de servicios principales - siempre visibles */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6">
+      {/* Grid de servicios principales con desplegables */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-6">
         {servicios.map((servicio) => {
           const Icon = servicio.icon;
+          const isExpanded = servicioExpanded === servicio.id;
+          
           return (
-            <Link
+            <div
               key={servicio.id}
-              href={servicio.href}
-              onClick={onClose}
-              className="group relative overflow-hidden rounded-xl bg-white border border-gray-100 p-3 md:p-4 hover:border-transparent hover:shadow-xl transition-all duration-300"
+              className="relative overflow-hidden rounded-xl bg-white border border-gray-100 hover:shadow-lg transition-all duration-300"
             >
-              {/* Fondo con gradiente al hover */}
-              <div className={`absolute inset-0 bg-gradient-to-br ${servicio.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+              {/* Header del servicio - clickeable para expandir */}
+              <button
+                onClick={() => toggleServicio(servicio.id)}
+                className="w-full flex items-center justify-between p-3 md:p-4 hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  {/* Icono */}
+                  <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${servicio.color} flex items-center justify-center shadow-lg`}>
+                    <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
+                  </div>
+                  
+                  {/* Contenido */}
+                  <div className="text-left">
+                    <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                      {servicio.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 hidden sm:block">
+                      {servicio.description}
+                    </p>
+                  </div>
+                </div>
+                
+                <ChevronDown 
+                  className={`w-5 h-5 text-gray-400 transition-transform duration-200 flex-shrink-0 ${isExpanded ? 'rotate-180' : ''}`} 
+                />
+              </button>
               
-              {/* Icono */}
-              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl bg-gradient-to-br ${servicio.color} flex items-center justify-center mb-2 md:mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                <Icon className="w-5 h-5 md:w-6 md:h-6 text-white" />
-              </div>
-              
-              {/* Contenido */}
-              <h3 className="font-bold text-gray-900 text-sm md:text-base mb-1 group-hover:text-orange-600 transition-colors">
-                {servicio.name}
-              </h3>
-              <p className="text-xs text-gray-500 mb-2 line-clamp-2 hidden sm:block">
-                {servicio.description}
-              </p>
-              
-              {/* Features - solo en desktop */}
-              <div className="hidden md:flex flex-wrap gap-1">
-                {servicio.features.map((feature) => (
-                  <span
-                    key={feature}
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${servicio.bgLight} ${servicio.textColor} font-medium`}
+              {/* Contenido desplegable con sub-servicios */}
+              <AnimatePresence>
+                {isExpanded && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden border-t border-gray-100"
                   >
-                    {feature}
-                  </span>
-                ))}
-              </div>
-            </Link>
+                    <div className="p-3 bg-gray-50">
+                      <div className="grid grid-cols-3 gap-2">
+                        {servicio.subServicios.map((sub) => {
+                          const SubIcon = sub.icon;
+                          return (
+                            <Link
+                              key={sub.slug}
+                              href={`/servicios/${servicio.id}/${sub.slug}`}
+                              onClick={onClose}
+                              className={`flex flex-col items-center gap-1.5 p-2 md:p-3 rounded-lg ${servicio.bgLight} hover:shadow-md transition-all duration-200 group`}
+                            >
+                              <div className={`w-8 h-8 rounded-lg bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}>
+                                <SubIcon className={`w-4 h-4 ${servicio.textColor}`} />
+                              </div>
+                              <span className={`text-xs font-medium ${servicio.textColor} text-center`}>
+                                {sub.name}
+                              </span>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* Link a ver todos los servicios de esta categoría */}
+                      <Link
+                        href={servicio.href}
+                        onClick={onClose}
+                        className={`mt-2 flex items-center justify-center gap-1 text-xs ${servicio.textColor} hover:underline`}
+                      >
+                        Ver todos los servicios de {servicio.name}
+                        <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           );
         })}
       </div>
@@ -411,84 +480,65 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       transition={{ duration: 0.2 }}
       className="p-4 md:p-6"
     >
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Columnas de categorías */}
-        <div className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {Object.entries(categoriasRepuestos).map(([key, categoria]) => {
-            const Icon = categoria.icon;
-            return (
-              <div key={key} className="bg-white rounded-2xl border border-gray-100 p-4">
-                {/* Header de categoría */}
-                <Link
-                  href={categoria.href}
-                  onClick={onClose}
-                  className="flex items-center gap-2 mb-3 group"
-                >
-                  <Icon className={`w-5 h-5 ${categoria.color}`} />
-                  <span className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
-                    {categoria.name}
-                  </span>
-                </Link>
-                
-                {/* Items */}
-                <div className="space-y-1">
-                  {categoria.items.map((item) => {
-                    const ItemIcon = item.icon;
-                    const href = item.isLink 
-                      ? categoria.href 
-                      : `${categoria.href}/${item.slug}`;
-                    
-                    return (
+      {/* Grid de categorías */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+        {Object.entries(categoriasRepuestos).map(([key, categoria]) => {
+          const Icon = categoria.icon;
+          return (
+            <div key={key} className="bg-white rounded-xl border border-gray-100 p-4 hover:shadow-lg transition-shadow">
+              <div className="flex items-center gap-2 mb-3">
+                <Icon className={`w-5 h-5 ${categoria.color}`} />
+                <h3 className="font-bold text-gray-900 text-sm">{categoria.name}</h3>
+              </div>
+              <ul className="space-y-1">
+                {categoria.items.map((item) => {
+                  const ItemIcon = item.icon;
+                  return (
+                    <li key={item.slug}>
                       <Link
-                        key={item.slug || 'all'}
-                        href={href}
+                        href={item.isLink ? categoria.href : `${categoria.href}/${item.slug}`}
                         onClick={onClose}
-                        className={`flex items-center gap-2 py-1.5 px-2 rounded-lg text-sm transition-colors ${
-                          item.isLink 
-                            ? 'text-orange-600 hover:bg-orange-50 font-medium' 
-                            : 'text-gray-600 hover:text-orange-600 hover:bg-gray-50'
+                        className={`flex items-center gap-2 text-xs py-1.5 px-2 rounded-lg hover:bg-gray-50 transition-colors ${
+                          item.isLink ? "text-orange-600 font-medium" : "text-gray-600"
                         }`}
                       >
-                        <ItemIcon className="w-4 h-4 opacity-50" />
+                        <ItemIcon className="w-3.5 h-3.5 text-gray-400" />
                         {item.name}
                       </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          );
+        })}
 
-        {/* Columna de marcas */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-4">
+        {/* Grid de marcas */}
+        <div className="bg-white rounded-xl border border-gray-100 p-4 md:col-span-1 lg:col-span-1">
           <div className="flex items-center justify-between mb-3">
-            <span className="font-bold text-gray-900">Marcas</span>
+            <h3 className="font-bold text-gray-900 text-sm">Marcas</h3>
             <Link
               href="/marcas"
               onClick={onClose}
-              className="text-xs text-orange-600 hover:text-orange-700 font-medium"
+              className="text-xs text-orange-600 hover:underline flex items-center gap-1"
             >
               Ver todas →
             </Link>
           </div>
-          
-          {/* Grid de miniaturas de marcas */}
           <div className="grid grid-cols-4 gap-2">
             {marcas.map((marca) => (
               <Link
                 key={marca.slug}
                 href={`/marca/${marca.slug}`}
                 onClick={onClose}
-                className="relative aspect-square rounded-lg bg-gray-50 hover:bg-orange-50 border border-gray-100 hover:border-orange-200 transition-all duration-200 flex items-center justify-center p-1.5 group"
+                className="relative aspect-square rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors overflow-hidden group"
                 title={marca.name}
               >
                 <Image
                   src={marca.logo}
                   alt={marca.name}
-                  width={40}
-                  height={40}
-                  className="object-contain grayscale group-hover:grayscale-0 transition-all duration-200"
+                  fill
+                  className="object-contain p-1.5 grayscale group-hover:grayscale-0 transition-all duration-300"
                 />
               </Link>
             ))}
@@ -497,7 +547,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
       </div>
 
       {/* Enlaces rápidos */}
-      <div className="flex flex-wrap items-center justify-center gap-3 mt-6 pt-4 border-t border-gray-100">
+      <div className="flex flex-wrap gap-2 mb-4">
         {enlacesRapidos.map((enlace) => {
           const Icon = enlace.icon;
           return (
@@ -505,7 +555,7 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
               key={enlace.href}
               href={enlace.href}
               onClick={onClose}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-full ${enlace.bg} ${enlace.color} text-sm font-medium hover:opacity-80 transition-opacity`}
+              className={`flex items-center gap-2 px-3 py-2 rounded-xl ${enlace.bg} ${enlace.color} text-sm font-medium hover:shadow-md transition-shadow`}
             >
               <Icon className="w-4 h-4" />
               {enlace.name}
@@ -513,9 +563,28 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
           );
         })}
       </div>
+
+      {/* Información de contacto */}
+      <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500 border-t border-gray-100 pt-4">
+        <a href="tel:912345678" className="flex items-center gap-1 hover:text-orange-600 transition-colors">
+          <Phone className="w-3.5 h-3.5" />
+          912 345 678
+        </a>
+        <a href="mailto:info@uniclima.es" className="flex items-center gap-1 hover:text-orange-600 transition-colors">
+          <Mail className="w-3.5 h-3.5" />
+          info@uniclima.es
+        </a>
+        <span className="flex items-center gap-1">
+          <Clock className="w-3.5 h-3.5" />
+          L-V: 9:00-18:00
+        </span>
+      </div>
     </motion.div>
   );
 
+  // ============================================
+  // RENDER PRINCIPAL
+  // ============================================
   return (
     <AnimatePresence>
       {isOpen && (
@@ -526,30 +595,27 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
             onClick={onClose}
           />
 
           {/* Panel del menú */}
           <motion.div
             ref={menuRef}
-            initial={{ opacity: 0, x: "-100%" }}
+            initial={{ opacity: 0, x: -100 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "-100%" }}
+            exit={{ opacity: 0, x: -100 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="fixed inset-y-0 left-0 w-full max-w-4xl bg-gray-50 shadow-2xl z-[101] overflow-hidden flex flex-col"
+            className="fixed top-0 left-0 h-full w-full max-w-2xl bg-gray-50 z-50 overflow-hidden flex flex-col shadow-2xl"
           >
-            {/* Header del menú */}
-            <div className="bg-white border-b border-gray-100 p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Link href="/" onClick={onClose} className="flex items-center gap-2">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">U</span>
-                  </div>
-                  <span className="font-bold text-xl text-gray-900">Uniclima</span>
-                </Link>
-              </div>
-              
+            {/* Header */}
+            <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center justify-between flex-shrink-0">
+              <Link href="/" onClick={onClose} className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">U</span>
+                </div>
+                <span className="font-bold text-gray-900">Uniclima</span>
+              </Link>
               <button
                 onClick={onClose}
                 className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
@@ -559,88 +625,62 @@ export default function MegaMenu({ isOpen, onClose }: MegaMenuProps) {
             </div>
 
             {/* Tabs */}
-            <div className="bg-white border-b border-gray-100 px-4 flex gap-1">
-              <button
-                onClick={() => setActiveTab("tienda")}
-                className={`px-4 py-3 font-semibold text-sm rounded-t-lg transition-colors relative ${
-                  activeTab === "tienda"
-                    ? "text-orange-600 bg-gray-50"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                Tienda
-                {activeTab === "tienda" && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-                  />
-                )}
-              </button>
-              <button
-                onClick={() => setActiveTab("servicios")}
-                className={`px-4 py-3 font-semibold text-sm rounded-t-lg transition-colors relative ${
-                  activeTab === "servicios"
-                    ? "text-orange-600 bg-gray-50"
-                    : "text-gray-600 hover:text-gray-900"
-                }`}
-              >
-                Servicios
-                {activeTab === "servicios" && (
-                  <motion.div
-                    layoutId="activeTab"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
-                  />
-                )}
-              </button>
+            <div className="bg-white border-b border-gray-100 px-4 flex-shrink-0">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setActiveTab("tienda")}
+                  className={`px-4 py-3 text-sm font-medium transition-colors relative ${
+                    activeTab === "tienda"
+                      ? "text-orange-600"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  Tienda
+                  {activeTab === "tienda" && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
+                    />
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab("servicios")}
+                  className={`px-4 py-3 text-sm font-medium transition-colors relative ${
+                    activeTab === "servicios"
+                      ? "text-orange-600"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  Servicios
+                  {activeTab === "servicios" && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-500"
+                    />
+                  )}
+                </button>
+              </div>
             </div>
 
             {/* Buscador */}
-            <div className="bg-white border-b border-gray-100 p-4">
+            <div className="bg-white px-4 py-3 border-b border-gray-100 flex-shrink-0">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Buscar productos, marcas..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-100 border-0 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
                 />
-                {searchQuery && (
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center transition-colors"
-                  >
-                    <X className="w-3 h-3 text-white" />
-                  </button>
-                )}
               </div>
             </div>
 
-            {/* Contenido */}
+            {/* Contenido scrolleable */}
             <div className="flex-1 overflow-y-auto">
               <AnimatePresence mode="wait">
                 {activeTab === "servicios" ? renderServicios() : renderTienda()}
               </AnimatePresence>
-            </div>
-
-            {/* Footer del menú */}
-            <div className="bg-white border-t border-gray-100 p-4">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="flex items-center gap-4 text-sm text-gray-600">
-                  <a href="tel:912345678" className="flex items-center gap-1.5 hover:text-orange-600 transition-colors">
-                    <Phone className="w-4 h-4" />
-                    912 345 678
-                  </a>
-                  <a href="mailto:info@uniclima.es" className="flex items-center gap-1.5 hover:text-orange-600 transition-colors">
-                    <Mail className="w-4 h-4" />
-                    info@uniclima.es
-                  </a>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-gray-400">
-                  <Clock className="w-3.5 h-3.5" />
-                  L-V: 9:00-18:00
-                </div>
-              </div>
             </div>
           </motion.div>
         </>
