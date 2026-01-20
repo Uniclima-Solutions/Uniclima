@@ -37,6 +37,7 @@ import {
   BadgeCheck,
   Wind
 } from "lucide-react";
+import Image from "next/image";
 import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
 
 // Categorías de Repuestos de Aire Acondicionado
@@ -112,13 +113,15 @@ function CategoryCard({ category, index }: { category: typeof repuestosAire[0]; 
           </svg>
         </div>
         
-        {/* Imagen con animación suave */}
+        {/* Imagen con animación suave - optimizada para LCP */}
         <div className="absolute inset-0 flex items-center justify-center p-3 z-10">
-          <img
+          <Image
             src={category.image}
             alt={category.fullName}
+            width={200}
+            height={200}
+            priority={index < 6}
             className="w-full h-full object-contain drop-shadow-xl max-w-[85%] max-h-[75%] transition-all duration-500 ease-out group-hover:scale-110 group-hover:drop-shadow-2xl"
-            loading="lazy"
           />
         </div>
         
@@ -144,9 +147,11 @@ function BrandCard({ marca }: { marca: typeof marcas[0] }) {
       href={`/c/aire-acondicionado?marca=${marca.slug}`}
       className="group bg-white rounded-2xl p-3 sm:p-4 border border-gray-100 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-400 ease-out flex items-center justify-center aspect-[4/3] transform hover:-translate-y-0.5"
     >
-      <img 
+      <Image 
         src={marca.logo} 
         alt={marca.name}
+        width={100}
+        height={75}
         className="w-full h-full object-contain transition-all duration-400 ease-out group-hover:scale-110"
         loading="lazy"
       />

@@ -39,7 +39,8 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { groupedSearch, type SearchResult, type GroupedSearchResults } from "@/lib/smartSearch";
-import MobileMenu from "./MobileMenu";
+import dynamic from "next/dynamic";
+const MobileMenu = dynamic(() => import("./MobileMenu"), { ssr: false });
 import SideCart from "./SideCart";
 
 

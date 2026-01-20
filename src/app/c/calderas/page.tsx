@@ -110,13 +110,15 @@ function CategoryCard({ category, index }: { category: typeof repuestosCalderas[
           </svg>
         </div>
         
-        {/* Imagen con animación suave */}
+        {/* Imagen con animación suave - optimizada para LCP */}
         <div className="absolute inset-0 flex items-center justify-center p-3 z-10">
-          <img
+          <Image
             src={category.image}
             alt={category.fullName}
+            width={200}
+            height={200}
+            priority={index < 6}
             className="w-full h-full object-contain drop-shadow-xl max-w-[85%] max-h-[75%] transition-all duration-500 ease-out group-hover:scale-110 group-hover:drop-shadow-2xl"
-            loading="lazy"
           />
         </div>
         
