@@ -308,12 +308,12 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   return (
     <Link href={`${basePath}/${category.slug}`}>
       <div 
-        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-300 rounded-lg sm:rounded-xl lg:rounded-2xl relative aspect-square"
+        className="cursor-pointer bg-white overflow-hidden w-full hover:shadow-2xl transition-all duration-500 ease-out rounded-lg sm:rounded-xl lg:rounded-2xl relative aspect-square group transform hover:scale-105"
       >
         {/* Banner con forma de onda - posicionado detrás */}
-        <div className="absolute bottom-0 left-0 right-0 h-[45%]">
+        <div className="absolute bottom-0 left-0 right-0 h-[40%]">
           <svg 
-            className="absolute inset-0 w-full h-full" 
+            className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105" 
             viewBox="0 0 400 100" 
             preserveAspectRatio="none"
           >
@@ -334,18 +334,18 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         </div>
         
         {/* Contenedor de imagen - ocupa todo el espacio disponible */}
-        <div className="absolute inset-0 flex items-center justify-center p-1 z-10">
+        <div className="absolute inset-0 flex items-center justify-center p-1 z-10 transition-transform duration-500 group-hover:scale-110">
           <img
             src={category.image}
             alt={category.name}
-            className="w-full h-full object-contain drop-shadow-2xl max-w-[92%] max-h-[85%]"
+            className="w-full h-full object-contain drop-shadow-2xl max-w-[92%] max-h-[80%]"
             loading="lazy"
           />
         </div>
         
-        {/* Texto blanco en la parte inferior */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3 sm:pb-4 px-1 sm:px-2">
-          <h3 className="text-white font-bold text-[10px] sm:text-xs lg:text-sm leading-tight text-center drop-shadow-lg uppercase tracking-wide">
+        {/* Texto blanco en la parte inferior - más abajo y letra más pequeña */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 pb-2 sm:pb-2.5 px-1 sm:px-2">
+          <h3 className="text-white font-semibold text-[8px] sm:text-[10px] lg:text-xs leading-tight text-center drop-shadow-lg uppercase tracking-wider">
             {category.name}
           </h3>
         </div>
@@ -354,7 +354,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
   );
 }
 
-// Componente Carrusel de Categorías
+// Componente Carrusel de Categorías con scroll automático lento
 function CategoryCarousel({ 
   title, 
   subtitle,
@@ -373,6 +373,7 @@ function CategoryCarousel({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -381,6 +382,35 @@ function CategoryCarousel({
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
     }
   };
+
+  // Scroll automático lento
+  useEffect(() => {
+    const scrollEl = scrollRef.current;
+    if (!scrollEl) return;
+
+    let animationId: number;
+    let scrollSpeed = 0.5; // Píxeles por frame (muy lento)
+
+    const autoScroll = () => {
+      if (!isPaused && scrollEl) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollEl;
+        
+        // Si llegamos al final, volver al inicio suavemente
+        if (scrollLeft >= scrollWidth - clientWidth - 1) {
+          scrollEl.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          scrollEl.scrollLeft += scrollSpeed;
+        }
+      }
+      animationId = requestAnimationFrame(autoScroll);
+    };
+
+    animationId = requestAnimationFrame(autoScroll);
+
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+    };
+  }, [isPaused]);
 
   useEffect(() => {
     checkScroll();
@@ -435,16 +465,18 @@ function CategoryCarousel({
             </button>
           )}
 
-          {/* Contenedor scroll */}
+          {/* Contenedor scroll con pausa al hover */}
           <div
             ref={scrollRef}
             className="flex gap-2 sm:gap-3 lg:gap-4 overflow-x-auto scrollbar-hide scroll-smooth pb-2"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
           >
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="flex-shrink-0 w-[calc(25%-6px)] sm:w-[calc(20%-10px)] lg:w-[calc(16.666%-14px)]"
+                className="flex-shrink-0 w-[calc(25%-6px)] sm:w-[calc(20%-10px)] lg:w-[calc(16.666%-14px)] transition-transform duration-300 hover:z-10"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
