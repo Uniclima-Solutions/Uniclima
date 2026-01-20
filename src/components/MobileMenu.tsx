@@ -1,21 +1,23 @@
 'use client'
 
 /**
- * MobileMenu Component - Menú móvil estilo PCComponentes
- * - Equipos Nuevos separados: Calderas Nuevas / Aires Nuevos
- * - Marcas con productos reales (solo muestran lo que fabrican)
- * - Acordeones exclusivos (solo uno abierto a la vez)
- * - Contacto al final del menú
+ * MobileMenu Component - Mega Menú Rediseñado
+ * - Diseño moderno con mejor UX
+ * - Vínculos coherentes con las páginas existentes
+ * - Animaciones suaves y transiciones fluidas
+ * - Estructura clara y navegación intuitiva
  */
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import Link from "next/link";
 import { 
-  X, ChevronRight, ChevronLeft, ChevronsLeft, Phone, Mail,
-  Flame, Snowflake, Package, Wrench, Search, Zap, Thermometer,
-  Fan, Gauge, CircuitBoard, Droplets, Wind, Settings, Cpu,
-  Radio, Filter, Disc, BatteryCharging, Waves, RefreshCw,
-  LayoutGrid, MessageCircleQuestion, PhoneCall, ChevronDown, Shield
+  X, ChevronRight, ChevronLeft, Phone, Mail,
+  Flame, Snowflake, Package, Wrench, Search,
+  Fan, CircuitBoard, Droplets, Wind, Settings,
+  LayoutGrid, PhoneCall, ChevronDown, Shield,
+  FileText, Tag, Truck, Clock, Star, Heart,
+  ShoppingBag, Home, Building2, MapPin, Sparkles
 } from "lucide-react";
 
 interface MobileMenuProps {
@@ -25,264 +27,199 @@ interface MobileMenuProps {
 
 type MenuView = 
   | "main" 
+  | "repuestos"
   | "repuestos-calderas" 
   | "repuestos-aire" 
-  | "calderas-nuevas"
-  | "aires-nuevos"
-  | "calderas-reacondicionadas"
+  | "tienda"
+  | "tienda-calderas"
+  | "tienda-aires"
   | "servicios"
-  
-  
   | "marca-caldera"
-  | "marca-aire"
-  | "marca-caldera-nueva"
-  | "marca-aire-nuevo";
+  | "marca-aire";
 
-// Menú principal con desplegables
-const categoriasConDesplegable = [
+// Estructura del menú principal
+const menuPrincipal = [
   { 
-    id: "repuestos", 
-    name: "Repuestos", 
-    icon: Wrench, 
-    hasDropdown: true,
-    subItems: [
-      { id: "repuestos-calderas", name: "Calderas", icon: Flame, view: "repuestos-calderas" as MenuView },
-      { id: "repuestos-aire", name: "Aire Acondicionado", icon: Snowflake, view: "repuestos-aire" as MenuView },
-    ]
+    id: "repuestos",
+    name: "Repuestos",
+    description: "Piezas para calderas y aire acondicionado",
+    icon: Wrench,
+    color: "from-orange-500 to-orange-600",
+    view: "repuestos" as MenuView
   },
   { 
-    id: "calderas", 
-    name: "Calderas", 
-    icon: Package, 
-    hasDropdown: true,
-    subItems: [
-      { id: "calderas-nuevas", name: "Nuevas", icon: Package, view: "calderas-nuevas" as MenuView },
-      { id: "calderas-reacondicionadas", name: "Reacondicionadas", icon: RefreshCw, view: "calderas-reacondicionadas" as MenuView },
-    ]
+    id: "tienda",
+    name: "Equipos Nuevos",
+    description: "Calderas y aires acondicionados",
+    icon: ShoppingBag,
+    color: "from-blue-500 to-blue-600",
+    view: "tienda" as MenuView
   },
-  { id: "aires-nuevos", name: "Aires Acondicionados", icon: Fan, view: "aires-nuevos" as MenuView, hasDropdown: false },
-  { id: "servicios", name: "Servicios", icon: Wrench, view: "servicios" as MenuView, hasDropdown: false },
-  { id: "mantenimiento", name: "Contratos de Mantenimiento", icon: Shield, href: "/contrato-mantenimiento", hasDropdown: false },
-  
-  { id: "contacto", name: "Contacto", icon: PhoneCall, href: "/contacto", hasDropdown: false },
-];
-
-// Marcas de calderas para REPUESTOS
-const marcasRepuestosCalderas = [
-  { name: "Junkers / Bosch", count: 312 },
-  { name: "Vaillant", count: 287 },
-  { name: "Saunier Duval", count: 265 },
-  { name: "Ferroli", count: 198 },
-  { name: "Baxi / BaxiRoca", count: 176 },
-  { name: "Ariston", count: 154 },
-  { name: "Beretta", count: 132 },
-  { name: "Roca", count: 118 },
-  { name: "Cointra", count: 95 },
-  { name: "Chaffoteaux", count: 87 },
-  { name: "Hermann", count: 76 },
-  { name: "Manaut", count: 68 },
-  { name: "Viessmann", count: 89 },
-  { name: "Wolf", count: 54 },
-  { name: "Buderus", count: 62 },
-  { name: "Immergas", count: 48 },
-  { name: "Biasi", count: 42 },
-  { name: "Lamborghini", count: 38 },
-  { name: "Fondital", count: 35 },
-  { name: "De Dietrich", count: 45 },
-];
-
-// Marcas de aire para REPUESTOS
-const marcasRepuestosAire = [
-  { name: "Daikin", count: 234 },
-  { name: "Mitsubishi Electric", count: 198 },
-  { name: "Fujitsu", count: 167 },
-  { name: "LG", count: 145 },
-  { name: "Samsung", count: 132 },
-  { name: "Panasonic", count: 118 },
-  { name: "Toshiba", count: 98 },
-  { name: "Hitachi", count: 87 },
-  { name: "Carrier", count: 76 },
-  { name: "Hisense", count: 65 },
-  { name: "Haier", count: 54 },
-  { name: "Midea", count: 48 },
-  { name: "Gree", count: 56 },
-  { name: "Mitsubishi Heavy", count: 78 },
-];
-
-// Marcas de CALDERAS NUEVAS con productos que fabrican
-const marcasCalderasNuevas = [
-  { name: "Junkers / Bosch", productos: ["condensacion", "calentadores"] },
-  { name: "Vaillant", productos: ["condensacion", "calentadores", "aerotermia"] },
-  { name: "Saunier Duval", productos: ["condensacion", "calentadores", "aerotermia"] },
-  { name: "Ferroli", productos: ["condensacion", "calentadores", "biomasa"] },
-  { name: "Baxi", productos: ["condensacion", "calentadores"] },
-  { name: "Ariston", productos: ["condensacion", "termos", "calentadores"] },
-  { name: "Viessmann", productos: ["condensacion", "aerotermia", "biomasa"] },
-  { name: "Wolf", productos: ["condensacion"] },
-  { name: "Buderus", productos: ["condensacion", "biomasa"] },
-  { name: "Cointra", productos: ["condensacion", "termos", "calentadores"] },
-  { name: "Thermor", productos: ["termos", "calentadores"] },
-  { name: "Fleck", productos: ["termos"] },
-  { name: "Domusa", productos: ["condensacion", "biomasa"] },
-  { name: "Chaffoteaux", productos: ["condensacion"] },
-];
-
-// Marcas de AIRES NUEVOS con productos que fabrican
-const marcasAiresNuevos = [
-  { name: "Daikin", productos: ["split", "multisplit", "conductos", "cassette"] },
-  { name: "Mitsubishi Electric", productos: ["split", "multisplit", "conductos", "cassette"] },
-  { name: "Fujitsu", productos: ["split", "multisplit", "conductos"] },
-  { name: "LG", productos: ["split", "multisplit", "conductos"] },
-  { name: "Samsung", productos: ["split", "multisplit"] },
-  { name: "Panasonic", productos: ["split", "multisplit", "conductos"] },
-  { name: "Toshiba", productos: ["split", "multisplit", "conductos"] },
-  { name: "Hitachi", productos: ["split", "multisplit", "conductos"] },
-  { name: "Carrier", productos: ["split", "multisplit", "conductos"] },
-  { name: "Hisense", productos: ["split", "multisplit"] },
-  { name: "Haier", productos: ["split", "multisplit"] },
-  { name: "Gree", productos: ["split", "multisplit"] },
-  { name: "Midea", productos: ["split"] },
-];
-
-// Categorías de calderas nuevas con opciones (kW, litros)
-const categoriasCalderasNuevas: Record<string, { name: string; icon: any; options: string[] }> = {
-  condensacion: { 
-    name: "Calderas de condensación", 
-    icon: Flame,
-    options: ["24 kW", "28 kW", "30 kW", "35 kW"]
-  },
-  calentadores: { 
-    name: "Calentadores", 
-    icon: Droplets,
-    options: ["6 L/min", "11 L/min", "14 L/min", "18 L/min"]
-  },
-  termos: { 
-    name: "Termos eléctricos", 
-    icon: Thermometer,
-    options: ["30 L", "50 L", "80 L", "100 L", "150 L"]
-  },
-  aerotermia: { 
-    name: "Aerotermia", 
-    icon: Wind,
-    options: ["Monobloc 6 kW", "Monobloc 8 kW", "Bibloc 8 kW", "Bibloc 12 kW", "Híbrida"]
-  },
-  biomasa: { 
-    name: "Calderas de biomasa", 
-    icon: Flame,
-    options: ["Pellets 15 kW", "Pellets 25 kW", "Leña 20 kW", "Leña 30 kW"]
-  },
-};
-
-// Categorías de aires nuevos con opciones (frigorías)
-const categoriasAiresNuevos: Record<string, { name: string; icon: any; options: string[] }> = {
-  split: { 
-    name: "Split 1x1", 
-    icon: Fan,
-    options: ["2.000 fg (2,3 kW)", "2.500 fg (2,9 kW)", "3.000 fg (3,5 kW)", "3.500 fg (4,0 kW)", "4.500 fg (5,2 kW)", "6.000 fg (7,0 kW)"]
-  },
-  multisplit: { 
-    name: "Multisplit", 
-    icon: Waves,
-    options: ["2x1 4.500 fg", "2x1 5.200 fg", "3x1 6.800 fg", "3x1 8.000 fg", "4x1 9.500 fg", "5x1 12.000 fg"]
-  },
-  conductos: { 
-    name: "Conductos", 
-    icon: Filter,
-    options: ["3.000 fg", "4.500 fg", "6.000 fg", "8.000 fg", "10.000 fg", "12.000 fg"]
-  },
-  cassette: { 
-    name: "Cassette", 
+  { 
+    id: "servicios",
+    name: "Servicios",
+    description: "Mantenimiento, reparación e instalación",
     icon: Settings,
-    options: ["3.500 fg", "5.000 fg", "6.000 fg", "8.000 fg"]
+    color: "from-green-500 to-green-600",
+    view: "servicios" as MenuView
   },
-};
+];
+
+// Submenú de Repuestos
+const repuestosMenu = [
+  {
+    id: "calderas",
+    name: "Repuestos de Calderas",
+    description: "Más de 3,000 referencias",
+    icon: Flame,
+    color: "text-orange-500",
+    bgColor: "bg-orange-50",
+    href: "/c/calderas",
+    view: "repuestos-calderas" as MenuView
+  },
+  {
+    id: "aire",
+    name: "Repuestos de Aire Acondicionado",
+    description: "Más de 1,700 referencias",
+    icon: Snowflake,
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    href: "/c/aire-acondicionado",
+    view: "repuestos-aire" as MenuView
+  },
+];
+
+// Submenú de Tienda (Equipos Nuevos)
+const tiendaMenu = [
+  {
+    id: "calderas",
+    name: "Calderas",
+    description: "Nuevas y reacondicionadas",
+    icon: Flame,
+    color: "text-orange-500",
+    bgColor: "bg-orange-50",
+    href: "/tienda/calderas",
+    view: "tienda-calderas" as MenuView
+  },
+  {
+    id: "aires",
+    name: "Aires Acondicionados",
+    description: "Splits, multisplits y más",
+    icon: Fan,
+    color: "text-blue-500",
+    bgColor: "bg-blue-50",
+    href: "/tienda/aire-acondicionado",
+    view: "tienda-aires" as MenuView
+  },
+];
 
 // Categorías de repuestos de calderas
 const categoriasRepuestosCalderas = [
-  { name: "Válvulas de gas", count: 45, icon: Gauge },
-  { name: "Intercambiadores", count: 32, icon: Waves },
-  { name: "Placas electrónicas", count: 28, icon: CircuitBoard },
-  { name: "Bombas de circulación", count: 18, icon: Droplets },
-  { name: "Quemadores", count: 15, icon: Flame },
-  { name: "Electrodos de encendido", count: 12, icon: Zap },
-  { name: "Ventiladores / Extractores", count: 14, icon: Fan },
-  { name: "Presostatos", count: 8, icon: Gauge },
-  { name: "Termostatos", count: 10, icon: Thermometer },
-  { name: "Sondas y sensores", count: 16, icon: Radio },
-  { name: "Vasos de expansión", count: 6, icon: Disc },
-  { name: "Válvulas de 3 vías", count: 9, icon: Settings },
-  { name: "Juntas y retenes", count: 22, icon: Disc },
-  { name: "Cuerpos de agua", count: 8, icon: Droplets },
-  { name: "Kits de mantenimiento", count: 14, icon: Wrench },
-  { name: "Transformadores", count: 6, icon: BatteryCharging },
+  { name: "Placas Electrónicas", slug: "placas", icon: CircuitBoard, count: 245 },
+  { name: "Intercambiadores", slug: "intercambiadores", icon: Droplets, count: 189 },
+  { name: "Bombas de Circulación", slug: "bombas", icon: Droplets, count: 156 },
+  { name: "Válvulas de Gas", slug: "valvulas-gas", icon: Settings, count: 312 },
+  { name: "Válvulas 3 Vías", slug: "valvulas-3-vias", icon: Settings, count: 234 },
+  { name: "Sensores y Sondas", slug: "sensores", icon: Wind, count: 276 },
+  { name: "Ventiladores", slug: "ventiladores", icon: Fan, count: 145 },
+  { name: "Quemadores", slug: "quemadores", icon: Flame, count: 98 },
 ];
 
 // Categorías de repuestos de aire
 const categoriasRepuestosAire = [
-  { name: "Compresores", count: 24, icon: Cpu },
-  { name: "Placas electrónicas", count: 18, icon: CircuitBoard },
-  { name: "Motores ventilador", count: 22, icon: Fan },
-  { name: "Condensadores", count: 12, icon: Disc },
-  { name: "Sensores y sondas", count: 16, icon: Radio },
-  { name: "Mandos a distancia", count: 8, icon: Radio },
-  { name: "Turbinas", count: 10, icon: Wind },
-  { name: "Válvulas de expansión", count: 6, icon: Gauge },
-  { name: "Filtros", count: 14, icon: Filter },
-  { name: "Rejillas y difusores", count: 12, icon: Wind },
-  { name: "Bombas de drenaje", count: 8, icon: Droplets },
-  { name: "Kits de instalación", count: 18, icon: Wrench },
+  { name: "Placas Interior", slug: "placas-interior", icon: CircuitBoard, count: 312 },
+  { name: "Placas Exterior", slug: "placas-exterior", icon: CircuitBoard, count: 234 },
+  { name: "Turbinas", slug: "turbinas", icon: Fan, count: 187 },
+  { name: "Motores", slug: "motores", icon: Settings, count: 156 },
+  { name: "Motor Hélice", slug: "motor-helice", icon: Fan, count: 276 },
+  { name: "Mandos", slug: "mandos", icon: Settings, count: 167 },
+  { name: "Compresores", slug: "compresores", icon: Settings, count: 89 },
+  { name: "Filtros", slug: "filtros", icon: Wind, count: 234 },
 ];
 
-// Calderas reacondicionadas (sin marcas)
-const calderasReacondicionadas = [
-  { name: "Calderas de condensación", options: ["24 kW", "28 kW", "30 kW", "35 kW"] },
-  { name: "Calderas murales", options: ["24 kW", "28 kW"] },
-  { name: "Termos eléctricos", options: ["50 L", "80 L", "100 L"] },
+// Marcas de calderas
+const marcasCalderas = [
+  { name: "Vaillant", slug: "vaillant", count: 287 },
+  { name: "Junkers", slug: "junkers", count: 312 },
+  { name: "Baxi", slug: "baxi", count: 176 },
+  { name: "Ferroli", slug: "ferroli", count: 198 },
+  { name: "Ariston", slug: "ariston", count: 154 },
+  { name: "Viessmann", slug: "viessmann", count: 89 },
+  { name: "Beretta", slug: "beretta", count: 132 },
+  { name: "Chaffoteaux", slug: "chaffoteaux", count: 87 },
+  { name: "Cointra", slug: "cointra", count: 95 },
+  { name: "Bosch", slug: "bosch", count: 156 },
+  { name: "Wolf", slug: "wolf", count: 54 },
+  { name: "Saunier Duval", slug: "saunier-duval", count: 265 },
+];
+
+// Marcas de aire acondicionado
+const marcasAire = [
+  { name: "Mitsubishi Electric", slug: "mitsubishi-electric", count: 198 },
+  { name: "Daikin", slug: "daikin", count: 234 },
+  { name: "Fujitsu", slug: "fujitsu", count: 167 },
+  { name: "LG", slug: "lg", count: 145 },
+  { name: "Samsung", slug: "samsung", count: 132 },
+  { name: "Panasonic", slug: "panasonic", count: 118 },
+  { name: "Toshiba", slug: "toshiba", count: 98 },
+  { name: "Hisense", slug: "hisense", count: 65 },
+  { name: "Haier", slug: "haier", count: 54 },
+  { name: "Carrier", slug: "carrier", count: 76 },
+  { name: "Midea", slug: "midea", count: 48 },
+  { name: "Gree", slug: "gree", count: 56 },
 ];
 
 // Servicios
 const serviciosItems = [
-  { name: "Reparación de placas electrónicas", desc: "Reparamos placas de calderas y aire" },
-  { name: "Mantenimiento de calderas", desc: "Revisión anual y puesta a punto" },
-  { name: "Mantenimiento de aire acondicionado", desc: "Limpieza y recarga de gas" },
-  { name: "Instalación de equipos", desc: "Instalación profesional certificada" },
-  { name: "Asistencia técnica", desc: "Servicio técnico especializado" },
+  { 
+    name: "Contratos de Mantenimiento", 
+    description: "Desde 70€/año",
+    icon: FileText,
+    href: "/contrato-mantenimiento",
+    highlight: true
+  },
+  { 
+    name: "Diagnóstico de Placas", 
+    description: "Reparación de placas electrónicas",
+    icon: CircuitBoard,
+    href: "/diagnostico-placas"
+  },
+  { 
+    name: "Zona Profesionales", 
+    description: "Precios especiales para instaladores",
+    icon: Shield,
+    href: "/profesionales"
+  },
 ];
 
-
-// Productos para búsqueda predictiva
-const productosEjemplo = [
-  { id: 1, name: "Válvula de Gas Honeywell VK4105M", ref: "VK4105M5033", marca: "Junkers", precio: 89.90, imagen: "/images/hero-calderas.png" },
-  { id: 2, name: "Intercambiador de Placas 14P", ref: "87161066850", marca: "Vaillant", precio: 145.50, imagen: "/images/category-intercambiadores.png" },
-  { id: 3, name: "Placa Electrónica Thema Condens", ref: "S5742000", marca: "Saunier Duval", precio: 178.00, imagen: "/images/category-placas.png" },
+// Enlaces rápidos
+const enlacesRapidos = [
+  { name: "Ofertas", icon: Tag, href: "/ofertas", color: "text-red-500" },
+  { name: "Marcas", icon: Star, href: "/marcas", color: "text-yellow-500" },
+  { name: "Favoritos", icon: Heart, href: "/favoritos", color: "text-pink-500" },
+  { name: "Seguimiento", icon: Truck, href: "/seguimiento", color: "text-green-500" },
 ];
 
 export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const [currentView, setCurrentView] = useState<MenuView>("main");
-  const [selectedMarca, setSelectedMarca] = useState<string>("");
-  const [selectedMarcaProductos, setSelectedMarcaProductos] = useState<string[]>([]);
-  const [expandedAccordion, setExpandedAccordion] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Bloquear scroll de la página
+  // Bloquear scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
       document.body.style.position = "fixed";
       document.body.style.width = "100%";
-      document.body.style.touchAction = "none";
     } else {
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
-      document.body.style.touchAction = "";
     }
     return () => {
       document.body.style.overflow = "";
       document.body.style.position = "";
       document.body.style.width = "";
-      document.body.style.touchAction = "";
     };
   }, [isOpen]);
 
@@ -291,123 +228,21 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     if (!isOpen) {
       setTimeout(() => {
         setCurrentView("main");
-        setSelectedMarca("");
-        setSelectedMarcaProductos([]);
-        setExpandedAccordion(null);
         setSearchQuery("");
       }, 300);
     }
   }, [isOpen]);
 
-  // Filtrar categorías del menú basado en la búsqueda
-  const filteredCategories = searchQuery.length >= 2 
-    ? [
-        // Categorías principales
-        ...categoriasConDesplegable.filter(cat => 
-          cat.name.toLowerCase().includes(searchQuery.toLowerCase())
-        ).map(cat => ({ 
-          type: 'category' as const, 
-          name: cat.name, 
-          icon: cat.icon, 
-          view: cat.view || null,
-          hasDropdown: cat.hasDropdown,
-          subItems: cat.subItems 
-        })),
-        // Subcategorías de repuestos
-        ...categoriasConDesplegable
-          .filter(cat => cat.subItems)
-          .flatMap(cat => cat.subItems || [])
-          .filter(sub => sub.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(sub => ({ 
-            type: 'subcategory' as const, 
-            name: sub.name, 
-            icon: sub.icon, 
-            view: sub.view,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-        // Marcas de calderas
-        ...marcasRepuestosCalderas
-          .filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(m => ({ 
-            type: 'marca-caldera' as const, 
-            name: m.name, 
-            icon: Flame, 
-            view: 'marca-caldera' as MenuView,
-            count: m.count,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-        // Marcas de aire
-        ...marcasRepuestosAire
-          .filter(m => m.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(m => ({ 
-            type: 'marca-aire' as const, 
-            name: m.name, 
-            icon: Snowflake, 
-            view: 'marca-aire' as MenuView,
-            count: m.count,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-        // Categorías de repuestos calderas
-        ...categoriasRepuestosCalderas
-          .filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(c => ({ 
-            type: 'repuesto-caldera' as const, 
-            name: c.name, 
-            icon: c.icon, 
-            view: 'repuestos-calderas' as MenuView,
-            count: c.count,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-        // Categorías de repuestos aire
-        ...categoriasRepuestosAire
-          .filter(c => c.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(c => ({ 
-            type: 'repuesto-aire' as const, 
-            name: c.name, 
-            icon: c.icon, 
-            view: 'repuestos-aire' as MenuView,
-            count: c.count,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-        // Servicios
-        ...serviciosItems
-          .filter(s => s.name.toLowerCase().includes(searchQuery.toLowerCase()))
-          .map(s => ({ 
-            type: 'servicio' as const, 
-            name: s.name, 
-            icon: Wrench, 
-            view: 'servicios' as MenuView,
-            desc: s.desc,
-            hasDropdown: false,
-            subItems: undefined
-          })),
-      ].slice(0, 8) // Limitar a 8 resultados
-    : [];
-
   const handleBack = () => {
-    if (currentView === "marca-caldera") {
-      setCurrentView("repuestos-calderas");
-    } else if (currentView === "marca-aire") {
-      setCurrentView("repuestos-aire");
-    } else if (currentView === "marca-caldera-nueva") {
-      setCurrentView("calderas-nuevas");
-    } else if (currentView === "marca-aire-nuevo") {
-      setCurrentView("aires-nuevos");
+    if (currentView === "repuestos-calderas" || currentView === "repuestos-aire") {
+      setCurrentView("repuestos");
+    } else if (currentView === "tienda-calderas" || currentView === "tienda-aires") {
+      setCurrentView("tienda");
+    } else if (currentView === "repuestos" || currentView === "tienda" || currentView === "servicios") {
+      setCurrentView("main");
     } else {
       setCurrentView("main");
     }
-    setSelectedMarca("");
-    setSelectedMarcaProductos([]);
-    setExpandedAccordion(null);
-  };
-
-  const handleClose = () => {
-    onClose();
   };
 
   const handleDragEnd = (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -415,19 +250,28 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       if (currentView !== "main") {
         handleBack();
       } else {
-        handleClose();
+        onClose();
       }
     }
   };
 
-  const toggleAccordion = (key: string) => {
-    setExpandedAccordion(expandedAccordion === key ? null : key);
+  const getViewTitle = () => {
+    switch (currentView) {
+      case "repuestos": return "Repuestos";
+      case "repuestos-calderas": return "Repuestos Calderas";
+      case "repuestos-aire": return "Repuestos Aire";
+      case "tienda": return "Equipos Nuevos";
+      case "tienda-calderas": return "Calderas";
+      case "tienda-aires": return "Aires Acondicionados";
+      case "servicios": return "Servicios";
+      default: return "Menú";
+    }
   };
 
   const menuVariants = {
     hidden: { x: "-100%" },
-    visible: { x: 0, transition: { type: "spring" as const, damping: 30, stiffness: 300 } },
-    exit: { x: "-100%", transition: { type: "spring" as const, damping: 30, stiffness: 300 } }
+    visible: { x: 0, transition: { type: "spring", damping: 30, stiffness: 300 } },
+    exit: { x: "-100%", transition: { type: "spring", damping: 30, stiffness: 300 } }
   };
 
   const slideVariants = {
@@ -436,7 +280,7 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
     exit: { x: "-100%", opacity: 0 }
   };
 
-  // Render menú principal con desplegables
+  // Render menú principal
   const renderMain = () => (
     <motion.div
       key="main"
@@ -445,107 +289,150 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       exit="exit"
       variants={slideVariants}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
+      className="p-4"
     >
-      <a
-        href="/catalogo"
-        className="flex items-center gap-2 px-3 py-2.5 mb-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all shadow-md"
-      >
-        <LayoutGrid className="w-4 h-4" />
-        <span>Ver catálogo</span>
-        <ChevronRight className="w-4 h-4 ml-auto" />
-      </a>
+      {/* Buscador */}
+      <div className="relative mb-6">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Buscar productos, marcas..."
+          className="w-full h-12 pl-12 pr-4 bg-gray-100 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all"
+        />
+      </div>
 
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Categorías</p>
-      
-      <div className="space-y-0.5">
-        {categoriasConDesplegable.map((cat) => {
-          const Icon = cat.icon;
-          
-          // Si tiene desplegable
-          if (cat.hasDropdown && cat.subItems) {
-            const isExpanded = expandedAccordion === cat.id;
-            return (
-              <div key={cat.id}>
-                <button
-                  onClick={() => toggleAccordion(cat.id)}
-                  className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
-                >
-                  <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                    <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-orange-600" />
-                  </div>
-                  <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
-                  <ChevronDown className={`w-4 h-4 text-gray-400 ml-auto transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-                </button>
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden ml-4 pl-5 border-l-2 border-gray-200"
-                    >
-                      {cat.subItems.map((subItem) => {
-                        const SubIcon = subItem.icon;
-                        return (
-                          <button
-                            key={subItem.id}
-                            onClick={() => setCurrentView(subItem.view)}
-                            className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
-                          >
-                            <div className="w-6 h-6 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                              <SubIcon className="w-3 h-3 text-gray-500 group-hover:text-orange-600" />
-                            </div>
-                            <span className="font-medium text-gray-700 text-[12px]">{subItem.name}</span>
-                            <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
-                          </button>
-                        );
-                      })}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          }
-          
-          // Sin desplegable - puede ser href directo o vista
-          if ('href' in cat && cat.href) {
-            return (
-              <a
-                key={cat.id}
-                href={cat.href}
-                onClick={handleClose}
-                className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
-              >
-                <div className="w-7 h-7 bg-orange-100 rounded-md flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                  <Icon className="w-3.5 h-3.5 text-orange-600" />
-                </div>
-                <span className="font-medium text-orange-600 text-[13px]">{cat.name}</span>
-                <ChevronRight className="w-4 h-4 text-orange-400 ml-auto" />
-              </a>
-            );
-          }
-          
+      {/* Categorías principales */}
+      <div className="space-y-3 mb-6">
+        {menuPrincipal.map((item) => {
+          const Icon = item.icon;
           return (
             <button
-              key={cat.id}
-              onClick={() => setCurrentView(cat.view as MenuView)}
-              className="w-full flex items-center gap-2.5 px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors group"
+              key={item.id}
+              onClick={() => setCurrentView(item.view)}
+              className="w-full flex items-center gap-4 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:border-orange-200 transition-all group"
             >
-              <div className="w-7 h-7 bg-gray-100 rounded-md flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                <Icon className="w-3.5 h-3.5 text-gray-500 group-hover:text-orange-600" />
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg`}>
+                <Icon className="w-6 h-6 text-white" />
               </div>
-              <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
-              <ChevronRight className="w-4 h-4 text-gray-400 ml-auto" />
+              <div className="flex-1 text-left">
+                <p className="font-bold text-gray-900 group-hover:text-orange-600 transition-colors">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.description}</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-orange-500 group-hover:translate-x-1 transition-all" />
             </button>
           );
         })}
       </div>
+
+      {/* Enlaces rápidos */}
+      <div className="grid grid-cols-4 gap-3 mb-6">
+        {enlacesRapidos.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={onClose}
+              className="flex flex-col items-center gap-2 p-3 bg-gray-50 rounded-xl hover:bg-orange-50 transition-colors group"
+            >
+              <Icon className={`w-5 h-5 ${item.color} group-hover:scale-110 transition-transform`} />
+              <span className="text-[10px] font-medium text-gray-600 group-hover:text-orange-600">{item.name}</span>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Banner de Mantenimiento */}
+      <Link
+        href="/contrato-mantenimiento"
+        onClick={onClose}
+        className="block p-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl text-white mb-6 hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+            <Shield className="w-5 h-5" />
+          </div>
+          <div className="flex-1">
+            <p className="font-bold">Contratos de Mantenimiento</p>
+            <p className="text-xs text-orange-100">Desde 70€/año • Calderas y Aires</p>
+          </div>
+          <ChevronRight className="w-5 h-5" />
+        </div>
+      </Link>
+
+      {/* Contacto */}
+      <div className="bg-gray-50 rounded-2xl p-4">
+        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Contacto</p>
+        <div className="space-y-2">
+          <a href="tel:+34912345678" className="flex items-center gap-3 p-2 hover:bg-white rounded-lg transition-colors">
+            <Phone className="w-4 h-4 text-orange-500" />
+            <span className="text-sm font-medium text-gray-700">912 345 678</span>
+          </a>
+          <a href="mailto:info@uniclima.es" className="flex items-center gap-3 p-2 hover:bg-white rounded-lg transition-colors">
+            <Mail className="w-4 h-4 text-orange-500" />
+            <span className="text-sm font-medium text-gray-700">info@uniclima.es</span>
+          </a>
+          <div className="flex items-center gap-3 p-2 text-gray-500">
+            <Clock className="w-4 h-4" />
+            <span className="text-sm">Lun-Vie: 9:00 - 18:00</span>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 
-  // Render repuestos calderas
+  // Render submenú de Repuestos
+  const renderRepuestos = () => (
+    <motion.div
+      key="repuestos"
+      initial="enter"
+      animate="center"
+      exit="exit"
+      variants={slideVariants}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+      className="p-4"
+    >
+      {/* Opciones principales */}
+      <div className="space-y-3 mb-6">
+        {repuestosMenu.map((item) => {
+          const Icon = item.icon;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setCurrentView(item.view)}
+              className={`w-full flex items-center gap-4 p-4 ${item.bgColor} rounded-2xl hover:shadow-md transition-all group`}
+            >
+              <div className={`w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm`}>
+                <Icon className={`w-6 h-6 ${item.color}`} />
+              </div>
+              <div className="flex-1 text-left">
+                <p className="font-bold text-gray-900">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.description}</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Ver todas las marcas */}
+      <Link
+        href="/marcas"
+        onClick={onClose}
+        className="flex items-center justify-between p-4 bg-gray-100 rounded-2xl hover:bg-gray-200 transition-colors"
+      >
+        <div className="flex items-center gap-3">
+          <Star className="w-5 h-5 text-yellow-500" />
+          <span className="font-semibold text-gray-900">Ver todas las marcas</span>
+        </div>
+        <ChevronRight className="w-5 h-5 text-gray-400" />
+      </Link>
+    </motion.div>
+  );
+
+  // Render repuestos de calderas
   const renderRepuestosCalderas = () => (
     <motion.div
       key="repuestos-calderas"
@@ -554,36 +441,62 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       exit="exit"
       variants={slideVariants}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
+      className="p-4"
     >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">Repuestos Calderas</h2>
-      <a href="/repuestos-calderas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todo →
-      </a>
+      {/* Ver todo */}
+      <Link
+        href="/c/calderas"
+        onClick={onClose}
+        className="flex items-center justify-between p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-2xl mb-4 hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <LayoutGrid className="w-5 h-5" />
+          <span className="font-bold">Ver todos los repuestos</span>
+        </div>
+        <ChevronRight className="w-5 h-5" />
+      </Link>
 
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Marcas</p>
-      <div className="space-y-0.5 mb-4">
-        {marcasRepuestosCalderas.map((marca) => (
-          <button
-            key={marca.name}
-            onClick={() => {
-              setSelectedMarca(marca.name);
-              setCurrentView("marca-caldera");
-            }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
+      {/* Categorías */}
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por categoría</p>
+      <div className="grid grid-cols-2 gap-2 mb-6">
+        {categoriasRepuestosCalderas.map((cat) => {
+          const Icon = cat.icon;
+          return (
+            <Link
+              key={cat.slug}
+              href={`/c/calderas/${cat.slug}`}
+              onClick={onClose}
+              className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl hover:bg-orange-50 transition-colors group"
+            >
+              <Icon className="w-4 h-4 text-gray-400 group-hover:text-orange-500" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-700 truncate group-hover:text-orange-600">{cat.name}</p>
+                <p className="text-[10px] text-gray-400">{cat.count} productos</p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* Marcas */}
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por marca</p>
+      <div className="grid grid-cols-3 gap-2">
+        {marcasCalderas.slice(0, 12).map((marca) => (
+          <Link
+            key={marca.slug}
+            href={`/marca/${marca.slug}`}
+            onClick={onClose}
+            className="p-3 bg-gray-50 rounded-xl hover:bg-orange-50 text-center transition-colors group"
           >
-            <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
-            <div className="flex items-center gap-1">
-              <span className="text-gray-400 text-xs">{marca.count}</span>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-            </div>
-          </button>
+            <p className="text-xs font-medium text-gray-700 truncate group-hover:text-orange-600">{marca.name}</p>
+            <p className="text-[10px] text-gray-400">{marca.count}</p>
+          </Link>
         ))}
       </div>
     </motion.div>
   );
 
-  // Render repuestos aire
+  // Render repuestos de aire
   const renderRepuestosAire = () => (
     <motion.div
       key="repuestos-aire"
@@ -592,372 +505,112 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       exit="exit"
       variants={slideVariants}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
+      className="p-4"
     >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">Repuestos Aire Acondicionado</h2>
-      <a href="/repuestos-aire" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todo →
-      </a>
+      {/* Ver todo */}
+      <Link
+        href="/c/aire-acondicionado"
+        onClick={onClose}
+        className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl mb-4 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <LayoutGrid className="w-5 h-5" />
+          <span className="font-bold">Ver todos los repuestos</span>
+        </div>
+        <ChevronRight className="w-5 h-5" />
+      </Link>
 
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Marcas</p>
-      <div className="space-y-0.5 mb-4">
-        {marcasRepuestosAire.map((marca) => (
-          <button
-            key={marca.name}
-            onClick={() => {
-              setSelectedMarca(marca.name);
-              setCurrentView("marca-aire");
-            }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
-          >
-            <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
-            <div className="flex items-center gap-1">
-              <span className="text-gray-400 text-xs">{marca.count}</span>
-              <ChevronRight className="w-4 h-4 text-gray-400" />
-            </div>
-          </button>
-        ))}
-      </div>
-    </motion.div>
-  );
-
-  // Render marca caldera (repuestos)
-  const renderMarcaCaldera = () => (
-    <motion.div
-      key="marca-caldera"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/repuestos-calderas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todos los repuestos →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Categorías</p>
-      <div className="space-y-0.5">
-        {categoriasRepuestosCalderas.map((cat) => {
-          const Icon = cat.icon;
-          return (
-            <button
-              key={cat.name}
-              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
-            >
-              <div className="flex items-center gap-2">
-                <Icon className="w-4 h-4 text-gray-400" />
-                <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
-              </div>
-              <span className="text-gray-400 text-xs">{cat.count}</span>
-            </button>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-
-  // Render marca aire (repuestos)
-  const renderMarcaAire = () => (
-    <motion.div
-      key="marca-aire"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/repuestos-aire/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todos los repuestos →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Categorías</p>
-      <div className="space-y-0.5">
+      {/* Categorías */}
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por categoría</p>
+      <div className="grid grid-cols-2 gap-2 mb-6">
         {categoriasRepuestosAire.map((cat) => {
           const Icon = cat.icon;
           return (
-            <button
-              key={cat.name}
-              className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
+            <Link
+              key={cat.slug}
+              href={`/c/aire-acondicionado/${cat.slug}`}
+              onClick={onClose}
+              className="flex items-center gap-2 p-3 bg-gray-50 rounded-xl hover:bg-blue-50 transition-colors group"
             >
-              <div className="flex items-center gap-2">
-                <Icon className="w-4 h-4 text-gray-400" />
-                <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
+              <Icon className="w-4 h-4 text-gray-400 group-hover:text-blue-500" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-medium text-gray-700 truncate group-hover:text-blue-600">{cat.name}</p>
+                <p className="text-[10px] text-gray-400">{cat.count} productos</p>
               </div>
-              <span className="text-gray-400 text-xs">{cat.count}</span>
-            </button>
+            </Link>
           );
         })}
       </div>
-    </motion.div>
-  );
 
-  // Render calderas nuevas
-  const renderCalderasNuevas = () => (
-    <motion.div
-      key="calderas-nuevas"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">Calderas Nuevas</h2>
-      <a href="/calderas-nuevas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todas →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Marcas</p>
-      <div className="space-y-0.5">
-        {marcasCalderasNuevas.map((marca) => (
-          <button
-            key={marca.name}
-            onClick={() => {
-              setSelectedMarca(marca.name);
-              setSelectedMarcaProductos(marca.productos);
-              setCurrentView("marca-caldera-nueva");
-              setExpandedAccordion(null);
-            }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
+      {/* Marcas */}
+      <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Por marca</p>
+      <div className="grid grid-cols-3 gap-2">
+        {marcasAire.slice(0, 12).map((marca) => (
+          <Link
+            key={marca.slug}
+            href={`/marca/${marca.slug}`}
+            onClick={onClose}
+            className="p-3 bg-gray-50 rounded-xl hover:bg-blue-50 text-center transition-colors group"
           >
-            <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
-          </button>
+            <p className="text-xs font-medium text-gray-700 truncate group-hover:text-blue-600">{marca.name}</p>
+            <p className="text-[10px] text-gray-400">{marca.count}</p>
+          </Link>
         ))}
       </div>
     </motion.div>
   );
 
-  // Render aires nuevos
-  const renderAiresNuevos = () => (
+  // Render submenú de Tienda
+  const renderTienda = () => (
     <motion.div
-      key="aires-nuevos"
+      key="tienda"
       initial="enter"
       animate="center"
       exit="exit"
       variants={slideVariants}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
+      className="p-4"
     >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">Aires Acondicionados Nuevos</h2>
-      <a href="/aires-nuevos" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todos →
-      </a>
+      {/* Ver todo */}
+      <Link
+        href="/tienda"
+        onClick={onClose}
+        className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl mb-4 hover:from-blue-600 hover:to-blue-700 transition-all shadow-lg"
+      >
+        <div className="flex items-center gap-3">
+          <ShoppingBag className="w-5 h-5" />
+          <span className="font-bold">Ver toda la tienda</span>
+        </div>
+        <ChevronRight className="w-5 h-5" />
+      </Link>
 
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Marcas</p>
-      <div className="space-y-0.5">
-        {marcasAiresNuevos.map((marca) => (
-          <button
-            key={marca.name}
-            onClick={() => {
-              setSelectedMarca(marca.name);
-              setSelectedMarcaProductos(marca.productos);
-              setCurrentView("marca-aire-nuevo");
-              setExpandedAccordion(null);
-            }}
-            className="w-full flex items-center justify-between px-2.5 py-2 hover:bg-orange-50 rounded-lg transition-colors"
-          >
-            <span className="font-medium text-gray-800 text-[13px]">{marca.name}</span>
-            <ChevronRight className="w-4 h-4 text-gray-400" />
-          </button>
-        ))}
-      </div>
-    </motion.div>
-  );
-
-  // Render marca caldera nueva (con acordeón de categorías)
-  const renderMarcaCalderaNueva = () => (
-    <motion.div
-      key="marca-caldera-nueva"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/calderas-nuevas/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todos los productos →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Categorías</p>
-      <div className="space-y-1.5">
-        {selectedMarcaProductos.map((productoKey) => {
-          const categoria = categoriasCalderasNuevas[productoKey];
-          if (!categoria) return null;
-          const Icon = categoria.icon;
-          const isExpanded = expandedAccordion === productoKey;
-          
+      {/* Opciones principales */}
+      <div className="space-y-3">
+        {tiendaMenu.map((item) => {
+          const Icon = item.icon;
           return (
-            <div key={productoKey} className="border border-slate-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => toggleAccordion(productoKey)}
-                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className="w-4 h-4 text-gray-500" />
-                  <span className="font-medium text-gray-800 text-[13px]">{categoria.name}</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-2 bg-white border-t border-slate-100">
-                      {categoria.options.map((option) => (
-                        <button
-                          key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+            <Link
+              key={item.id}
+              href={item.href}
+              onClick={onClose}
+              className={`flex items-center gap-4 p-4 ${item.bgColor} rounded-2xl hover:shadow-md transition-all group`}
+            >
+              <div className={`w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-sm`}>
+                <Icon className={`w-6 h-6 ${item.color}`} />
+              </div>
+              <div className="flex-1 text-left">
+                <p className="font-bold text-gray-900">{item.name}</p>
+                <p className="text-xs text-gray-500">{item.description}</p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
+            </Link>
           );
         })}
       </div>
     </motion.div>
   );
 
-  // Render marca aire nuevo (con acordeón de categorías)
-  const renderMarcaAireNuevo = () => (
-    <motion.div
-      key="marca-aire-nuevo"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">{selectedMarca}</h2>
-      <a href={`/aires-nuevos/${selectedMarca.toLowerCase().replace(/ /g, '-')}`} className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todos los productos →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Categorías</p>
-      <div className="space-y-1.5">
-        {selectedMarcaProductos.map((productoKey) => {
-          const categoria = categoriasAiresNuevos[productoKey];
-          if (!categoria) return null;
-          const Icon = categoria.icon;
-          const isExpanded = expandedAccordion === productoKey;
-          
-          return (
-            <div key={productoKey} className="border border-slate-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => toggleAccordion(productoKey)}
-                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className="w-4 h-4 text-gray-500" />
-                  <span className="font-medium text-gray-800 text-[13px]">{categoria.name}</span>
-                </div>
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-2 bg-white border-t border-slate-100">
-                      {categoria.options.map((option) => (
-                        <button
-                          key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-
-  // Render calderas reacondicionadas
-  const renderCalderasReacondicionadas = () => (
-    <motion.div
-      key="calderas-reacondicionadas"
-      initial="enter"
-      animate="center"
-      exit="exit"
-      variants={slideVariants}
-      transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
-    >
-      <h2 className="text-base font-bold text-gray-900 mb-0.5">Calderas Reacondicionadas</h2>
-      <a href="/calderas-reacondicionadas" className="text-orange-600 font-medium text-xs mb-3 inline-block hover:underline">
-        Ver todas →
-      </a>
-
-      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 mt-2">Categorías</p>
-      <div className="space-y-1.5">
-        {calderasReacondicionadas.map((cat) => {
-          const isExpanded = expandedAccordion === cat.name;
-          return (
-            <div key={cat.name} className="border border-slate-200 rounded-lg overflow-hidden">
-              <button
-                onClick={() => toggleAccordion(cat.name)}
-                className="w-full flex items-center justify-between p-2.5 bg-orange-50 hover:bg-gray-100 transition-colors"
-              >
-                <span className="font-medium text-gray-800 text-[13px]">{cat.name}</span>
-                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`} />
-              </button>
-              <AnimatePresence>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden"
-                  >
-                    <div className="p-2 bg-white border-t border-slate-100">
-                      {cat.options.map((option) => (
-                        <button
-                          key={option}
-                          className="w-full text-left text-[13px] text-gray-600 hover:text-orange-600 py-1.5 px-2 hover:bg-orange-50 rounded transition-colors"
-                        >
-                          {option}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
-      </div>
-    </motion.div>
-  );
-
-  // Render servicios
+  // Render submenú de Servicios
   const renderServicios = () => (
     <motion.div
       key="servicios"
@@ -966,39 +619,69 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       exit="exit"
       variants={slideVariants}
       transition={{ duration: 0.25, ease: "easeOut" }}
-      className="p-3"
+      className="p-4"
     >
-      <h2 className="text-base font-bold text-gray-900 mb-3">Servicios</h2>
+      <div className="space-y-3">
+        {serviciosItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.name}
+              href={item.href}
+              onClick={onClose}
+              className={`flex items-center gap-4 p-4 rounded-2xl transition-all group ${
+                item.highlight 
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 shadow-lg' 
+                  : 'bg-gray-50 hover:bg-gray-100'
+              }`}
+            >
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                item.highlight ? 'bg-white/20' : 'bg-white shadow-sm'
+              }`}>
+                <Icon className={`w-6 h-6 ${item.highlight ? 'text-white' : 'text-orange-500'}`} />
+              </div>
+              <div className="flex-1 text-left">
+                <p className={`font-bold ${item.highlight ? 'text-white' : 'text-gray-900'}`}>{item.name}</p>
+                <p className={`text-xs ${item.highlight ? 'text-orange-100' : 'text-gray-500'}`}>{item.description}</p>
+              </div>
+              <ChevronRight className={`w-5 h-5 ${item.highlight ? 'text-white' : 'text-gray-400'} group-hover:translate-x-1 transition-transform`} />
+            </Link>
+          );
+        })}
+      </div>
 
-      <div className="space-y-2">
-        {serviciosItems.map((servicio) => (
-          <button
-            key={servicio.name}
-            className="w-full text-left p-3 border border-slate-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-colors"
-          >
-            <span className="font-medium text-gray-800 text-[13px] block">{servicio.name}</span>
-            <span className="text-xs text-gray-500">{servicio.desc}</span>
-          </button>
-        ))}
+      {/* Contacto directo */}
+      <div className="mt-6 p-4 bg-gray-100 rounded-2xl">
+        <p className="text-sm font-semibold text-gray-900 mb-3">¿Necesitas ayuda?</p>
+        <a 
+          href="tel:+34912345678" 
+          className="flex items-center gap-3 p-3 bg-white rounded-xl hover:bg-orange-50 transition-colors"
+        >
+          <Phone className="w-5 h-5 text-orange-500" />
+          <div>
+            <p className="font-bold text-gray-900">912 345 678</p>
+            <p className="text-xs text-gray-500">Lun-Vie: 9:00 - 18:00</p>
+          </div>
+        </a>
       </div>
     </motion.div>
   );
 
-
+  // Render contenido según la vista actual
   const renderContent = () => {
     switch (currentView) {
-      case "main": return renderMain();
-      case "repuestos-calderas": return renderRepuestosCalderas();
-      case "repuestos-aire": return renderRepuestosAire();
-      case "marca-caldera": return renderMarcaCaldera();
-      case "marca-aire": return renderMarcaAire();
-      case "calderas-nuevas": return renderCalderasNuevas();
-      case "aires-nuevos": return renderAiresNuevos();
-      case "marca-caldera-nueva": return renderMarcaCalderaNueva();
-      case "marca-aire-nuevo": return renderMarcaAireNuevo();
-      case "calderas-reacondicionadas": return renderCalderasReacondicionadas();
-      case "servicios": return renderServicios();
-      default: return renderMain();
+      case "repuestos":
+        return renderRepuestos();
+      case "repuestos-calderas":
+        return renderRepuestosCalderas();
+      case "repuestos-aire":
+        return renderRepuestosAire();
+      case "tienda":
+        return renderTienda();
+      case "servicios":
+        return renderServicios();
+      default:
+        return renderMain();
     }
   };
 
@@ -1011,137 +694,70 @@ export default function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={handleClose}
-            className="fixed inset-0 bg-black/60 z-50 backdrop-blur-sm"
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
           />
 
-          {/* Menu panel */}
+          {/* Panel del menú */}
           <motion.div
             ref={menuRef}
+            variants={menuVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            variants={menuVariants}
-            className="fixed left-0 top-0 h-full w-[85%] max-w-[340px] bg-white z-50 shadow-2xl flex flex-col overflow-hidden"
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.1}
+            onDragEnd={handleDragEnd}
+            className="fixed left-0 top-0 bottom-0 w-[85%] max-w-sm bg-white z-50 flex flex-col shadow-2xl"
           >
-            {/* Header Premium */}
-            <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-3 flex items-center justify-between flex-shrink-0">
+            {/* Header del menú */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
               {currentView !== "main" ? (
-                <button 
+                <button
                   onClick={handleBack}
-                  className="flex items-center gap-1.5 text-white font-medium text-sm hover:bg-white/10 px-2 py-1 rounded-lg transition-colors"
+                  className="flex items-center gap-2 text-gray-600 hover:text-orange-500 transition-colors"
                 >
                   <ChevronLeft className="w-5 h-5" />
-                  <span>Volver</span>
+                  <span className="font-medium">Volver</span>
                 </button>
               ) : (
-                <a 
-                  href="/"
-                  onClick={handleClose}
-                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-                >
-                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                    <span className="text-orange-500 font-black text-lg">U</span>
+                <Link href="/" onClick={onClose} className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                    <span className="text-white font-bold text-sm">U</span>
                   </div>
-                  <span className="font-bold text-lg">Uniclima</span>
-                </a>
+                  <span className="font-bold text-gray-900">Uniclima</span>
+                </Link>
               )}
               
-              <button 
-                onClick={handleClose}
-                className="p-2 hover:bg-white/20 rounded-full transition-colors"
-                aria-label="Cerrar menú"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            {/* Barra de búsqueda - Solo busca en el menú */}
-            <div className="px-3 py-2 border-b border-slate-200 flex-shrink-0">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Buscar en el menú..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-8 pr-3 py-2 bg-gray-100 rounded-lg text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-orange-400"
-                />
+              <div className="flex items-center gap-2">
+                {currentView !== "main" && (
+                  <span className="text-sm font-semibold text-gray-900">{getViewTitle()}</span>
+                )}
+                <button
+                  onClick={onClose}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-gray-100 transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
               </div>
-              
-              {filteredCategories.length > 0 && (
-                <div className="mt-2 bg-white border border-slate-200 rounded-lg shadow-lg max-h-64 overflow-y-auto">
-                  {filteredCategories.map((item, index) => {
-                    const Icon = item.icon;
-                    return (
-                      <button
-                        key={`${item.type}-${index}`}
-                        onClick={() => {
-                          if (item.type === 'marca-caldera') {
-                            setSelectedMarca(item.name);
-                            setCurrentView('marca-caldera');
-                          } else if (item.type === 'marca-aire') {
-                            setSelectedMarca(item.name);
-                            setCurrentView('marca-aire');
-                          } else if (item.view) {
-                            setCurrentView(item.view as MenuView);
-                          }
-                          setSearchQuery('');
-                        }}
-                        className="w-full flex items-center gap-2.5 p-2.5 hover:bg-orange-50 border-b border-slate-100 last:border-0 text-left transition-colors"
-                      >
-                        <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-4 h-4 text-orange-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium text-gray-900 text-sm truncate">{item.name}</p>
-                          <p className="text-xs text-gray-500">
-                            {item.type === 'category' && 'Categoría'}
-                            {item.type === 'subcategory' && 'Subcategoría'}
-                            {item.type === 'marca-caldera' && `Marca de calderas • ${(item as any).count} productos`}
-                            {item.type === 'marca-aire' && `Marca de aire • ${(item as any).count} productos`}
-                            {item.type === 'repuesto-caldera' && `Repuesto caldera • ${(item as any).count} productos`}
-                            {item.type === 'repuesto-aire' && `Repuesto aire • ${(item as any).count} productos`}
-                            {item.type === 'servicio' && (item as any).desc}
-                          </p>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-gray-400 flex-shrink-0" />
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-              
-              {searchQuery.length >= 2 && filteredCategories.length === 0 && (
-                <div className="mt-2 p-3 bg-gray-50 rounded-lg text-center">
-                  <p className="text-sm text-gray-500">No se encontraron resultados para "{searchQuery}"</p>
-                </div>
-              )}
             </div>
 
-            {/* Content con gestos */}
-            <motion.div
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={handleDragEnd}
-              className="flex-1 overflow-y-auto overflow-x-hidden touch-pan-y"
-            >
+            {/* Contenido scrolleable */}
+            <div className="flex-1 overflow-y-auto overscroll-contain">
               <AnimatePresence mode="wait">
                 {renderContent()}
               </AnimatePresence>
-            </motion.div>
+            </div>
 
-            {/* Footer con contacto */}
-            <div className="p-3 border-t border-slate-200 bg-orange-50 flex-shrink-0">
-              <div className="flex items-center gap-2 text-xs text-gray-600 mb-1">
-                <Phone className="w-3.5 h-3.5 text-orange-500" />
-                <span className="font-medium">91 117 77 77</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-gray-600">
-                <Mail className="w-3.5 h-3.5 text-orange-500" />
-                <span>info@repuestosclima.es</span>
+            {/* Footer del menú */}
+            <div className="p-4 border-t border-gray-100 bg-gray-50">
+              <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                <Link href="/aviso-legal" onClick={onClose} className="hover:text-orange-500">Aviso Legal</Link>
+                <span>•</span>
+                <Link href="/privacidad" onClick={onClose} className="hover:text-orange-500">Privacidad</Link>
+                <span>•</span>
+                <Link href="/cookies" onClick={onClose} className="hover:text-orange-500">Cookies</Link>
               </div>
             </div>
           </motion.div>
