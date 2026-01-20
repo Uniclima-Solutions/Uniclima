@@ -353,6 +353,11 @@ export default function Header() {
                 )}
               </Link>
 
+              {/* Perfil/Usuario - Icono de cuenta */}
+              <Link href="/login" className="flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 text-gray-700 hover:text-orange-500 hover:bg-orange-50 rounded-xl transition-colors flex-shrink-0">
+                <User className="w-6 h-6" />
+              </Link>
+
               {/* Carrito - Mismo tamaño que favoritos en móvil */}
               <button
                 onClick={openCart}
