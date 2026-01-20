@@ -160,7 +160,7 @@ function BrandCard({ brand }: BrandCardProps) {
       <img
         src={brand.logo}
         alt={brand.name}
-        className="object-contain w-32 h-16 sm:w-40 sm:h-20 md:w-48 md:h-24 lg:w-56 lg:h-28 hover:scale-105 transition-transform duration-300 ease-in-out"
+        className="object-contain grayscale hover:grayscale-0 w-24 h-12 sm:w-28 sm:h-14 md:w-32 md:h-16 lg:w-36 lg:h-18 hover:scale-105 transition-all duration-300 ease-in-out"
         draggable={false}
         loading="lazy"
       />
