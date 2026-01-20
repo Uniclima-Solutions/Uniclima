@@ -11,6 +11,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { 
   ArrowLeft, 
   CreditCard, 
@@ -162,25 +164,9 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header del checkout */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                <span className="text-white font-black text-lg">U</span>
-              </div>
-              <span className="text-xl font-black text-gray-900">Uniclima</span>
-            </Link>
-            
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Lock className="w-4 h-4 text-green-600" />
-              <span>Pago 100% seguro</span>
-            </div>
-          </div>
-        </div>
-      </header>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gray-50">
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumb / Steps */}
@@ -742,6 +728,8 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }

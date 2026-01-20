@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import { 
   Gift, Video, CheckCircle, AlertCircle, ArrowLeft, Wrench, 
   Upload, Camera, Mic, MicOff, X, FileVideo,
@@ -496,25 +498,17 @@ export default function PiezaGratisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-orange-50/30">
-      {/* Header elegante */}
-      <header className="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all group-hover:scale-105">
-              <span className="text-white font-bold text-xl">U</span>
-            </div>
-            <span className="font-bold text-xl text-gray-800">Uniclima</span>
-          </Link>
-          <Link 
-            href="/"
-            className="text-gray-500 hover:text-orange-600 flex items-center gap-2 text-sm font-medium transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Volver a la tienda</span>
-          </Link>
-        </div>
-      </header>
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-orange-50/30">
+        {/* Breadcrumbs */}
+        <nav className="max-w-5xl mx-auto px-4 py-4">
+          <ol className="flex items-center gap-2 text-sm text-gray-500">
+            <li><Link href="/" className="hover:text-orange-600 transition-colors">Inicio</Link></li>
+            <li>/</li>
+            <li className="text-gray-900 font-medium">Pieza Gratis</li>
+          </ol>
+        </nav>
 
       {/* Hero Section - Diseño Premium Limpio */}
       <section className="py-12 sm:py-16 px-4">
@@ -1234,6 +1228,8 @@ export default function PiezaGratisPage() {
           </p>
         </div>
       </section>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
