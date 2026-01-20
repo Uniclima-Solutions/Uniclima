@@ -48,7 +48,7 @@ function CategoryCard({ category, index, baseUrl }: { category: Category; index:
         )}
         
         {/* Banner con forma de onda */}
-        <div className="absolute bottom-0 left-0 right-0 h-[42%]">
+        <div className="absolute bottom-0 left-0 right-0 h-[32%]">
           <svg 
             className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105" 
             viewBox="0 0 400 100" 
@@ -79,7 +79,7 @@ function CategoryCard({ category, index, baseUrl }: { category: Category; index:
         </div>
         
         {/* Imagen con optimización next/image */}
-        <div className="absolute inset-0 flex items-center justify-center p-4 pb-[45%]">
+        <div className="absolute inset-0 flex items-center justify-center p-4 pb-[35%]">
           <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-110">
             <Image
               src={category.image}
