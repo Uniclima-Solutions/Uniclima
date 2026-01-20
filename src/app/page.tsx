@@ -345,7 +345,7 @@ function CategoryPartCard({ category, basePath = "/c/calderas", colorType = "ora
         
         {/* Texto blanco en la parte inferior - más abajo y letra más pequeña */}
         <div className="absolute bottom-0 left-0 right-0 z-20 pb-2 sm:pb-2.5 px-1 sm:px-2">
-          <h3 className="text-white font-semibold text-[10px] sm:text-xs lg:text-sm leading-tight text-center drop-shadow-lg uppercase tracking-wider">
+          <h3 className="text-white font-semibold text-xs sm:text-sm lg:text-base leading-tight text-center drop-shadow-lg uppercase tracking-wider">
             {category.name}
           </h3>
         </div>
@@ -398,7 +398,7 @@ function CategoryCarousel({
             {categories.map((category) => (
               <div 
                 key={category.id} 
-                className="w-[134px] sm:w-[154px] lg:w-[173px]"
+                className="w-[160px] sm:w-[185px] lg:w-[208px]"
               >
                 <CategoryPartCard category={category} basePath={basePath} colorType={colorType} />
               </div>
@@ -760,11 +760,11 @@ export default function Home() {
       ]} />
       
       <Header />
-      {/* Espaciador para compensar el header fixed */}
-      <div className="h-14 lg:h-[104px]" />
+      {/* Espaciador para compensar el header fixed + margen adicional */}
+      <div className="h-20 sm:h-24 lg:h-32" />
 
       {/* Hero Banner Principal - Ofertas (ADAPTATIVO) */}
-      <section className="w-full flex justify-center pt-4 sm:pt-6 lg:pt-8 pb-8">
+      <section className="w-full flex justify-center pb-8">
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
           <Link href="/ofertas" className="block w-full">
             <picture>
