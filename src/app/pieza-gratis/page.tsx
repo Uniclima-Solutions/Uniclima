@@ -1,307 +1,85 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { 
-  Gift, Video, CheckCircle, AlertCircle, ArrowLeft, Wrench, 
-  Upload, Camera, Mic, MicOff, X, FileVideo,
-  Square, Clock, HardDrive, Sparkles, Shield, Award, 
-  ChevronRight, Info, ExternalLink
+  Gift, Video, CheckCircle, Upload, Camera, X, Play, Pause,
+  Clock, Sparkles, Shield, ChevronRight, ChevronLeft, Film,
+  User, Mail, Phone, FileVideo, AlertCircle
 } from 'lucide-react';
 
-// Datos de marcas para autocompletado (todas las marcas juntas)
-const todasLasMarcas = [
-  'Junkers / Bosch', 'Vaillant', 'Saunier Duval', 'Ferroli', 'Baxi / BaxiRoca',
-  'Ariston', 'Beretta', 'Roca', 'Cointra', 'Chaffoteaux', 'Hermann', 'Manaut',
-  'Fondital', 'Immergas', 'Viessmann', 'Wolf', 'De Dietrich', 'Lamborghini',
-  'Fagor', 'Sime', 'Buderus', 'Atlantic', 'Thermor', 'Tesy',
-  'Daikin', 'Mitsubishi Electric', 'Fujitsu', 'LG', 'Samsung', 'Panasonic',
-  'Toshiba', 'Hitachi', 'Carrier', 'Hisense', 'Haier', 'Midea', 'Gree',
-  'General (Fujitsu)', 'Johnson', 'Mundoclima', 'Kosner', 'HTW', 'Infiniton'
-];
-
-// Modelos por marca (ejemplos)
-const modelosPorMarca: { [key: string]: string[] } = {
-  'Junkers / Bosch': ['Cerapur', 'Cerapur Comfort', 'Cerapur Excellence', 'Cerapur Smart', 'Condens 2300', 'Condens 5300', 'Condens 7000', 'Euromaxx', 'Euroline', 'Ceraclass'],
-  'Vaillant': ['EcoTec Plus', 'EcoTec Pro', 'EcoTec Pure', 'EcoTec Exclusive', 'TurboTec Plus', 'TurboTec Pro', 'AtmoTec Plus', 'EcoCompact'],
-  'Saunier Duval': ['Themafast Condens', 'Thema Condens', 'Thelia Condens', 'Isofast Condens', 'Isomax Condens', 'Duomax Condens', 'Semia Condens'],
-  'Ferroli': ['Bluehelix Tech', 'Bluehelix Pro', 'Divacondens', 'Domicondens', 'Econcept', 'Energy Top', 'Modena'],
-  'Baxi / BaxiRoca': ['Platinum Compact', 'Platinum Max Plus', 'Platinum Alux', 'Victoria Condens', 'Duo-Tec Compact', 'Neodens Plus'],
-  'Ariston': ['Genus Premium', 'Clas Premium', 'Alteas One', 'Cares Premium', 'HS Premium', 'Matis Condens'],
-  'Daikin': ['Sensira', 'Perfera', 'Stylish', 'Emura', 'Ururu Sarara', 'Comfora', 'FTXM', 'FTXA', 'FTXJ'],
-  'Mitsubishi Electric': ['MSZ-AP', 'MSZ-LN', 'MSZ-EF', 'MSZ-HR', 'MSZ-BT', 'MUZ-AP', 'MXZ-2F', 'MXZ-3F'],
-  'Fujitsu': ['ASY', 'ASYG', 'AOYG', 'Nocria X', 'KM', 'KL', 'KE', 'LM', 'LU'],
-  'LG': ['Artcool', 'Artcool Gallery', 'Dualcool', 'Standard Plus', 'Prestige', 'Libero Plus'],
-  'Samsung': ['WindFree', 'WindFree Elite', 'WindFree Avant', 'Luzon', 'Maldives', 'AR'],
-};
-
-// Tipos de piezas (todas juntas)
-const todasLasPiezas = [
-  'Válvula de gas', 'Placa electrónica', 'Intercambiador primario', 'Intercambiador ACS',
-  'Bomba de circulación', 'Ventilador / Extractor', 'Electrodo de encendido', 'Electrodo de ionización',
-  'Presostato de agua', 'Presostato de humos', 'Termostato', 'Sonda NTC', 'Vaso de expansión',
-  'Válvula de 3 vías', 'Motor de 3 vías', 'Grifo de llenado', 'Cuerpo de agua', 'Manómetro',
-  'Junta / Retén', 'Quemador', 'Cámara de combustión', 'Transformador de encendido',
-  'Placa electrónica interior', 'Placa electrónica exterior', 'Compresor', 'Motor ventilador interior',
-  'Motor ventilador exterior', 'Turbina', 'Condensador', 'Evaporador', 'Válvula de expansión',
-  'Sensor de temperatura', 'Sensor de humedad', 'Mando a distancia', 'Receptor IR', 'Filtro',
-  'Bobina / Solenoide', 'Tarjeta de control', 'Capacitador', 'Relé', 'Termistor'
-];
-
-// Errores comunes (todos juntos)
-const todosLosErrores = [
-  'Error F28 - Fallo de encendido', 'Error F29 - Llama se apaga', 'Error F22 - Falta de agua',
-  'Error F75 - Fallo bomba/presostato', 'Error F20 - Sobrecalentamiento', 'Error F27 - Llama parásita',
-  'Error F24 - Calentamiento rápido', 'Error F25 - Gases de combustión', 'Error F05 - Sonda ACS',
-  'Error F10 - Sonda NTC ida', 'Error F11 - Sonda NTC retorno', 'Error A01 - Sin llama',
-  'Error E01 - Fallo general', 'Error E02 - Termostato seguridad', 'Error E03 - Presostato humos',
-  'Error E04 - Fallo ionización', 'Error E05 - Sonda calefacción', 'Error E06 - Sonda ACS',
-  'No enciende', 'No calienta agua', 'No calienta calefacción', 'Hace ruido', 'Pierde agua',
-  'Presión baja', 'Presión alta', 'Se apaga solo', 'Tarda en encender',
-  'Error E1 - Sensor temperatura', 'Error E2 - Sensor evaporador', 'Error E3 - Sensor condensador',
-  'Error E4 - Protección compresor', 'Error E5 - Comunicación', 'Error E6 - Motor ventilador',
-  'Error F1 - Sensor interior', 'Error F2 - Sensor exterior', 'Error F3 - Sensor descarga',
-  'Error H1 - Descongelación', 'Error H3 - Protección alta presión', 'Error H6 - Sensor posición',
-  'No enfría', 'No calienta', 'No arranca', 'Gotea agua', 'Mal olor',
-  'Mando no funciona', 'Parpadean luces', 'Se para solo', 'Hielo en unidad exterior'
-];
-
 export default function PiezaGratisPage() {
-  // Estados del formulario
-  const [formData, setFormData] = useState({
-    marca: '',
-    modelo: '',
-    error: '',
-    pieza: '',
-    descripcion: '',
-    nombre: '',
-    email: '',
-    telefono: '',
-    aceptaTerminos: false
-  });
-  
-  // Estados de UI
-  const [enviado, setEnviado] = useState(false);
-  const [errores, setErrores] = useState<string[]>([]);
-  const [paso, setPaso] = useState(1);
-  
-  // Estados de autocompletado
-  const [marcasSugeridas, setMarcasSugeridas] = useState<string[]>([]);
-  const [modelosSugeridos, setModelosSugeridos] = useState<string[]>([]);
-  const [piezasSugeridas, setPiezasSugeridas] = useState<string[]>([]);
-  const [erroresSugeridos, setErroresSugeridos] = useState<string[]>([]);
-  const [showMarcas, setShowMarcas] = useState(false);
-  const [showModelos, setShowModelos] = useState(false);
-  const [showPiezas, setShowPiezas] = useState(false);
-  const [showErrores, setShowErrores] = useState(false);
-  
-  // Estados de vídeo
+  // Estados principales
+  const [step, setStep] = useState(1);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [videoError, setVideoError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
   
-  // Estados de grabación
-  const [isRecording, setIsRecording] = useState(false);
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
-  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
-  const [showCamera, setShowCamera] = useState(false);
-  
-  // Estados de voz
-  const [isListening, setIsListening] = useState(false);
-  const [speechSupported, setSpeechSupported] = useState(false);
-  const [voiceError, setVoiceError] = useState<string | null>(null);
-  
+  // Datos del formulario
+  const [formData, setFormData] = useState({
+    brand: '',
+    model: '',
+    description: '',
+    name: '',
+    email: '',
+    phone: '',
+    acceptTerms: false
+  });
+
   // Refs
-  const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  
-  // Verificar soporte de Speech Recognition
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      setSpeechSupported(!!SpeechRecognition);
-    }
-  }, []);
-  
-  // Limpiar al desmontar
-  useEffect(() => {
-    return () => {
-      if (cameraStream) {
-        cameraStream.getTracks().forEach(track => track.stop());
-      }
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
-      if (videoPreview) {
-        URL.revokeObjectURL(videoPreview);
-      }
-    };
-  }, [cameraStream, videoPreview]);
-  
-  // Manejar cambio de marca
-  const handleMarcaChange = (value: string) => {
-    setFormData({ ...formData, marca: value, modelo: '' });
-    if (value.length > 0) {
-      const filtered = todasLasMarcas.filter(m => 
-        m.toLowerCase().includes(value.toLowerCase())
-      );
-      setMarcasSugeridas(filtered);
-      setShowMarcas(filtered.length > 0);
-    } else {
-      setMarcasSugeridas([]);
-      setShowMarcas(false);
-    }
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Manejar cambios en el formulario
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+    }));
   };
-  
-  // Manejar cambio de modelo
-  const handleModeloChange = (value: string) => {
-    setFormData({ ...formData, modelo: value });
-    const modelos = modelosPorMarca[formData.marca] || [];
-    if (value.length > 0 && modelos.length > 0) {
-      const filtered = modelos.filter(m => 
-        m.toLowerCase().includes(value.toLowerCase())
-      );
-      setModelosSugeridos(filtered);
-      setShowModelos(filtered.length > 0);
-    } else if (value.length === 0 && modelos.length > 0) {
-      setModelosSugeridos(modelos);
-      setShowModelos(true);
-    } else {
-      setModelosSugeridos([]);
-      setShowModelos(false);
-    }
-  };
-  
-  // Manejar cambio de pieza
-  const handlePiezaChange = (value: string) => {
-    setFormData({ ...formData, pieza: value });
-    if (value.length > 0) {
-      const filtered = todasLasPiezas.filter(p => 
-        p.toLowerCase().includes(value.toLowerCase())
-      );
-      setPiezasSugeridas(filtered);
-      setShowPiezas(filtered.length > 0);
-    } else {
-      setPiezasSugeridas(todasLasPiezas.slice(0, 10));
-      setShowPiezas(true);
-    }
-  };
-  
-  // Manejar cambio de error
-  const handleErrorChange = (value: string) => {
-    setFormData({ ...formData, error: value });
-    if (value.length > 0) {
-      const filtered = todosLosErrores.filter(e => 
-        e.toLowerCase().includes(value.toLowerCase())
-      );
-      setErroresSugeridos(filtered);
-      setShowErrores(filtered.length > 0);
-    } else {
-      setErroresSugeridos(todosLosErrores.slice(0, 8));
-      setShowErrores(true);
-    }
-  };
-  
-  // Manejar reconocimiento de voz
-  const handleVoiceInput = () => {
-    if (!speechSupported) {
-      setVoiceError('Tu navegador no soporta reconocimiento de voz');
-      return;
-    }
-    
-    setVoiceError(null);
-    
-    try {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-      
-      recognition.lang = 'es-ES';
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.maxAlternatives = 1;
-      
-      recognition.onstart = () => {
-        setIsListening(true);
-        setVoiceError(null);
-      };
-      
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-      
-      recognition.onerror = (event: any) => {
-        setIsListening(false);
-        if (event.error === 'no-speech') {
-          setVoiceError('No se detectó voz. Intenta de nuevo.');
-        } else if (event.error === 'not-allowed') {
-          setVoiceError('Permiso de micrófono denegado. Actívalo en tu navegador.');
-        } else {
-          setVoiceError('Error al escuchar. Intenta de nuevo.');
-        }
-      };
-      
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setFormData(prev => ({
-          ...prev,
-          descripcion: prev.descripcion + (prev.descripcion ? ' ' : '') + transcript
-        }));
-        // Enfocar el textarea después de añadir texto
-        if (textareaRef.current) {
-          textareaRef.current.focus();
-        }
-      };
-      
-      recognition.start();
-    } catch (error) {
-      setVoiceError('Error al iniciar el reconocimiento de voz');
-      setIsListening(false);
-    }
-  };
-  
+
   // Manejar drag & drop
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(true);
-  };
-  
-  const handleDragLeave = (e: React.DragEvent) => {
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-  };
-  
-  const handleDrop = (e: React.DragEvent) => {
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
     const files = e.dataTransfer.files;
     if (files.length > 0) {
       handleVideoFile(files[0]);
     }
-  };
-  
-  // Validar y procesar archivo de vídeo
+  }, []);
+
+  // Procesar archivo de vídeo
   const handleVideoFile = (file: File) => {
-    setVideoError(null);
+    setErrors([]);
     
     // Validar tipo
-    const validTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo', 'video/avi'];
+    const validTypes = ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'];
     if (!validTypes.includes(file.type) && !file.name.match(/\.(mp4|webm|mov|avi)$/i)) {
-      setVideoError('Formato no válido. Usa MP4, WebM, MOV o AVI.');
+      setErrors(['Formato no válido. Usa MP4, WebM, MOV o AVI.']);
       return;
     }
     
-    // Validar tamaño (100MB)
-    const maxSize = 100 * 1024 * 1024;
+    // Validar tamaño (500MB)
+    const maxSize = 500 * 1024 * 1024;
     if (file.size > maxSize) {
-      setVideoError(`El archivo es demasiado grande (${(file.size / 1024 / 1024).toFixed(1)}MB). Máximo 100MB.`);
+      setErrors([`El archivo es demasiado grande (${(file.size / 1024 / 1024).toFixed(1)}MB). Máximo 500MB.`]);
       return;
     }
     
@@ -309,198 +87,124 @@ export default function PiezaGratisPage() {
     setVideoPreview(URL.createObjectURL(file));
     
     // Simular progreso de carga
+    setIsUploading(true);
     setUploadProgress(0);
     const interval = setInterval(() => {
       setUploadProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval);
+          setIsUploading(false);
           return 100;
         }
-        return prev + 10;
+        return prev + Math.random() * 15;
       });
-    }, 100);
+    }, 200);
   };
-  
-  // Iniciar grabación de cámara
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment', width: { ideal: 1920 }, height: { ideal: 1080 } },
-        audio: true 
-      });
-      
-      setCameraStream(stream);
-      setShowCamera(true);
-      
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
-      }
-      
-      const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-      const chunks: Blob[] = [];
-      
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) {
-          chunks.push(e.data);
-        }
-      };
-      
-      recorder.onstop = () => {
-        const blob = new Blob(chunks, { type: 'video/webm' });
-        const file = new File([blob], `grabacion-${Date.now()}.webm`, { type: 'video/webm' });
-        handleVideoFile(file);
-        setShowCamera(false);
-        stream.getTracks().forEach(track => track.stop());
-        setCameraStream(null);
-      };
-      
-      setMediaRecorder(recorder);
-      recorder.start(1000);
-      setIsRecording(true);
-      setRecordingTime(0);
-      
-      recordingIntervalRef.current = setInterval(() => {
-        setRecordingTime(prev => prev + 1);
-      }, 1000);
-      
-    } catch (error) {
-      console.error('Error al acceder a la cámara:', error);
-      setVideoError('No se pudo acceder a la cámara. Verifica los permisos.');
-    }
-  };
-  
-  // Detener grabación
-  const stopRecording = () => {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-      setIsRecording(false);
-      if (recordingIntervalRef.current) {
-        clearInterval(recordingIntervalRef.current);
-      }
-    }
-  };
-  
-  // Cancelar grabación
-  const cancelRecording = () => {
-    if (cameraStream) {
-      cameraStream.getTracks().forEach(track => track.stop());
-      setCameraStream(null);
-    }
-    if (recordingIntervalRef.current) {
-      clearInterval(recordingIntervalRef.current);
-    }
-    setIsRecording(false);
-    setShowCamera(false);
-    setRecordingTime(0);
-  };
-  
+
   // Eliminar vídeo
   const removeVideo = () => {
-    if (videoPreview) {
-      URL.revokeObjectURL(videoPreview);
-    }
     setVideoFile(null);
     setVideoPreview(null);
     setUploadProgress(0);
-  };
-  
-  // Formatear tiempo
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-  
-  // Formatear tamaño de archivo
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024 * 1024) {
-      return `${(bytes / 1024).toFixed(1)} KB`;
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
-    return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
   };
-  
+
   // Validar paso actual
-  const validateStep = (step: number): boolean => {
-    const nuevosErrores: string[] = [];
+  const validateStep = () => {
+    const newErrors: string[] = [];
     
     if (step === 1) {
-      if (!formData.marca) nuevosErrores.push('Indica la marca del equipo');
-      if (!formData.modelo) nuevosErrores.push('Indica el modelo del equipo');
+      if (!videoFile) {
+        newErrors.push('Debes subir un vídeo de tu reparación');
+      }
     } else if (step === 2) {
-      if (!formData.error) nuevosErrores.push('Describe el error o problema');
-      if (!formData.pieza) nuevosErrores.push('Indica la pieza sustituida');
+      if (!formData.brand.trim()) newErrors.push('La marca es obligatoria');
+      if (!formData.model.trim()) newErrors.push('El modelo es obligatorio');
     } else if (step === 3) {
-      if (!videoFile) nuevosErrores.push('Debes subir o grabar un vídeo');
-    } else if (step === 4) {
-      if (!formData.nombre) nuevosErrores.push('Indica tu nombre');
-      if (!formData.email) nuevosErrores.push('Indica tu email');
-      if (!formData.aceptaTerminos) nuevosErrores.push('Debes aceptar los términos y condiciones');
+      if (!formData.name.trim()) newErrors.push('El nombre es obligatorio');
+      if (!formData.email.trim()) newErrors.push('El email es obligatorio');
+      if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+        newErrors.push('El email no es válido');
+      }
+      if (!formData.acceptTerms) newErrors.push('Debes aceptar los términos y condiciones');
     }
     
-    setErrores(nuevosErrores);
-    return nuevosErrores.length === 0;
+    setErrors(newErrors);
+    return newErrors.length === 0;
   };
-  
-  // Avanzar paso
+
+  // Navegar entre pasos
   const nextStep = () => {
-    if (validateStep(paso)) {
-      setPaso(prev => Math.min(prev + 1, 4));
-      setErrores([]);
+    if (validateStep()) {
+      setStep(prev => Math.min(prev + 1, 3));
+      setErrors([]);
     }
   };
-  
-  // Retroceder paso
+
   const prevStep = () => {
-    setPaso(prev => Math.max(prev - 1, 1));
-    setErrores([]);
+    setStep(prev => Math.max(prev - 1, 1));
+    setErrors([]);
   };
-  
+
   // Enviar formulario
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateStep(4)) {
-      setEnviado(true);
+    if (validateStep()) {
+      setSubmitted(true);
     }
   };
-  
+
   // Pantalla de éxito
-  if (enviado) {
+  if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 text-center">
-          <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-            <CheckCircle className="w-12 h-12 text-white" />
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">¡Reparación enviada!</h1>
-          <p className="text-gray-600 mb-6 leading-relaxed">
-            Hemos recibido tu vídeo correctamente. Nuestro equipo técnico lo revisará en las próximas <strong>48-72 horas</strong>.
-          </p>
-          <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-5 mb-6 border border-orange-100">
-            <div className="flex items-center gap-3 mb-3">
-              <Clock className="w-5 h-5 text-orange-600" />
-              <span className="font-semibold text-gray-900">Estado: Pendiente de revisión</span>
+      <>
+        <Header />
+        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 flex items-center justify-center p-4">
+          <div className="max-w-lg w-full text-center animate-fade-in">
+            {/* Icono de éxito animado */}
+            <div className="relative w-32 h-32 mx-auto mb-8">
+              <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-20"></div>
+              <div className="relative w-full h-full bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/30">
+                <CheckCircle className="w-16 h-16 text-white" />
+              </div>
             </div>
-            <p className="text-sm text-gray-600">
-              Te contactaremos por email a <strong>{formData.email}</strong> para informarte del resultado.
+            
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">¡Vídeo enviado!</h1>
+            <p className="text-xl text-gray-600 mb-8">
+              Nuestro equipo lo revisará en <strong className="text-green-600">48-72 horas</strong>
             </p>
+            
+            <div className="bg-white rounded-2xl p-6 shadow-xl mb-8">
+              <div className="flex items-center gap-4 text-left">
+                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Mail className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Te contactaremos por email</p>
+                  <p className="text-gray-500">{formData.email}</p>
+                </div>
+              </div>
+            </div>
+            
+            <Link 
+              href="/"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
+            >
+              Volver a la tienda
+            </Link>
           </div>
-          <Link 
-            href="/"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Volver a la tienda
-          </Link>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-orange-50/30">
+      <main className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/30">
         {/* Breadcrumbs */}
         <nav className="max-w-5xl mx-auto px-4 py-4">
           <ol className="flex items-center gap-2 text-sm text-gray-500">
@@ -510,726 +214,414 @@ export default function PiezaGratisPage() {
           </ol>
         </nav>
 
-      {/* Hero Section - Diseño Premium Limpio */}
-      <section className="py-12 sm:py-16 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          {/* Badge sutil */}
-          <div className="inline-flex items-center gap-2 text-orange-600 text-sm font-medium mb-6">
-            <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
-            Promoción activa
-          </div>
-          
-          {/* Título principal */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
-            Consigue tu pieza
-            <span className="block text-orange-600">completamente gratis</span>
-          </h1>
-          
-          {/* Descripción */}
-          <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto leading-relaxed mb-10">
-            Comparte un vídeo de tu reparación y te regalamos una pieza reacondicionada o te devolvemos el importe de tu compra.
-          </p>
-          
-          {/* CTA y garantías */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
-            <a href="#formulario" className="w-full sm:w-auto px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-orange-600/20 hover:shadow-xl hover:shadow-orange-600/30">
-              Empezar ahora
-            </a>
-            <Link href="/terminos-cesion-video" className="flex items-center gap-2 text-gray-500 hover:text-gray-700 font-medium transition-colors">
-              <Info className="w-4 h-4" />
-              Ver términos y condiciones
-            </Link>
-          </div>
-          
-          {/* Garantías en línea */}
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-gray-400">
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              Sin compromiso
-            </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              Validación en 48-72h
-            </span>
-            <span className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
-              +500 vídeos aprobados
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Beneficios - Diseño Premium Limpio */}
-      <section className="px-4 pb-16">
-        <div className="max-w-4xl mx-auto">
-          {/* Título de sección */}
-          <div className="text-center mb-12">
-            <p className="text-orange-600 font-semibold text-sm uppercase tracking-wider mb-3">Proceso simple</p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">¿Cómo funciona?</h2>
-          </div>
-          
-          {/* Timeline vertical en móvil, horizontal en desktop */}
-          <div className="relative">
-            {/* Línea conectora */}
-            <div className="hidden sm:block absolute top-8 left-[calc(16.67%-12px)] right-[calc(16.67%-12px)] h-0.5 bg-gradient-to-r from-orange-200 via-orange-300 to-orange-200"></div>
+        {/* Hero Section - Compacto y atractivo */}
+        <section className="py-8 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge animado */}
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-sm font-semibold px-4 py-2 rounded-full mb-6 animate-pulse">
+              <Gift className="w-4 h-4" />
+              Promoción Activa
+            </div>
             
-            <div className="grid sm:grid-cols-3 gap-8 sm:gap-6">
-              {/* Paso 1 */}
-              <div className="relative">
-                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
-                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
-                      <Video className="w-6 h-6 text-orange-600" />
-                    </div>
-                  </div>
-                  <div className="flex-1 sm:text-center">
-                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 1</span>
-                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Graba tu reparación</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">Mínimo 7 minutos mostrando el proceso completo de diagnóstico y reparación.</p>
-                  </div>
-                </div>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Consigue tu pieza <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-500">GRATIS</span>
+            </h1>
+            
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+              Sube un vídeo de tu reparación y te regalamos una pieza o te devolvemos el dinero
+            </p>
+
+            {/* Beneficios en cards */}
+            <div className="grid grid-cols-3 gap-4 max-w-xl mx-auto mb-12">
+              <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                <Clock className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-900">48-72h</p>
+                <p className="text-xs text-gray-500">Validación</p>
               </div>
-              
-              {/* Paso 2 */}
-              <div className="relative">
-                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
-                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
-                      <Shield className="w-6 h-6 text-orange-600" />
-                    </div>
-                  </div>
-                  <div className="flex-1 sm:text-center">
-                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 2</span>
-                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Validación profesional</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">Nuestro equipo técnico verifica la calidad y utilidad del contenido en 48-72h.</p>
-                  </div>
-                </div>
+              <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                <Sparkles className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-900">100%</p>
+                <p className="text-xs text-gray-500">Gratis</p>
               </div>
-              
-              {/* Paso 3 */}
-              <div className="relative">
-                <div className="flex sm:flex-col items-start sm:items-center gap-4 sm:gap-0">
-                  <div className="relative z-10 w-16 h-16 bg-white rounded-2xl border-2 border-orange-100 flex items-center justify-center shadow-sm sm:mb-6">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl flex items-center justify-center">
-                      <Gift className="w-6 h-6 text-orange-600" />
-                    </div>
-                  </div>
-                  <div className="flex-1 sm:text-center">
-                    <span className="inline-block text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full mb-2">Paso 3</span>
-                    <h3 className="font-semibold text-gray-900 text-lg mb-2">Recibe tu recompensa</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed">Pieza reacondicionada gratis o reembolso completo de tu compra anterior.</p>
-                  </div>
-                </div>
+              <div className="bg-white rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
+                <Shield className="w-8 h-8 text-orange-500 mx-auto mb-2" />
+                <p className="text-sm font-medium text-gray-900">Garantía</p>
+                <p className="text-xs text-gray-500">1 año</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Indicador de pasos - Diseño Premium Minimalista */}
-      <section className="px-4 pb-8" id="formulario">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center justify-between">
-            {[
-              { num: 1, label: 'Equipo' },
-              { num: 2, label: 'Problema' },
-              { num: 3, label: 'Vídeo' },
-              { num: 4, label: 'Enviar' }
-            ].map((step, index) => (
-              <div key={step.num} className="flex items-center flex-1">
-                <div className="flex flex-col items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
-                    paso > step.num 
-                      ? 'bg-green-500 text-white' 
-                      : paso === step.num
-                        ? 'bg-orange-600 text-white ring-4 ring-orange-100'
-                        : 'bg-gray-100 text-gray-400'
-                  }`}>
-                    {paso > step.num ? (
-                      <CheckCircle className="w-5 h-5" />
-                    ) : (
-                      step.num
-                    )}
+        {/* Formulario principal */}
+        <section className="pb-16 px-4">
+          <div className="max-w-2xl mx-auto">
+            {/* Progress Steps */}
+            <div className="flex items-center justify-center gap-2 mb-8">
+              {[1, 2, 3].map((s) => (
+                <div key={s} className="flex items-center">
+                  <div 
+                    className={`w-10 h-10 rounded-full flex items-center justify-center font-bold transition-all duration-300 ${
+                      step >= s 
+                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg shadow-orange-500/30' 
+                        : 'bg-gray-200 text-gray-500'
+                    }`}
+                  >
+                    {step > s ? <CheckCircle className="w-5 h-5" /> : s}
                   </div>
-                  <span className={`text-xs mt-2 font-medium hidden sm:block ${
-                    paso >= step.num ? 'text-gray-700' : 'text-gray-400'
-                  }`}>
-                    {step.label}
-                  </span>
+                  {s < 3 && (
+                    <div className={`w-16 md:w-24 h-1 mx-2 rounded transition-all duration-300 ${
+                      step > s ? 'bg-orange-500' : 'bg-gray-200'
+                    }`} />
+                  )}
                 </div>
-                {index < 3 && (
-                  <div className={`flex-1 h-0.5 mx-2 sm:mx-4 transition-colors duration-300 ${
-                    paso > step.num ? 'bg-green-500' : 'bg-gray-200'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              ))}
+            </div>
 
-      {/* Formulario */}
-      <section className="px-4 pb-16">
-        <div className="max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 overflow-hidden">
-            
+            {/* Step Labels */}
+            <div className="flex justify-between text-sm text-gray-500 mb-8 px-4">
+              <span className={step >= 1 ? 'text-orange-600 font-medium' : ''}>Vídeo</span>
+              <span className={step >= 2 ? 'text-orange-600 font-medium' : ''}>Equipo</span>
+              <span className={step >= 3 ? 'text-orange-600 font-medium' : ''}>Datos</span>
+            </div>
+
             {/* Errores */}
-            {errores.length > 0 && (
-              <div className="bg-red-50 border-b border-red-100 p-4">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-red-800 mb-1">Por favor, corrige los siguientes errores:</p>
-                    <ul className="list-disc list-inside text-sm text-red-600 space-y-1">
-                      {errores.map((error, i) => (
-                        <li key={i}>{error}</li>
-                      ))}
-                    </ul>
+            {errors.length > 0 && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6 animate-shake">
+                {errors.map((error, i) => (
+                  <div key={i} className="flex items-center gap-2 text-red-600 text-sm">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    {error}
                   </div>
-                </div>
+                ))}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="p-6 sm:p-8">
-              
-              {/* Paso 1: Datos del equipo */}
-              {paso === 1 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Datos del equipo</h2>
-                    <p className="text-gray-600">Indica la marca y modelo del equipo reparado</p>
-                  </div>
-                  
-                  {/* Marca con autocompletado */}
-                  <div className="relative">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Marca *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.marca}
-                      onChange={(e) => handleMarcaChange(e.target.value)}
-                      onFocus={() => {
-                        if (formData.marca.length === 0) {
-                          setMarcasSugeridas(todasLasMarcas.slice(0, 10));
-                          setShowMarcas(true);
-                        }
-                      }}
-                      onBlur={() => setTimeout(() => setShowMarcas(false), 200)}
-                      placeholder="Ej: Vaillant, Daikin, Junkers..."
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                    />
-                    {showMarcas && marcasSugeridas.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
-                        {marcasSugeridas.map((marca, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => {
-                              setFormData({ ...formData, marca, modelo: '' });
-                              setShowMarcas(false);
-                            }}
-                            className="w-full px-4 py-3 text-left hover:bg-orange-50 text-gray-700 hover:text-orange-700 transition-colors border-b border-gray-100 last:border-0"
-                          >
-                            {marca}
-                          </button>
-                        ))}
+            {/* Card del formulario */}
+            <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 transition-all duration-500">
+              <form onSubmit={handleSubmit}>
+                
+                {/* PASO 1: Subir vídeo */}
+                {step === 1 && (
+                  <div className="animate-fade-in">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <Video className="w-6 h-6 text-orange-600" />
                       </div>
-                    )}
-                  </div>
-                  
-                  {/* Modelo con autocompletado */}
-                  <div className="relative">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Modelo *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.modelo}
-                      onChange={(e) => handleModeloChange(e.target.value)}
-                      onFocus={() => {
-                        const modelos = modelosPorMarca[formData.marca] || [];
-                        if (modelos.length > 0) {
-                          setModelosSugeridos(modelos);
-                          setShowModelos(true);
-                        }
-                      }}
-                      onBlur={() => setTimeout(() => setShowModelos(false), 200)}
-                      placeholder="Ej: EcoTec Plus, Sensira, Cerapur..."
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                    />
-                    {showModelos && modelosSugeridos.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
-                        {modelosSugeridos.map((modelo, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => {
-                              setFormData({ ...formData, modelo });
-                              setShowModelos(false);
-                            }}
-                            className="w-full px-4 py-3 text-left hover:bg-orange-50 text-gray-700 hover:text-orange-700 transition-colors border-b border-gray-100 last:border-0"
-                          >
-                            {modelo}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              {/* Paso 2: Error y pieza */}
-              {paso === 2 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Problema y solución</h2>
-                    <p className="text-gray-600">Describe el error y la pieza que has sustituido</p>
-                  </div>
-                  
-                  {/* Error con autocompletado */}
-                  <div className="relative">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Error o síntoma *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.error}
-                      onChange={(e) => handleErrorChange(e.target.value)}
-                      onFocus={() => {
-                        setErroresSugeridos(todosLosErrores.slice(0, 8));
-                        setShowErrores(true);
-                      }}
-                      onBlur={() => setTimeout(() => setShowErrores(false), 200)}
-                      placeholder="Ej: Error F28, No enciende, No enfría..."
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                    />
-                    {showErrores && erroresSugeridos.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
-                        {erroresSugeridos.map((error, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => {
-                              setFormData({ ...formData, error });
-                              setShowErrores(false);
-                            }}
-                            className="w-full px-4 py-3 text-left hover:bg-orange-50 text-gray-700 hover:text-orange-700 transition-colors border-b border-gray-100 last:border-0"
-                          >
-                            {error}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Pieza con autocompletado */}
-                  <div className="relative">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Pieza sustituida *
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.pieza}
-                      onChange={(e) => handlePiezaChange(e.target.value)}
-                      onFocus={() => {
-                        setPiezasSugeridas(todasLasPiezas.slice(0, 10));
-                        setShowPiezas(true);
-                      }}
-                      onBlur={() => setTimeout(() => setShowPiezas(false), 200)}
-                      placeholder="Ej: Placa electrónica, Válvula de gas..."
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                    />
-                    {showPiezas && piezasSugeridas.length > 0 && (
-                      <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
-                        {piezasSugeridas.map((pieza, i) => (
-                          <button
-                            key={i}
-                            type="button"
-                            onClick={() => {
-                              setFormData({ ...formData, pieza });
-                              setShowPiezas(false);
-                            }}
-                            className="w-full px-4 py-3 text-left hover:bg-orange-50 text-gray-700 hover:text-orange-700 transition-colors border-b border-gray-100 last:border-0"
-                          >
-                            {pieza}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Descripción con micrófono integrado */}
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Descripción adicional (opcional)
-                    </label>
-                    <div className="relative">
-                      <textarea
-                        ref={textareaRef}
-                        value={formData.descripcion}
-                        onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
-                        placeholder="Describe brevemente el proceso de diagnóstico y reparación... o pulsa el micrófono para dictar"
-                        rows={4}
-                        className="w-full px-4 py-3.5 pr-20 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base resize-none"
-                      />
-                      {/* Botón de micrófono grande y atractivo */}
-                      {speechSupported && (
-                        <button
-                          type="button"
-                          onClick={handleVoiceInput}
-                          className={`absolute right-3 top-3 w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 ${
-                            isListening 
-                              ? 'bg-gradient-to-br from-red-500 to-red-600 animate-pulse' 
-                              : 'bg-gradient-to-br from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600'
-                          }`}
-                          title={isListening ? 'Escuchando...' : 'Pulsa para dictar'}
-                        >
-                          {isListening ? (
-                            <MicOff className="w-7 h-7 text-white" />
-                          ) : (
-                            <Mic className="w-7 h-7 text-white" />
-                          )}
-                        </button>
-                      )}
-                    </div>
-                    {/* Indicador de estado del micrófono */}
-                    {isListening && (
-                      <div className="mt-2 flex items-center gap-2 text-orange-600">
-                        <div className="flex gap-1">
-                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                          <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
-                        </div>
-                        <span className="text-sm font-medium">Escuchando... habla ahora</span>
-                      </div>
-                    )}
-                    {voiceError && (
-                      <div className="mt-2 flex items-center gap-2 text-red-600">
-                        <AlertCircle className="w-4 h-4" />
-                        <span className="text-sm">{voiceError}</span>
-                      </div>
-                    )}
-                    {!speechSupported && (
-                      <p className="mt-2 text-xs text-gray-500">
-                        Tu navegador no soporta dictado por voz. Usa Chrome o Edge para esta función.
-                      </p>
-                    )}
-                  </div>
-                </div>
-              )}
-              
-              {/* Paso 3: Vídeo */}
-              {paso === 3 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Vídeo de la reparación</h2>
-                    <p className="text-gray-600">Sube o graba un vídeo mostrando el proceso completo</p>
-                  </div>
-                  
-                  {/* Vista previa de cámara */}
-                  {showCamera && (
-                    <div className="relative rounded-2xl overflow-hidden bg-black">
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        muted
-                        playsInline
-                        className="w-full aspect-video object-cover"
-                      />
-                      <div className="absolute top-4 left-4 flex items-center gap-2 bg-red-600 text-white px-3 py-1.5 rounded-full text-sm font-medium">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                        REC {formatTime(recordingTime)}
-                      </div>
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4">
-                        <button
-                          type="button"
-                          onClick={cancelRecording}
-                          className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all"
-                        >
-                          <X className="w-6 h-6" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={stopRecording}
-                          className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-all shadow-lg"
-                        >
-                          <Square className="w-6 h-6" />
-                        </button>
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-900">Sube tu vídeo</h2>
+                        <p className="text-sm text-gray-500">Mínimo 5 minutos mostrando la reparación</p>
                       </div>
                     </div>
-                  )}
-                  
-                  {/* Vista previa del vídeo subido */}
-                  {videoPreview && !showCamera && (
-                    <div className="relative rounded-2xl overflow-hidden bg-gray-900">
-                      <video
-                        src={videoPreview}
-                        controls
-                        className="w-full aspect-video object-contain"
-                      />
-                      <button
-                        type="button"
-                        onClick={removeVideo}
-                        className="absolute top-3 right-3 w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white hover:bg-red-700 transition-all shadow-lg"
+
+                    {!videoFile ? (
+                      <div
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        onDrop={handleDrop}
+                        onClick={() => fileInputRef.current?.click()}
+                        className={`relative border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all duration-300 ${
+                          isDragging 
+                            ? 'border-orange-500 bg-orange-50 scale-[1.02]' 
+                            : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/50'
+                        }`}
                       >
-                        <X className="w-5 h-5" />
-                      </button>
-                      {uploadProgress < 100 && (
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-700">
-                          <div 
-                            className="h-full bg-orange-500 transition-all"
-                            style={{ width: `${uploadProgress}%` }}
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept="video/*"
+                          onChange={(e) => e.target.files?.[0] && handleVideoFile(e.target.files[0])}
+                          className="hidden"
+                        />
+                        
+                        <div className={`w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center transition-all duration-300 ${
+                          isDragging ? 'bg-orange-500 scale-110' : 'bg-gray-100'
+                        }`}>
+                          <Upload className={`w-10 h-10 transition-colors ${isDragging ? 'text-white' : 'text-gray-400'}`} />
+                        </div>
+                        
+                        <p className="text-lg font-semibold text-gray-900 mb-2">
+                          {isDragging ? 'Suelta el vídeo aquí' : 'Arrastra tu vídeo aquí'}
+                        </p>
+                        <p className="text-gray-500 mb-4">o haz clic para seleccionar</p>
+                        
+                        <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-400">
+                          <span className="px-2 py-1 bg-gray-100 rounded">MP4</span>
+                          <span className="px-2 py-1 bg-gray-100 rounded">WebM</span>
+                          <span className="px-2 py-1 bg-gray-100 rounded">MOV</span>
+                          <span className="px-2 py-1 bg-gray-100 rounded">Máx. 500MB</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative rounded-2xl overflow-hidden bg-black">
+                        {/* Preview del vídeo */}
+                        <video
+                          ref={videoRef}
+                          src={videoPreview || ''}
+                          className="w-full aspect-video object-contain"
+                          controls
+                        />
+                        
+                        {/* Barra de progreso */}
+                        {isUploading && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-black/50 p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="flex-1 h-2 bg-white/30 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-orange-500 rounded-full transition-all duration-300"
+                                  style={{ width: `${uploadProgress}%` }}
+                                />
+                              </div>
+                              <span className="text-white text-sm font-medium">{Math.round(uploadProgress)}%</span>
+                            </div>
+                          </div>
+                        )}
+                        
+                        {/* Botón eliminar */}
+                        <button
+                          type="button"
+                          onClick={removeVideo}
+                          className="absolute top-4 right-4 w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                        
+                        {/* Info del archivo */}
+                        {!isUploading && (
+                          <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                            <FileVideo className="w-4 h-4" />
+                            <span className="text-sm">{videoFile.name}</span>
+                            <span className="text-xs text-gray-300">({(videoFile.size / 1024 / 1024).toFixed(1)}MB)</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Tips */}
+                    <div className="mt-6 p-4 bg-blue-50 rounded-xl">
+                      <p className="text-sm font-medium text-blue-900 mb-2">💡 Consejos para un buen vídeo:</p>
+                      <ul className="text-sm text-blue-700 space-y-1">
+                        <li>• Muestra claramente el problema y la solución</li>
+                        <li>• Graba en horizontal para mejor calidad</li>
+                        <li>• Asegúrate de tener buena iluminación</li>
+                      </ul>
+                    </div>
+                  </div>
+                )}
+
+                {/* PASO 2: Datos del equipo */}
+                {step === 2 && (
+                  <div className="animate-fade-in">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <Film className="w-6 h-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-900">Datos del equipo</h2>
+                        <p className="text-sm text-gray-500">Indica qué equipo has reparado</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Marca del equipo *
+                        </label>
+                        <input
+                          type="text"
+                          name="brand"
+                          value={formData.brand}
+                          onChange={handleChange}
+                          placeholder="Ej: Vaillant, Daikin, Junkers..."
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Modelo *
+                        </label>
+                        <input
+                          type="text"
+                          name="model"
+                          value={formData.model}
+                          onChange={handleChange}
+                          placeholder="Ej: EcoTec Plus, Sensira..."
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Descripción de la reparación
+                        </label>
+                        <textarea
+                          name="description"
+                          value={formData.description}
+                          onChange={handleChange}
+                          placeholder="Describe brevemente qué problema tenía y cómo lo solucionaste..."
+                          rows={4}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all resize-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* PASO 3: Datos de contacto */}
+                {step === 3 && (
+                  <div className="animate-fade-in">
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                        <User className="w-6 h-6 text-orange-600" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-bold text-gray-900">Tus datos</h2>
+                        <p className="text-sm text-gray-500">Para enviarte tu recompensa</p>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Nombre completo *
+                        </label>
+                        <div className="relative">
+                          <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            placeholder="Tu nombre"
+                            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
                           />
                         </div>
-                      )}
-                      {videoFile && (
-                        <div className="absolute bottom-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur-sm text-white px-3 py-1.5 rounded-lg text-sm">
-                          <FileVideo className="w-4 h-4" />
-                          {formatFileSize(videoFile.size)}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Email *
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            placeholder="tu@email.com"
+                            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                          />
                         </div>
-                      )}
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Teléfono (opcional)
+                        </label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            placeholder="612 345 678"
+                            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <label className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                        <input
+                          type="checkbox"
+                          name="acceptTerms"
+                          checked={formData.acceptTerms}
+                          onChange={handleChange}
+                          className="w-5 h-5 mt-0.5 text-orange-500 focus:ring-orange-500 rounded"
+                        />
+                        <span className="text-sm text-gray-600">
+                          Acepto los{' '}
+                          <Link href="/terminos-cesion-video" className="text-orange-600 hover:underline">
+                            términos de cesión de derechos
+                          </Link>
+                          {' '}y la{' '}
+                          <Link href="/politica-privacidad" className="text-orange-600 hover:underline">
+                            política de privacidad
+                          </Link>
+                        </span>
+                      </label>
                     </div>
-                  )}
-                  
-                  {/* Zona de subida */}
-                  {!videoPreview && !showCamera && (
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                        isDragging 
-                          ? 'border-orange-500 bg-orange-50' 
-                          : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/50'
-                      }`}
+                  </div>
+                )}
+
+                {/* Navegación */}
+                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+                  {step > 1 ? (
+                    <button
+                      type="button"
+                      onClick={prevStep}
+                      className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-gray-900 font-medium transition-colors"
                     >
-                      <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-amber-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <Upload className="w-8 h-8 text-orange-600" />
-                      </div>
-                      <p className="text-lg font-semibold text-gray-900 mb-2">
-                        Arrastra tu vídeo aquí
-                      </p>
-                      <p className="text-gray-500 mb-6">
-                        o elige una opción
-                      </p>
-                      
-                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          className="inline-flex items-center gap-2 bg-white border-2 border-gray-200 text-gray-700 px-5 py-3 rounded-xl font-medium hover:border-orange-400 hover:text-orange-700 transition-all"
-                        >
-                          <FileVideo className="w-5 h-5" />
-                          Seleccionar archivo
-                        </button>
-                        <button
-                          type="button"
-                          onClick={startRecording}
-                          className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-5 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg"
-                        >
-                          <Camera className="w-5 h-5" />
-                          Grabar ahora
-                        </button>
-                      </div>
-                      
-                      <input
-                        ref={fileInputRef}
-                        type="file"
-                        accept="video/mp4,video/webm,video/quicktime,video/x-msvideo,.mp4,.webm,.mov,.avi"
-                        onChange={(e) => e.target.files?.[0] && handleVideoFile(e.target.files[0])}
-                        className="hidden"
-                      />
-                    </div>
+                      <ChevronLeft className="w-5 h-5" />
+                      Anterior
+                    </button>
+                  ) : (
+                    <div />
                   )}
-                  
-                  {/* Error de vídeo */}
-                  {videoError && (
-                    <div className="flex items-center gap-3 bg-red-50 text-red-700 p-4 rounded-xl">
-                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                      <p className="text-sm">{videoError}</p>
-                    </div>
+
+                  {step < 3 ? (
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                    >
+                      Siguiente
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl hover:scale-105"
+                    >
+                      <Gift className="w-5 h-5" />
+                      Enviar y conseguir pieza
+                    </button>
                   )}
-                  
-                  {/* Requisitos del vídeo */}
-                  <div className="bg-gradient-to-r from-slate-50 to-gray-50 rounded-2xl p-5 border border-gray-100">
-                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                      <Info className="w-5 h-5 text-orange-600" />
-                      Requisitos del vídeo
-                    </h4>
-                    <div className="grid sm:grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Clock className="w-4 h-4 text-orange-500" />
-                        Duración mínima: 7 minutos
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <HardDrive className="w-4 h-4 text-orange-500" />
-                        Tamaño máximo: 100 MB
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Video className="w-4 h-4 text-orange-500" />
-                        Formatos: MP4, WebM, MOV, AVI
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600">
-                        <Camera className="w-4 h-4 text-orange-500" />
-                        Resolución mínima: 720p
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              )}
-              
-              {/* Paso 4: Datos de contacto y envío */}
-              {paso === 4 && (
-                <div className="space-y-6">
-                  <div className="text-center mb-8">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Datos de contacto</h2>
-                    <p className="text-gray-600">Indica cómo podemos contactarte</p>
-                  </div>
-                  
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Nombre completo *
-                      </label>
-                      <input
-                        type="text"
-                        value={formData.nombre}
-                        onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                        placeholder="Tu nombre"
-                        className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Teléfono (opcional)
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.telefono}
-                        onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                        placeholder="612 345 678"
-                        className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email *
-                    </label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="tu@email.com"
-                      className="w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-base"
-                    />
-                  </div>
-                  
-                  {/* Resumen */}
-                  <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-5 border border-orange-100">
-                    <h4 className="font-semibold text-gray-900 mb-3">Resumen de tu envío</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Equipo:</span>
-                        <span className="font-medium text-gray-900">{formData.marca} {formData.modelo}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Error:</span>
-                        <span className="font-medium text-gray-900">{formData.error}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Pieza:</span>
-                        <span className="font-medium text-gray-900">{formData.pieza}</span>
-                      </div>
-                      {videoFile && (
-                        <div className="flex justify-between">
-                          <span className="text-gray-600">Vídeo:</span>
-                          <span className="font-medium text-gray-900">{formatFileSize(videoFile.size)}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {/* Términos y condiciones */}
-                  <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
-                    <label className="flex items-start gap-3 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={formData.aceptaTerminos}
-                        onChange={(e) => setFormData({ ...formData, aceptaTerminos: e.target.checked })}
-                        className="mt-1 w-5 h-5 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
-                      />
-                      <span className="text-sm text-gray-700 leading-relaxed">
-                        He leído y acepto los{' '}
-                        <Link 
-                          href="/terminos-cesion-video" 
-                          target="_blank"
-                          className="text-orange-600 hover:underline font-medium inline-flex items-center gap-1"
-                        >
-                          Términos y Condiciones de Cesión de Derechos
-                          <ExternalLink className="w-3 h-3" />
-                        </Link>
-                        , incluyendo la cesión de derechos de autor del vídeo a Uniclima Solutions y los requisitos técnicos del contenido.
-                      </span>
-                    </label>
-                  </div>
-                </div>
-              )}
-              
-              {/* Navegación */}
-              <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
-                {paso > 1 ? (
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    className="flex items-center gap-2 text-gray-600 hover:text-orange-600 font-medium transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    Anterior
-                  </button>
-                ) : (
-                  <div />
-                )}
-                
-                {paso < 4 ? (
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-orange-600 hover:to-orange-700 transition-all shadow-lg hover:shadow-xl"
-                  >
-                    Siguiente
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl"
-                  >
-                    <Gift className="w-5 h-5" />
-                    Enviar para validación
-                  </button>
-                )}
-              </div>
-            </form>
+              </form>
+            </div>
+
+            {/* Enlace a términos */}
+            <p className="text-center text-sm text-gray-500 mt-6">
+              ¿Dudas?{' '}
+              <Link href="/terminos-cesion-video" className="text-orange-600 hover:underline">
+                Ver condiciones completas
+              </Link>
+            </p>
           </div>
-          
-          {/* Enlace a términos */}
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Al participar aceptas nuestra{' '}
-            <Link href="/politica-privacidad" className="text-orange-600 hover:underline">
-              política de privacidad
-            </Link>
-            {' '}y los{' '}
-            <Link href="/terminos-cesion-video" className="text-orange-600 hover:underline">
-              términos de cesión de derechos
-            </Link>
-          </p>
-        </div>
-      </section>
-      </div>
+        </section>
+      </main>
       <Footer />
+
+      {/* Estilos de animación */}
+      <style jsx global>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.4s ease-out;
+        }
+        .animate-shake {
+          animation: shake 0.3s ease-in-out;
+        }
+      `}</style>
     </>
   );
 }
