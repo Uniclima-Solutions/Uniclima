@@ -100,7 +100,7 @@ export default function BrandScroller() {
   const displayBrands = [...CAROUSEL_BRANDS, ...CAROUSEL_BRANDS];
 
   return (
-    <section className="py-6 sm:py-8 md:py-10 bg-[#1a1a1a]">
+    <section className="py-6 sm:py-8 md:py-10 bg-white">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div 
           className="relative"
@@ -116,7 +116,7 @@ export default function BrandScroller() {
           {/* Contenedor de logos */}
           <div
             ref={scrollContainerRef}
-            className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10 overflow-x-auto mx-10 sm:mx-12 md:mx-14 py-4"
+            className="flex items-center gap-2 sm:gap-3 md:gap-4 overflow-x-auto mx-10 sm:mx-12 md:mx-14 py-4"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {displayBrands.map((brand, idx) => (
@@ -154,13 +154,13 @@ function BrandCard({ brand }: BrandCardProps) {
   return (
     <Link
       href={`/marca/${brand.slug}`}
-      className="group flex-shrink-0 flex items-center justify-center p-2 sm:p-3"
+      className="group flex-shrink-0 flex items-center justify-center p-1 sm:p-2"
       title={`Ver repuestos de ${brand.name}`}
     >
       <img
         src={brand.logo}
         alt={brand.name}
-        className="object-contain w-20 h-10 sm:w-26 sm:h-13 md:w-32 md:h-16 lg:w-36 lg:h-18 filter grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-300 ease-in-out"
+        className="object-contain w-28 h-14 sm:w-36 sm:h-18 md:w-44 md:h-22 lg:w-52 lg:h-26 filter grayscale brightness-75 hover:grayscale-0 hover:brightness-100 transition-all duration-300 ease-in-out"
         draggable={false}
         loading="lazy"
         style={{
