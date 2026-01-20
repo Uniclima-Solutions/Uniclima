@@ -9,6 +9,12 @@
  * - Title: "Repuestos Aire Acondicionado | Splits y Climatización | Uniclima"
  * - H1: "Repuestos de Aire Acondicionado: Splits, Multisplits y Climatización"
  * - Intención: Transaccional + Comercial
+ * 
+ * UI/UX Mejorado:
+ * - Animaciones suaves y microinteracciones
+ * - Bordes redondeados consistentes
+ * - Transiciones fluidas
+ * - Efectos hover refinados
  */
 
 import { useState } from "react";
@@ -25,7 +31,11 @@ import {
   ArrowRight,
   Phone,
   CheckCircle,
-  Thermometer
+  Thermometer,
+  Sparkles,
+  Package,
+  BadgeCheck,
+  Wind
 } from "lucide-react";
 import { JsonLd, createBreadcrumbSchema, createCollectionPageSchema, UNICLIMA_ORGANIZATION } from "@/components/JsonLd";
 
@@ -66,22 +76,31 @@ const waveShapes = [
   "M0,45 C50,20 100,20 150,35 C200,50 250,50 300,35 C350,20 400,20 400,45 L400,100 L0,100 Z",
 ];
 
-// Componente de tarjeta de categoría
+// Componente de tarjeta de categoría con animaciones mejoradas
 function CategoryCard({ category, index }: { category: typeof repuestosAire[0]; index: number }) {
   const waveIndex = index % waveShapes.length;
   const wavePath = waveShapes[waveIndex];
   
   return (
-    <Link href={`/c/aire-acondicionado/${category.slug}`} className="group">
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 relative aspect-square border border-gray-100">
+    <Link href={`/c/aire-acondicionado/${category.slug}`} className="group block">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 ease-out relative aspect-square border border-gray-100/80 hover:border-blue-200 transform hover:-translate-y-1">
+        {/* Badge popular con animación */}
         {category.popular && (
-          <div className="absolute top-2 right-2 z-30 bg-blue-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-            Popular
+          <div className="absolute top-2.5 right-2.5 z-30 bg-gradient-to-r from-blue-500 to-blue-600 text-white text-[9px] font-bold px-2.5 py-1 rounded-full shadow-lg animate-pulse">
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3 h-3" />
+              Popular
+            </span>
           </div>
         )}
         
+        {/* Banner con forma de onda */}
         <div className="absolute bottom-0 left-0 right-0 h-[42%]">
-          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 100" preserveAspectRatio="none">
+          <svg 
+            className="absolute inset-0 w-full h-full transition-transform duration-500 group-hover:scale-105" 
+            viewBox="0 0 400 100" 
+            preserveAspectRatio="none"
+          >
             <defs>
               <linearGradient id={`gradient-aire-${category.slug}`} x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#60a5fa" />
@@ -89,45 +108,80 @@ function CategoryCard({ category, index }: { category: typeof repuestosAire[0]; 
                 <stop offset="100%" stopColor="#1d4ed8" />
               </linearGradient>
             </defs>
-            <path d={wavePath} fill={`url(#gradient-aire-${category.slug})`} />
+            <path d={wavePath} fill={`url(#gradient-aire-${category.slug})`} className="transition-all duration-500" />
           </svg>
         </div>
         
-        <div className="absolute inset-0 flex items-center justify-center p-2 z-10">
+        {/* Imagen con animación suave */}
+        <div className="absolute inset-0 flex items-center justify-center p-3 z-10">
           <img
             src={category.image}
             alt={category.fullName}
-            className="w-full h-full object-contain drop-shadow-xl max-w-[88%] max-h-[78%] group-hover:scale-110 transition-transform duration-300"
+            className="w-full h-full object-contain drop-shadow-xl max-w-[85%] max-h-[75%] transition-all duration-500 ease-out group-hover:scale-110 group-hover:drop-shadow-2xl"
             loading="lazy"
           />
         </div>
         
-        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3 px-2">
-          <h3 className="text-white font-bold text-[10px] sm:text-xs leading-tight text-center drop-shadow-lg uppercase tracking-wide">
+        {/* Texto con mejor tipografía */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 pb-3.5 px-2">
+          <h3 className="text-white font-bold text-[10px] sm:text-xs leading-tight text-center drop-shadow-lg uppercase tracking-wider">
             {category.name}
           </h3>
         </div>
       </div>
-      <p className="text-[11px] text-gray-500 text-center mt-1.5 font-medium">
+      {/* Contador con animación */}
+      <p className="text-[11px] text-gray-500 text-center mt-2 font-medium transition-colors duration-300 group-hover:text-blue-600">
         {category.count} productos
       </p>
     </Link>
   );
 }
 
+// Componente de tarjeta de marca con animaciones mejoradas
 function BrandCard({ marca }: { marca: typeof marcas[0] }) {
   return (
     <Link 
       href={`/c/aire-acondicionado?marca=${marca.slug}`}
-      className="group bg-white rounded-xl p-2 sm:p-3 md:p-4 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 flex items-center justify-center aspect-[4/3]"
+      className="group bg-white rounded-2xl p-3 sm:p-4 border border-gray-100 hover:border-blue-300 shadow-sm hover:shadow-xl transition-all duration-400 ease-out flex items-center justify-center aspect-[4/3] transform hover:-translate-y-0.5"
     >
-      {/* Logo a todo color */}
       <img 
         src={marca.logo} 
         alt={marca.name}
-        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+        className="w-full h-full object-contain transition-all duration-400 ease-out group-hover:scale-110"
         loading="lazy"
       />
+    </Link>
+  );
+}
+
+// Componente de stat card con animación
+function StatCard({ value, label, icon: Icon }: { value: string; label: string; icon?: any }) {
+  return (
+    <div className="bg-white/15 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
+      <div className="flex items-center gap-3">
+        {Icon && (
+          <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <Icon className="w-5 h-5 text-white" />
+          </div>
+        )}
+        <div>
+          <div className="text-2xl font-black text-white">{value}</div>
+          <div className="text-blue-200 text-sm font-medium">{label}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Componente de tipo de equipo
+function EquipmentTypeCard({ href, icon: Icon, title, subtitle }: { href: string; icon: any; title: string; subtitle: string }) {
+  return (
+    <Link href={href} className="group bg-white rounded-2xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-xl transition-all duration-400 transform hover:-translate-y-1">
+      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center mb-4 group-hover:from-blue-500 group-hover:to-blue-600 transition-all duration-400">
+        <Icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors duration-400" />
+      </div>
+      <h3 className="font-bold text-gray-900 mb-1 text-lg">{title}</h3>
+      <p className="text-sm text-gray-500">{subtitle}</p>
     </Link>
   );
 }
@@ -135,6 +189,7 @@ function BrandCard({ marca }: { marca: typeof marcas[0] }) {
 export default function RepuestosAireAcondicionado() {
   const [busqueda, setBusqueda] = useState("");
   const [mostrarTodas, setMostrarTodas] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
   
   const totalProductos = repuestosAire.reduce((acc, cat) => acc + cat.count, 0);
   const categoriasPopulares = repuestosAire.filter(c => c.popular);
@@ -162,113 +217,111 @@ export default function RepuestosAireAcondicionado() {
       <JsonLd data={[UNICLIMA_ORGANIZATION, breadcrumbSchema, collectionSchema]} />
       
       <Header />
-      <main className="pt-20 lg:pt-28 bg-gray-50 min-h-screen">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 text-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
-            <nav className="flex items-center gap-2 text-blue-100 text-sm mb-6">
-              <Link href="/" className="hover:text-white transition-colors">Inicio</Link>
-              <ChevronRight className="w-4 h-4" />
-              <span className="text-white font-medium">Repuestos Aire Acondicionado</span>
+      <main className="pt-20 lg:pt-28 bg-gradient-to-b from-gray-50 to-white min-h-screen">
+        {/* Hero Section con diseño mejorado */}
+        <section className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 text-white relative overflow-hidden">
+          {/* Elementos decorativos de fondo */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl"></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20 relative z-10">
+            {/* Breadcrumbs con animación */}
+            <nav className="flex items-center gap-2 text-blue-100 text-sm mb-8">
+              <Link href="/" className="hover:text-white transition-colors duration-300 hover:underline underline-offset-4">
+                Inicio
+              </Link>
+              <ChevronRight className="w-4 h-4 animate-pulse" />
+              <span className="text-white font-semibold">Repuestos Aire Acondicionado</span>
             </nav>
             
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
-                    <Snowflake className="w-7 h-7 text-white" />
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+              <div className="max-w-2xl">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+                    <Snowflake className="w-8 h-8 text-white" />
                   </div>
-                  <h1 className="text-3xl lg:text-4xl font-black">
-                    Repuestos de Aire Acondicionado: Splits y Climatización
+                  <h1 className="text-3xl lg:text-5xl font-black leading-tight">
+                    Repuestos de Aire Acondicionado
                   </h1>
                 </div>
-                <p className="text-blue-100 text-lg max-w-2xl">
-                  Más de {totalProductos.toLocaleString()} referencias de repuestos para Daikin, Mitsubishi, Fujitsu, LG y más marcas. 
-                  Placas, turbinas, motores y componentes con envío 24-48h y garantía 1 año.
+                <p className="text-blue-100 text-lg lg:text-xl leading-relaxed">
+                  Más de <span className="text-white font-bold">{totalProductos.toLocaleString()}</span> referencias de repuestos para 
+                  <span className="text-white font-semibold"> Daikin, Mitsubishi, Fujitsu, LG</span> y más marcas.
                 </p>
               </div>
               
-              <div className="w-full lg:w-96">
-                <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              {/* Buscador mejorado */}
+              <div className="w-full lg:w-[420px]">
+                <div className={`relative transition-all duration-300 ${searchFocused ? 'transform scale-105' : ''}`}>
+                  <Search className={`absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 transition-colors duration-300 ${searchFocused ? 'text-blue-500' : 'text-gray-400'}`} />
                   <input
                     type="text"
                     placeholder="Buscar por referencia, marca..."
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
-                    className="w-full pl-12 pr-4 py-3.5 rounded-xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-300 shadow-lg"
+                    onFocus={() => setSearchFocused(true)}
+                    onBlur={() => setSearchFocused(false)}
+                    className="w-full pl-14 pr-5 py-4 rounded-2xl bg-white text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-300/50 shadow-2xl transition-all duration-300 text-base"
                   />
                 </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
-              <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                <div className="text-2xl font-black">{totalProductos.toLocaleString()}</div>
-                <div className="text-blue-200 text-sm">Productos</div>
-              </div>
-              <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                <div className="text-2xl font-black">{marcas.length}</div>
-                <div className="text-blue-200 text-sm">Marcas</div>
-              </div>
-              <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                <div className="text-2xl font-black">24-48h</div>
-                <div className="text-blue-200 text-sm">Entrega</div>
-              </div>
-              <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                <div className="text-2xl font-black">1 año</div>
-                <div className="text-blue-200 text-sm">Garantía</div>
-              </div>
+            {/* Stats con iconos y animaciones */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-10">
+              <StatCard value={totalProductos.toLocaleString()} label="Productos" icon={Package} />
+              <StatCard value={marcas.length.toString()} label="Marcas" icon={BadgeCheck} />
+              <StatCard value="24-48h" label="Entrega" icon={Truck} />
+              <StatCard value="1 año" label="Garantía" icon={Shield} />
             </div>
           </div>
         </section>
         
-        {/* Beneficios */}
-        <section className="bg-white border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2 text-gray-600">
-                <Truck className="w-5 h-5 text-blue-500" />
-                <span>Envío gratis +120€</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Clock className="w-5 h-5 text-blue-500" />
-                <span>Entrega 24-48h</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <Shield className="w-5 h-5 text-blue-500" />
-                <span>Garantía 1 año</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-600">
-                <CheckCircle className="w-5 h-5 text-blue-500" />
-                <span>Repuestos verificados</span>
-              </div>
+        {/* Beneficios con diseño mejorado */}
+        <section className="bg-white border-b border-gray-100 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+            <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
+              {[
+                { icon: Truck, text: "Envío gratis +120€", color: "text-blue-500" },
+                { icon: Clock, text: "Entrega 24-48h", color: "text-blue-500" },
+                { icon: Shield, text: "Garantía 1 año", color: "text-blue-500" },
+                { icon: CheckCircle, text: "Repuestos verificados", color: "text-blue-500" }
+              ].map((item, idx) => (
+                <div key={idx} className="flex items-center gap-2.5 text-gray-600 hover:text-gray-900 transition-colors duration-300 group cursor-default">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
+                    <item.icon className={`w-5 h-5 ${item.color}`} />
+                  </div>
+                  <span className="font-medium">{item.text}</span>
+                </div>
+              ))}
             </div>
           </div>
         </section>
         
-        {/* Categorías */}
-        <section className="py-10">
+        {/* Categorías con diseño mejorado */}
+        <section className="py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
                   {mostrarTodas ? "Categorías de Repuestos de Aire Acondicionado" : "Repuestos de Aire Acondicionado Más Buscados"}
                 </h2>
-                <p className="text-gray-500 text-sm mt-1">
+                <p className="text-gray-500 mt-2">
                   {mostrarTodas ? `${repuestosAire.length} tipos de componentes disponibles` : `${categoriasPopulares.length} categorías con mayor demanda`}
                 </p>
               </div>
               <button
                 onClick={() => setMostrarTodas(!mostrarTodas)}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+                className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center gap-1.5 px-4 py-2 rounded-xl hover:bg-blue-50 transition-all duration-300"
               >
                 {mostrarTodas ? "Ver menos" : "Ver todas"}
-                <ChevronRight className={`w-4 h-4 transition-transform ${mostrarTodas ? "rotate-90" : ""}`} />
+                <ChevronRight className={`w-4 h-4 transition-transform duration-300 ${mostrarTodas ? "rotate-90" : ""}`} />
               </button>
             </div>
             
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-3 sm:gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 sm:gap-5">
               {categoriasAMostrar.map((category, index) => (
                 <CategoryCard key={category.id} category={category} index={index} />
               ))}
@@ -276,24 +329,28 @@ export default function RepuestosAireAcondicionado() {
           </div>
         </section>
         
-        {/* Banner Mantenimiento */}
-        <section className="py-8">
+        {/* Banner Mantenimiento con diseño premium */}
+        <section className="py-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-6 lg:p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
-                  <Thermometer className="w-7 h-7 text-white" />
+            <div className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-8 lg:p-10 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
+              {/* Elementos decorativos */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl"></div>
+              
+              <div className="flex items-center gap-5 relative z-10">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/30">
+                  <Thermometer className="w-8 h-8 text-white" />
                 </div>
                 <div className="text-white">
-                  <h3 className="text-xl font-bold mb-1">Mantén tu aire en perfecto estado</h3>
-                  <p className="text-gray-400 text-sm">
-                    Contrata nuestro servicio de mantenimiento preventivo. Desde 70€/año con técnicos certificados.
+                  <h3 className="text-2xl font-bold mb-2">¿Prefieres que lo hagamos nosotros?</h3>
+                  <p className="text-gray-400 text-base">
+                    Contrata nuestro servicio de mantenimiento y olvídate de problemas. <span className="text-blue-400 font-semibold">Desde 70€/año.</span>
                   </p>
                 </div>
               </div>
               <Link 
                 href="/contrato-mantenimiento"
-                className="flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap"
+                className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 whitespace-nowrap shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:scale-105 relative z-10"
               >
                 Contratar mantenimiento
                 <ArrowRight className="w-5 h-5" />
@@ -302,15 +359,15 @@ export default function RepuestosAireAcondicionado() {
           </div>
         </section>
         
-        {/* Marcas */}
-        <section className="py-10 bg-white">
+        {/* Marcas con diseño mejorado */}
+        <section className="py-14 bg-gradient-to-b from-white to-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Repuestos de Aire Acondicionado por Marca</h2>
-              <p className="text-gray-500">Componentes originales y compatibles para Daikin, Mitsubishi, Fujitsu, LG y más</p>
+            <div className="text-center mb-10">
+              <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-3">Repuestos de Aire Acondicionado por Marca</h2>
+              <p className="text-gray-500 text-lg">Componentes originales y compatibles para las principales marcas</p>
             </div>
             
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3 sm:gap-4">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4 sm:gap-5">
               {marcas.map((marca) => (
                 <BrandCard key={marca.slug} marca={marca} />
               ))}
@@ -318,71 +375,64 @@ export default function RepuestosAireAcondicionado() {
           </div>
         </section>
         
-        {/* Tipos de equipos */}
-        <section className="py-10">
+        {/* Tipos de equipos con diseño mejorado */}
+        <section className="py-14">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Repuestos según Tipo de Aire Acondicionado</h2>
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 text-center">Repuestos según Tipo de Aire Acondicionado</h2>
             
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Link href="/c/aire-acondicionado?tipo=split" className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                  <Snowflake className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Split</h3>
-                <p className="text-sm text-gray-500">Unidades de pared domésticas</p>
-              </Link>
-              
-              <Link href="/c/aire-acondicionado?tipo=multisplit" className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                  <Snowflake className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Multisplit</h3>
-                <p className="text-sm text-gray-500">Sistemas multi-unidad</p>
-              </Link>
-              
-              <Link href="/c/aire-acondicionado?tipo=conductos" className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                  <Snowflake className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Conductos</h3>
-                <p className="text-sm text-gray-500">Sistemas canalizados</p>
-              </Link>
-              
-              <Link href="/c/aire-acondicionado?tipo=cassette" className="group bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all">
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4 group-hover:bg-blue-500 transition-colors">
-                  <Snowflake className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="font-bold text-gray-900 mb-1">Cassette</h3>
-                <p className="text-sm text-gray-500">Unidades de techo</p>
-              </Link>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <EquipmentTypeCard 
+                href="/c/aire-acondicionado?tipo=split" 
+                icon={Snowflake} 
+                title="Split" 
+                subtitle="Unidades de pared" 
+              />
+              <EquipmentTypeCard 
+                href="/c/aire-acondicionado?tipo=multisplit" 
+                icon={Snowflake} 
+                title="Multisplit" 
+                subtitle="Sistemas multi-unidad" 
+              />
+              <EquipmentTypeCard 
+                href="/c/aire-acondicionado?tipo=conductos" 
+                icon={Wind} 
+                title="Conductos" 
+                subtitle="Sistemas canalizados" 
+              />
+              <EquipmentTypeCard 
+                href="/c/aire-acondicionado?tipo=cassette" 
+                icon={Snowflake} 
+                title="Cassette" 
+                subtitle="Unidades de techo" 
+              />
             </div>
           </div>
         </section>
         
-        {/* Ayuda */}
-        <section className="py-10 bg-white">
+        {/* Ayuda con diseño mejorado */}
+        <section className="py-14 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-blue-50 rounded-2xl p-6 lg:p-8">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-3xl p-8 lg:p-10 border border-blue-100">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div className="text-center lg:text-left">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
                     ¿No encuentras lo que buscas?
                   </h3>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-lg max-w-xl">
                     Nuestro equipo técnico te ayudará a encontrar el repuesto exacto para tu aire acondicionado.
                   </p>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <a 
                     href="tel:+34912345678"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-xl transition-colors"
+                    className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold rounded-2xl transition-all duration-300 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105"
                   >
                     <Phone className="w-5 h-5" />
                     912 345 678
                   </a>
                   <a 
                     href="mailto:info@uniclima.es"
-                    className="flex items-center justify-center gap-2 px-6 py-3 bg-white border-2 border-gray-200 hover:border-blue-500 text-gray-700 font-semibold rounded-xl transition-colors"
+                    className="flex items-center justify-center gap-3 px-8 py-4 bg-white border-2 border-gray-200 hover:border-blue-400 text-gray-700 hover:text-blue-600 font-bold rounded-2xl transition-all duration-300 shadow-sm hover:shadow-lg"
                   >
                     Enviar consulta
                   </a>
@@ -392,14 +442,14 @@ export default function RepuestosAireAcondicionado() {
           </div>
         </section>
         
-        {/* SEO Content */}
-        <section className="py-10">
+        {/* SEO Content con diseño mejorado */}
+        <section className="py-14">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+            <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
               Guía de Compra: Repuestos de Aire Acondicionado
             </h2>
             
-            <div className="prose prose-gray max-w-none">
+            <div className="prose prose-lg prose-gray max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-600 prose-li:text-gray-600 prose-strong:text-gray-900">
               <p>
                 En Uniclima Solutions somos especialistas en <strong>repuestos de aire acondicionado</strong> para todas las marcas 
                 y tipos de equipos. Disponemos de componentes originales y compatibles para splits, multisplits, 
@@ -417,7 +467,7 @@ export default function RepuestosAireAcondicionado() {
               
               <h3>Mantenimiento de Aire Acondicionado</h3>
               <p>
-                Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento" className="text-blue-600 hover:underline">contratos de mantenimiento</Link> para 
+                Además de repuestos, ofrecemos <Link href="/contrato-mantenimiento" className="text-blue-600 hover:underline font-semibold">contratos de mantenimiento</Link> para 
                 mantener tu aire acondicionado en perfecto estado todo el año.
               </p>
             </div>
