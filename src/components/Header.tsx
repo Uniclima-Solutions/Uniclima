@@ -39,7 +39,7 @@ import {
 import { useCart } from "@/contexts/CartContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { groupedSearch, type SearchResult, type GroupedSearchResults } from "@/lib/smartSearch";
-import MobileMenu from "./MobileMenu";
+import MegaMenu from "./MegaMenu";
 import SideCart from "./SideCart";
 
 
@@ -374,8 +374,8 @@ export default function Header() {
       </header>
     </div>
 
-    {/* Mobile Menu */}
-    <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+    {/* Mega Menu */}
+    <MegaMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
     
     {/* Side Cart */}
     <SideCart />
