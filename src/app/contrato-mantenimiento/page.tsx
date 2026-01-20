@@ -1,8 +1,13 @@
-"use client";
+'use client';
 
 /**
  * Contrato de Mantenimiento - Formulario Completo
  * Uniclima Solutions - CIF B21651393
+ * 
+ * SEO Optimizado:
+ * - Title: "Contrato Mantenimiento Calderas y Aire Acondicionado | Desde 70€/año | Uniclima"
+ * - H1: "Contratos de Mantenimiento: Calderas y Aire Acondicionado"
+ * - Intención: Transaccional
  * 
  * CARACTERÍSTICAS:
  * - Persistencia de datos en localStorage
@@ -663,8 +668,8 @@ function ContratoMantenimientoContent() {
   ]);
 
   const serviceSchema = createServiceSchema({
-    name: "Contrato de Mantenimiento de Calderas y Aire Acondicionado",
-    description: "Servicio de mantenimiento preventivo para calderas y aires acondicionados. Incluye revisiones anuales, asistencia técnica y garantía de funcionamiento.",
+    name: "Contrato de Mantenimiento Preventivo de Calderas y Aire Acondicionado",
+    description: "Servicio de mantenimiento preventivo anual para calderas y aires acondicionados. Incluye revisión completa, limpieza, ajustes, asistencia técnica prioritaria y garantía de funcionamiento. Desde 70€/año.",
     serviceType: "Mantenimiento HVAC",
     price: 70
   });

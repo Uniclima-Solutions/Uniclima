@@ -3,6 +3,11 @@
 /**
  * Página de todas las marcas
  * Muestra todas las marcas disponibles enmarcadas y a todo color
+ * 
+ * SEO Optimizado:
+ * - Title: "Marcas de Calderas y Aire Acondicionado | Repuestos Originales | Uniclima"
+ * - H1: "Repuestos por Marca: Calderas y Aire Acondicionado"
+ * - Intención: Navegacional + Comercial
  */
 
 import Link from 'next/link';
@@ -99,10 +104,10 @@ export default function MarcasPage() {
         <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Todas las Marcas
+              Repuestos por Marca: Calderas y Aire Acondicionado
             </h1>
             <p className="text-orange-100 text-lg max-w-2xl mx-auto">
-              Encuentra repuestos y equipos de las mejores marcas de calderas y aire acondicionado
+              Más de 35 marcas disponibles con repuestos originales y compatibles. Junkers, Vaillant, Daikin, Mitsubishi y más.
             </p>
           </div>
         </section>
@@ -115,8 +120,8 @@ export default function MarcasPage() {
                 <span className="text-2xl">🔥</span>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Marcas de Calderas</h2>
-                <p className="text-gray-500">{marcasCalderas.length} marcas disponibles</p>
+                <h2 className="text-2xl font-bold text-gray-900">Repuestos de Calderas por Marca</h2>
+                <p className="text-gray-500">{marcasCalderas.length} fabricantes de calderas con repuestos disponibles</p>
               </div>
             </div>
             
@@ -147,8 +152,8 @@ export default function MarcasPage() {
                 <span className="text-2xl">❄️</span>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">Marcas de Aire Acondicionado</h2>
-                <p className="text-gray-500">{marcasAire.length} marcas disponibles</p>
+                <h2 className="text-2xl font-bold text-gray-900">Repuestos de Aire Acondicionado por Marca</h2>
+                <p className="text-gray-500">{marcasAire.length} fabricantes de climatización con repuestos disponibles</p>
               </div>
             </div>
             
@@ -175,7 +180,7 @@ export default function MarcasPage() {
         <section className="py-12 bg-gradient-to-r from-gray-800 to-gray-900">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-2xl font-bold text-white mb-4">
-              ¿No encuentras tu marca?
+              ¿Buscas Repuestos de Otra Marca?
             </h2>
             <p className="text-gray-300 mb-6 max-w-xl mx-auto">
               Contáctanos y te ayudaremos a encontrar el repuesto que necesitas
